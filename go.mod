@@ -29,4 +29,4 @@ require (
 	golang.org/x/crypto v0.9.0 // indirect
 )
 
-replace github.com/invopop/gobl => ../gobl
+// replace github.com/invopop/gobl => ../gobl

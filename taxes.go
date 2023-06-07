@@ -10,7 +10,7 @@ import (
 // Impuestos store the invoice tax totals
 type Impuestos struct {
 	TotalImpuestosTrasladados string     `xml:",attr,omitempty"`
-	Traslados                 *Traslados `xml:"cfdi:Traslados"`
+	Traslados                 *Traslados `xml:"cfdi:Traslados,omitempty"`
 }
 
 // Traslados list the applicable taxes of the invoice or a line
@@ -21,9 +21,9 @@ type Traslados struct {
 // Traslado stores the tax data of the invoice or a line
 type Traslado struct {
 	Base       string `xml:",attr"`
-	Importe    string `xml:",attr"`
+	Importe    string `xml:",attr,omitempty"`
 	Impuesto   string `xml:",attr"`
-	TasaOCuota string `xml:",attr"`
+	TasaOCuota string `xml:",attr,omitempty"`
 	TipoFactor string `xml:",attr"`
 }
 

@@ -18,7 +18,7 @@ type Concepto struct {
 	Importe       string `xml:",attr"`
 	ObjetoImp     string `xml:",attr"`
 
-	Impuestos *Impuestos `xml:"cfdi:Impuestos"`
+	Impuestos *Impuestos `xml:"cfdi:Impuestos,omitempty"`
 }
 
 // nolint:misspell

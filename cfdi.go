@@ -44,16 +44,16 @@ type Document struct {
 	Version        string   `xml:"Version,attr"`
 
 	TipoDeComprobante string `xml:",attr"`
-	Serie             string `xml:",attr"`
-	Folio             string `xml:",attr"`
+	Serie             string `xml:",attr,omitempty"`
+	Folio             string `xml:",attr,omitempty"`
 	Fecha             string `xml:",attr"`
 	LugarExpedicion   string `xml:",attr"`
 	SubTotal          string `xml:",attr"`
 	Total             string `xml:",attr"`
 	Moneda            string `xml:",attr"`
 	Exportacion       string `xml:",attr"`
-	MetodoPago        string `xml:",attr"`
-	FormaPago         string `xml:",attr"`
+	MetodoPago        string `xml:",attr,omitempty"`
+	FormaPago         string `xml:",attr,omitempty"`
 	Sello             string `xml:",attr"`
 	NoCertificado     string `xml:",attr"`
 	Certificado       string `xml:",attr"`
@@ -61,7 +61,7 @@ type Document struct {
 	Emisor    *Emisor    `xml:"cfdi:Emisor"`
 	Receptor  *Receptor  `xml:"cfdi:Receptor"`
 	Conceptos *Conceptos `xml:"cfdi:Conceptos"` //nolint:misspell
-	Impuestos *Impuestos `xml:"cfdi:Impuestos"`
+	Impuestos *Impuestos `xml:"cfdi:Impuestos,omitempty"`
 }
 
 // NewDocument converts a GOBL envelope into a CFDI document

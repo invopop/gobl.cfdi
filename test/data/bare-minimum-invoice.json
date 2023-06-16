@@ -18,28 +18,18 @@
     "supplier": {
       "tax_id": {
         "country": "MX",
-        "code": "EKU9003173C9"
+        "code": "EKU9003173C9",
+        "zone": "26015"
       },
-      "name": "ESCUELA KEMPER URGATE",
-      "addresses": [
-        {
-          "locality": "Piedras Negras",
-          "code": "26015"
-        }
-      ]
+      "name": "ESCUELA KEMPER URGATE"
     },
     "customer": {
       "tax_id": {
         "country": "MX",
-        "code": "URE180429TM6"
+        "code": "URE180429TM6",
+        "zone": "65000"
       },
-      "name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
-      "addresses": [
-        {
-          "locality": "Anáhuac",
-          "code": "65000"
-        }
-      ]
+      "name": "UNIVERSIDAD ROBOTICA ESPAÑOLA"
     },
     "lines": [
       {

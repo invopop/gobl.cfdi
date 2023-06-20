@@ -32,7 +32,7 @@ func newReceptor(customer *org.Party) *Receptor {
 	receptor := &Receptor{
 		Rfc:                     customer.TaxID.Code.String(),
 		Nombre:                  customer.Name,
-		DomicilioFiscalReceptor: customer.Addresses[0].Code,
+		DomicilioFiscalReceptor: customer.TaxID.Zone.String(),
 		RegimenFiscalReceptor:   RegimenFiscalGeneral,
 		UsoCFDI:                 UsoCFDIGastosGenerales,
 	}

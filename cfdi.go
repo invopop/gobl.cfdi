@@ -81,7 +81,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Serie:             inv.Series,
 		Folio:             inv.Code,
 		Fecha:             formatIssueDate(inv.IssueDate),
-		LugarExpedicion:   inv.Supplier.Addresses[0].Code,
+		LugarExpedicion:   inv.Supplier.TaxID.Zone.String(),
 		SubTotal:          inv.Totals.Total.String(),
 		Total:             inv.Totals.TotalWithTax.String(),
 		Moneda:            string(inv.Currency),

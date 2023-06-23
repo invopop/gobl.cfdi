@@ -4,7 +4,7 @@
     "uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
     "dig": {
       "alg": "sha256",
-      "val": "f65c1d8d6f24dee6d2375f5d9c70d537e3c2040857a805ac3ead562169c9640f"
+      "val": "b28de1631ce7646c8852e5197db6d288af321169e1fde46cdd19dc6551da17af"
     },
     "draft": true
   },
@@ -18,16 +18,16 @@
     "supplier": {
       "tax_id": {
         "country": "MX",
-        "code": "EKU9003173C9",
-        "zone": "26015"
+        "zone": "26015",
+        "code": "EKU9003173C9"
       },
       "name": "ESCUELA KEMPER URGATE"
     },
     "customer": {
       "tax_id": {
         "country": "MX",
-        "code": "URE180429TM6",
-        "zone": "65000"
+        "zone": "65000",
+        "code": "URE180429TM6"
       },
       "name": "UNIVERSIDAD ROBOTICA ESPAÑOLA"
     },

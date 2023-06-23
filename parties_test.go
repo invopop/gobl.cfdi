@@ -32,6 +32,6 @@ func TestReceptor(t *testing.T) {
 		assert.Equal(t, "UNIVERSIDAD ROBOTICA ESPAÑOLA", r.Nombre)
 		assert.Equal(t, "65000", r.DomicilioFiscalReceptor)
 		assert.Equal(t, "601", r.RegimenFiscalReceptor)
-		assert.Equal(t, "G03", r.UsoCFDI)
+		assert.Equal(t, "G01", r.UsoCFDI)
 	})
 }

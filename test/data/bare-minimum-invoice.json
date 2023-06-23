@@ -4,7 +4,7 @@
     "uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
     "dig": {
       "alg": "sha256",
-      "val": "b28de1631ce7646c8852e5197db6d288af321169e1fde46cdd19dc6551da17af"
+      "val": "e425e2e49d3f11df3f74719ad8188a4b0d904ecc481811b892d787dc94b55e3e"
     },
     "draft": true
   },
@@ -14,6 +14,11 @@
     "code": "0010",
     "type": "standard",
     "currency": "MXN",
+    "tax": {
+      "tags": [
+        "use+goods-acquisition"
+      ]
+    },
     "issue_date": "2023-05-29",
     "supplier": {
       "tax_id": {
@@ -50,6 +55,11 @@
         "total": "200.00"
       }
     ],
+    "payment": {
+      "instructions": {
+        "key": "credit-transfer"
+      }
+    },
     "totals": {
       "sum": "200.00",
       "total": "200.00",

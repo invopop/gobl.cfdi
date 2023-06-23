@@ -9,6 +9,9 @@ import (
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
+	"github.com/invopop/gobl/cbc"
+	"github.com/invopop/gobl/regimes/mx"
+	"github.com/invopop/gobl/tax"
 )
 
 // CFDI schema constants
@@ -25,13 +28,11 @@ const (
 	TipoDeComprobanteIngreso      = "I"
 	ExportacionNoAplica           = "01"
 	MetodoPagoUnaExhibicion       = "PUE"
-	FormaPagoPorDefinir           = "99"
 	ClaveProdServNoExiste         = "01010101"
 	ClaveUnidadMutuamenteDefinida = "H87"
 	ObjetoImpSi                   = "02"
 	ImpuestoIVA                   = "002"
 	TipoFactorTasa                = "Tasa"
-	UsoCFDIGastosGenerales        = "G03"
 	RegimenFiscalGeneral          = "601"
 )
 
@@ -87,12 +88,12 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Moneda:            string(inv.Currency),
 		Exportacion:       ExportacionNoAplica,
 		MetodoPago:        MetodoPagoUnaExhibicion,
-		FormaPago:         FormaPagoPorDefinir,
+		FormaPago:         lookupFormaPago(inv),
 
 		NoCertificado: FakeNoCertificado,
 
 		Emisor:    newEmisor(inv.Supplier),
-		Receptor:  newReceptor(inv.Customer),
+		Receptor:  newReceptor(inv.Customer, lookupUsoCFDI(inv)),
 		Conceptos: newConceptos(inv.Lines), // nolint:misspell
 		Impuestos: newImpuestos(inv.Totals),
 	}
@@ -113,4 +114,39 @@ func (d *Document) Bytes() ([]byte, error) {
 func formatIssueDate(date cal.Date) string {
 	dateTime := civil.DateTime{Date: date.Date, Time: civil.Time{}}
 	return dateTime.String()
+}
+
+func lookupFormaPago(inv *bill.Invoice) string {
+	r := inv.TaxRegime()
+	if r == nil {
+		return ""
+	}
+
+	keyDef := findKeyDef(r.PaymentMeansKeys, inv.Payment.Instructions.Key)
+	if keyDef == nil {
+		return ""
+	}
+
+	code := keyDef.Codes[mx.KeySATFormaPago]
+	return code.String()
+}
+
+func lookupUsoCFDI(inv *bill.Invoice) string {
+	ss := inv.ScenarioSummary()
+	if ss == nil {
+		return ""
+	}
+
+	code := ss.Codes[mx.KeySATUsoCFDI]
+	return code.String()
+}
+
+func findKeyDef(keyDefs []*tax.KeyDefinition, key cbc.Key) *tax.KeyDefinition {
+	for _, keyDef := range keyDefs {
+		if keyDef.Key == key {
+			return keyDef
+		}
+	}
+
+	return nil
 }

@@ -3,7 +3,7 @@ module github.com/invopop/gobl.cfdi
 go 1.20
 
 require (
-	github.com/invopop/gobl v0.50.3
+	github.com/invopop/gobl v0.50.6
 	github.com/magefile/mage v1.15.0
 )
 
@@ -29,4 +29,4 @@ require (
 	golang.org/x/crypto v0.9.0 // indirect
 )
 
-// replace github.com/invopop/gobl => ../gobl
+replace github.com/invopop/gobl => ../gobl

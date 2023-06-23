@@ -31,7 +31,7 @@ func TestComprobante(t *testing.T) {
 		assert.Equal(t, "MXN", doc.Moneda)
 		assert.Equal(t, "01", doc.Exportacion)
 		assert.Equal(t, "PUE", doc.MetodoPago)
-		assert.Equal(t, "99", doc.FormaPago)
+		assert.Equal(t, "03", doc.FormaPago)
 	})
 }
 

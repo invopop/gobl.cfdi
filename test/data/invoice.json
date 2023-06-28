@@ -1,0 +1,92 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
+		"dig": {
+			"alg": "sha256",
+			"val": "6d9a80211d63f622f1c9eb2f09ac6b54be3c244506e0c15f3c78960288edf71c"
+		},
+		"draft": true
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"series": "LMC",
+		"code": "0010",
+		"type": "standard",
+		"currency": "MXN",
+		"tax": {
+			"tags": [
+				"use+goods-acquisition"
+			]
+		},
+		"issue_date": "2023-05-29",
+		"supplier": {
+			"tax_id": {
+				"country": "MX",
+				"zone": "26015",
+				"code": "EKU9003173C9"
+			},
+			"name": "ESCUELA KEMPER URGATE"
+		},
+		"customer": {
+			"tax_id": {
+				"country": "MX",
+				"zone": "65000",
+				"code": "URE180429TM6"
+			},
+			"name": "UNIVERSIDAD ROBOTICA ESPAÑOLA"
+		},
+		"lines": [
+			{
+				"i": 1,
+				"quantity": "2",
+				"item": {
+					"name": "Cigarros",
+					"price": "100.00"
+				},
+				"sum": "200.00",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"rate": "standard",
+						"percent": "16.0%"
+					}
+				],
+				"total": "200.00"
+			}
+		],
+		"payment": {
+			"terms": {
+				"key": "",
+				"notes": "Pago a 30 días."
+			},
+			"instructions": {
+				"key": "credit-transfer"
+			}
+		},
+		"totals": {
+			"sum": "200.00",
+			"total": "200.00",
+			"taxes": {
+				"categories": [
+					{
+						"code": "VAT",
+						"rates": [
+							{
+								"key": "standard",
+								"base": "200.00",
+								"percent": "16.0%",
+								"amount": "32.00"
+							}
+						],
+						"amount": "32.00"
+					}
+				],
+				"sum": "32.00"
+			},
+			"tax": "32.00",
+			"total_with_tax": "232.00",
+			"payable": "232.00"
+		}
+	}
+}

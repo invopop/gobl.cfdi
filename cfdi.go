@@ -55,6 +55,7 @@ type Document struct {
 	Exportacion       string `xml:",attr"`
 	MetodoPago        string `xml:",attr,omitempty"`
 	FormaPago         string `xml:",attr,omitempty"`
+	CondicionesDePago string `xml:",attr,omitempty"`
 	Sello             string `xml:",attr"`
 	NoCertificado     string `xml:",attr"`
 	Certificado       string `xml:",attr"`
@@ -89,6 +90,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Exportacion:       ExportacionNoAplica,
 		MetodoPago:        MetodoPagoUnaExhibicion,
 		FormaPago:         lookupFormaPago(inv),
+		CondicionesDePago: paymentTermsNotes(inv),
 
 		NoCertificado: FakeNoCertificado,
 
@@ -149,4 +151,12 @@ func findKeyDef(keyDefs []*tax.KeyDefinition, key cbc.Key) *tax.KeyDefinition {
 	}
 
 	return nil
+}
+
+func paymentTermsNotes(inv *bill.Invoice) string {
+	if inv.Payment == nil || inv.Payment.Terms == nil {
+		return ""
+	}
+
+	return inv.Payment.Terms.Notes
 }

@@ -45,6 +45,7 @@ func TestXMLGeneration(t *testing.T) {
 
 		schemaPath := filepath.Join(test.GetTestPath(), "schema", "cfdv40.xsd")
 		schema, err := xsd.ParseFromFile(schemaPath)
+		defer schema.Free()
 		require.NoError(t, err)
 
 		xmlDoc, err := libxml2.ParseString(string(data))

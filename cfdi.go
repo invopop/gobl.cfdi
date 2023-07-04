@@ -24,16 +24,15 @@ const (
 
 // Hard-coded values for (yet) unsupported mappings
 const (
-	FakeNoCertificado             = "00000000000000000000"
-	TipoDeComprobanteIngreso      = "I"
-	ExportacionNoAplica           = "01"
-	MetodoPagoUnaExhibicion       = "PUE"
-	ClaveProdServNoExiste         = "01010101"
-	ClaveUnidadMutuamenteDefinida = "H87"
-	ObjetoImpSi                   = "02"
-	ImpuestoIVA                   = "002"
-	TipoFactorTasa                = "Tasa"
-	RegimenFiscalGeneral          = "601"
+	FakeNoCertificado        = "00000000000000000000"
+	TipoDeComprobanteIngreso = "I"
+	ExportacionNoAplica      = "01"
+	MetodoPagoUnaExhibicion  = "PUE"
+	ClaveProdServNoExiste    = "01010101"
+	ObjetoImpSi              = "02"
+	ImpuestoIVA              = "002"
+	TipoFactorTasa           = "Tasa"
+	RegimenFiscalGeneral     = "601"
 )
 
 // Document is a pseudo-model for containing the XML document being created

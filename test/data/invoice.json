@@ -4,7 +4,7 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "6d9a80211d63f622f1c9eb2f09ac6b54be3c244506e0c15f3c78960288edf71c"
+			"val": "f3509d9841665d824cc983da0ac6ba7d59bb6ab8e95020d76881a956f3566a38"
 		},
 		"draft": true
 	},
@@ -42,7 +42,8 @@
 				"quantity": "2",
 				"item": {
 					"name": "Cigarros",
-					"price": "100.00"
+					"price": "100.00",
+					"unit": "piece"
 				},
 				"sum": "200.00",
 				"taxes": [

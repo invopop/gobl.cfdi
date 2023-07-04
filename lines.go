@@ -2,6 +2,11 @@ package cfdi
 
 import "github.com/invopop/gobl/bill"
 
+// Default keys
+const (
+	DefaultClaveUnidad = "ZZ" // Mutuamente definida
+)
+
 // Conceptos list invoice lines
 // nolint:misspell
 type Conceptos struct {
@@ -36,7 +41,7 @@ func newConcepto(line *bill.Line) *Concepto {
 	concepto := &Concepto{
 		ClaveProdServ: ClaveProdServNoExiste,
 		Cantidad:      line.Quantity.String(),
-		ClaveUnidad:   ClaveUnidadMutuamenteDefinida,
+		ClaveUnidad:   mapToClaveUnidad(line),
 		Descripcion:   line.Item.Name, // nolint:misspell
 		ValorUnitario: line.Item.Price.String(),
 		Importe:       line.Total.String(),
@@ -45,4 +50,12 @@ func newConcepto(line *bill.Line) *Concepto {
 	}
 
 	return concepto
+}
+
+func mapToClaveUnidad(line *bill.Line) string {
+	if line.Item.Unit == "" {
+		return DefaultClaveUnidad
+	}
+
+	return string(line.Item.Unit.UNECE())
 }

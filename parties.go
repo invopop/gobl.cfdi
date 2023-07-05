@@ -28,13 +28,13 @@ func newEmisor(supplier *org.Party) *Emisor {
 	return emisor
 }
 
-func newReceptor(customer *org.Party) *Receptor {
+func newReceptor(customer *org.Party, usoCFDI string) *Receptor {
 	receptor := &Receptor{
 		Rfc:                     customer.TaxID.Code.String(),
 		Nombre:                  customer.Name,
 		DomicilioFiscalReceptor: customer.TaxID.Zone.String(),
 		RegimenFiscalReceptor:   RegimenFiscalGeneral,
-		UsoCFDI:                 UsoCFDIGastosGenerales,
+		UsoCFDI:                 usoCFDI,
 	}
 
 	return receptor

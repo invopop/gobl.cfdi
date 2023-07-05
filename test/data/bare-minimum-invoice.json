@@ -4,7 +4,7 @@
     "uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
     "dig": {
       "alg": "sha256",
-      "val": "f65c1d8d6f24dee6d2375f5d9c70d537e3c2040857a805ac3ead562169c9640f"
+      "val": "e425e2e49d3f11df3f74719ad8188a4b0d904ecc481811b892d787dc94b55e3e"
     },
     "draft": true
   },
@@ -14,20 +14,25 @@
     "code": "0010",
     "type": "standard",
     "currency": "MXN",
+    "tax": {
+      "tags": [
+        "use+goods-acquisition"
+      ]
+    },
     "issue_date": "2023-05-29",
     "supplier": {
       "tax_id": {
         "country": "MX",
-        "code": "EKU9003173C9",
-        "zone": "26015"
+        "zone": "26015",
+        "code": "EKU9003173C9"
       },
       "name": "ESCUELA KEMPER URGATE"
     },
     "customer": {
       "tax_id": {
         "country": "MX",
-        "code": "URE180429TM6",
-        "zone": "65000"
+        "zone": "65000",
+        "code": "URE180429TM6"
       },
       "name": "UNIVERSIDAD ROBOTICA ESPAÑOLA"
     },
@@ -50,6 +55,11 @@
         "total": "200.00"
       }
     ],
+    "payment": {
+      "instructions": {
+        "key": "credit-transfer"
+      }
+    },
     "totals": {
       "sum": "200.00",
       "total": "200.00",

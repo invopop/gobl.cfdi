@@ -28,7 +28,6 @@ const (
 	TipoDeComprobanteIngreso = "I"
 	ExportacionNoAplica      = "01"
 	MetodoPagoUnaExhibicion  = "PUE"
-	ClaveProdServNoExiste    = "01010101"
 	ObjetoImpSi              = "02"
 	ImpuestoIVA              = "002"
 	TipoFactorTasa           = "Tasa"

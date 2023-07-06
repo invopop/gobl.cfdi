@@ -4,7 +4,7 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "007f645ce9f66f70e7fd1dbd5bae94ed61b669566f39915eee538be54fdc5772"
+			"val": "00e36b3bae93ca68a3b8024f300179040592541fa4a8e029c4648d6106dd83b2"
 		},
 		"draft": true
 	},
@@ -21,20 +21,20 @@
 		},
 		"issue_date": "2023-05-29",
 		"supplier": {
+			"name": "ESCUELA KEMPER URGATE",
 			"tax_id": {
 				"country": "MX",
 				"zone": "26015",
 				"code": "EKU9003173C9"
-			},
-			"name": "ESCUELA KEMPER URGATE"
+			}
 		},
 		"customer": {
+			"name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
 			"tax_id": {
 				"country": "MX",
 				"zone": "65000",
 				"code": "URE180429TM6"
-			},
-			"name": "UNIVERSIDAD ROBOTICA ESPAÑOLA"
+			}
 		},
 		"lines": [
 			{
@@ -42,6 +42,12 @@
 				"quantity": "2",
 				"item": {
 					"name": "Cigarros",
+					"identities": [
+						{
+							"type": "SAT",
+							"code": "50211502"
+						}
+					],
 					"price": "100.00"
 				},
 				"sum": "200.00",

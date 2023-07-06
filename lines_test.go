@@ -16,7 +16,7 @@ func TestConceptos(t *testing.T) {
 
 		c := doc.Conceptos.Concepto[0]
 
-		assert.Equal(t, "01010101", c.ClaveProdServ)
+		assert.Equal(t, "50211502", c.ClaveProdServ)
 		assert.Equal(t, "2", c.Cantidad)
 		assert.Equal(t, "H87", c.ClaveUnidad)
 		assert.Equal(t, "Cigarros", c.Descripcion)

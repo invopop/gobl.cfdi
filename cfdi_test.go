@@ -1,6 +1,7 @@
 package cfdi_test
 
 import (
+	"fmt"
 	"path/filepath"
 	"testing"
 
@@ -13,7 +14,7 @@ import (
 
 func TestComprobante(t *testing.T) {
 	t.Run("should return a Document with the Comprobante data", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("bare-minimum-invoice.json")
+		doc, err := test.NewDocumentFrom("invoice.json")
 		require.NoError(t, err)
 
 		assert.Equal(t, "http://www.sat.gob.mx/cfd/4", doc.CFDINamespace)
@@ -32,29 +33,39 @@ func TestComprobante(t *testing.T) {
 		assert.Equal(t, "01", doc.Exportacion)
 		assert.Equal(t, "PUE", doc.MetodoPago)
 		assert.Equal(t, "03", doc.FormaPago)
+		assert.Equal(t, "Pago a 30 días.", doc.CondicionesDePago)
 	})
 }
 
 func TestXMLGeneration(t *testing.T) {
-	t.Run("should generate a schema-valid XML", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("bare-minimum-invoice.json")
-		require.NoError(t, err)
+	schemaPath := filepath.Join(test.GetTestPath(), "schema", "cfdv40.xsd")
+	schema, err := xsd.ParseFromFile(schemaPath)
+	defer schema.Free()
+	require.NoError(t, err)
 
-		data, err := doc.Bytes()
-		require.NoError(t, err)
+	tests := []string{
+		"bare-minimum-invoice.json",
+		"invoice.json",
+	}
 
-		schemaPath := filepath.Join(test.GetTestPath(), "schema", "cfdv40.xsd")
-		schema, err := xsd.ParseFromFile(schemaPath)
-		require.NoError(t, err)
+	for _, testFile := range tests {
+		name := fmt.Sprintf("should generate a schema-valid XML from %s", testFile)
+		t.Run(name, func(t *testing.T) {
+			doc, err := test.NewDocumentFrom(testFile)
+			require.NoError(t, err)
 
-		xmlDoc, err := libxml2.ParseString(string(data))
-		require.NoError(t, err)
+			data, err := doc.Bytes()
+			require.NoError(t, err)
 
-		err = schema.Validate(xmlDoc)
-		if err != nil {
-			for _, e := range err.(xsd.SchemaValidationError).Errors() {
-				require.NoError(t, e)
+			xmlDoc, err := libxml2.ParseString(string(data))
+			require.NoError(t, err)
+
+			err = schema.Validate(xmlDoc)
+			if err != nil {
+				for _, e := range err.(xsd.SchemaValidationError).Errors() {
+					require.NoError(t, e)
+				}
 			}
-		}
-	})
+		})
+	}
 }

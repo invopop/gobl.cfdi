@@ -4,7 +4,7 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "00e36b3bae93ca68a3b8024f300179040592541fa4a8e029c4648d6106dd83b2"
+			"val": "7f856f5d1b179bff80fb1fe042349f4c45995c9bd9a18d6c3bf66b23dd57b886"
 		},
 		"draft": true
 	},
@@ -48,7 +48,8 @@
 							"code": "50211502"
 						}
 					],
-					"price": "100.00"
+					"price": "100.00",
+					"unit": "piece"
 				},
 				"sum": "200.00",
 				"taxes": [
@@ -62,6 +63,10 @@
 			}
 		],
 		"payment": {
+			"terms": {
+				"key": "",
+				"notes": "Pago a 30 días."
+			},
 			"instructions": {
 				"key": "credit-transfer"
 			}

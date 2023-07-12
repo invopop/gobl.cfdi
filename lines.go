@@ -1,6 +1,14 @@
 package cfdi
 
-import "github.com/invopop/gobl/bill"
+import (
+	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/regimes/mx"
+)
+
+// Default keys
+const (
+	DefaultClaveUnidad = "ZZ" // Mutuamente definida
+)
 
 // Conceptos list invoice lines
 // nolint:misspell
@@ -34,9 +42,9 @@ func newConceptos(lines []*bill.Line) *Conceptos {
 
 func newConcepto(line *bill.Line) *Concepto {
 	concepto := &Concepto{
-		ClaveProdServ: ClaveProdServNoExiste,
+		ClaveProdServ: mapToClaveProdServ(line),
 		Cantidad:      line.Quantity.String(),
-		ClaveUnidad:   ClaveUnidadMutuamenteDefinida,
+		ClaveUnidad:   mapToClaveUnidad(line),
 		Descripcion:   line.Item.Name, // nolint:misspell
 		ValorUnitario: line.Item.Price.String(),
 		Importe:       line.Total.String(),
@@ -45,4 +53,26 @@ func newConcepto(line *bill.Line) *Concepto {
 	}
 
 	return concepto
+}
+
+func mapToClaveUnidad(line *bill.Line) string {
+	if line.Item.Unit == "" {
+		return DefaultClaveUnidad
+	}
+
+	return string(line.Item.Unit.UNECE())
+}
+
+func mapToClaveProdServ(line *bill.Line) string {
+	if line.Item == nil {
+		return ""
+	}
+
+	for _, id := range line.Item.Identities {
+		if id.Type == mx.IdentityTypeSAT {
+			return string(id.Code)
+		}
+	}
+
+	return ""
 }

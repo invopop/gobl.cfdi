@@ -24,16 +24,14 @@ const (
 
 // Hard-coded values for (yet) unsupported mappings
 const (
-	FakeNoCertificado             = "00000000000000000000"
-	TipoDeComprobanteIngreso      = "I"
-	ExportacionNoAplica           = "01"
-	MetodoPagoUnaExhibicion       = "PUE"
-	ClaveProdServNoExiste         = "01010101"
-	ClaveUnidadMutuamenteDefinida = "H87"
-	ObjetoImpSi                   = "02"
-	ImpuestoIVA                   = "002"
-	TipoFactorTasa                = "Tasa"
-	RegimenFiscalGeneral          = "601"
+	FakeNoCertificado        = "00000000000000000000"
+	TipoDeComprobanteIngreso = "I"
+	ExportacionNoAplica      = "01"
+	MetodoPagoUnaExhibicion  = "PUE"
+	ObjetoImpSi              = "02"
+	ImpuestoIVA              = "002"
+	TipoFactorTasa           = "Tasa"
+	RegimenFiscalGeneral     = "601"
 )
 
 // Document is a pseudo-model for containing the XML document being created
@@ -55,6 +53,7 @@ type Document struct {
 	Exportacion       string `xml:",attr"`
 	MetodoPago        string `xml:",attr,omitempty"`
 	FormaPago         string `xml:",attr,omitempty"`
+	CondicionesDePago string `xml:",attr,omitempty"`
 	Sello             string `xml:",attr"`
 	NoCertificado     string `xml:",attr"`
 	Certificado       string `xml:",attr"`
@@ -89,6 +88,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Exportacion:       ExportacionNoAplica,
 		MetodoPago:        MetodoPagoUnaExhibicion,
 		FormaPago:         lookupFormaPago(inv),
+		CondicionesDePago: paymentTermsNotes(inv),
 
 		NoCertificado: FakeNoCertificado,
 
@@ -149,4 +149,12 @@ func findKeyDef(keyDefs []*tax.KeyDefinition, key cbc.Key) *tax.KeyDefinition {
 	}
 
 	return nil
+}
+
+func paymentTermsNotes(inv *bill.Invoice) string {
+	if inv.Payment == nil || inv.Payment.Terms == nil {
+		return ""
+	}
+
+	return inv.Payment.Terms.Notes
 }

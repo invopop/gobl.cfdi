@@ -95,7 +95,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Emisor:    newEmisor(inv.Supplier),
 		Receptor:  newReceptor(inv.Customer, lookupUsoCFDI(inv)),
 		Conceptos: newConceptos(inv.Lines), // nolint:misspell
-		Impuestos: newImpuestos(inv.Totals),
+		Impuestos: newImpuestos(inv.Totals, &inv.Currency),
 	}
 
 	return document, nil

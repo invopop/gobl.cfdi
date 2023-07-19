@@ -4,7 +4,7 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "7f856f5d1b179bff80fb1fe042349f4c45995c9bd9a18d6c3bf66b23dd57b886"
+			"val": "5a34385b90f6b352b7568ab1aaff4e4902afad80c59572f53a3966af8e3a17c6"
 		},
 		"draft": true
 	},
@@ -48,10 +48,10 @@
 							"code": "50211502"
 						}
 					],
-					"price": "100.00",
+					"price": "100.1010",
 					"unit": "piece"
 				},
-				"sum": "200.00",
+				"sum": "200.2020",
 				"taxes": [
 					{
 						"cat": "VAT",
@@ -59,7 +59,7 @@
 						"percent": "16.0%"
 					}
 				],
-				"total": "200.00"
+				"total": "200.2020"
 			}
 		],
 		"payment": {
@@ -72,8 +72,8 @@
 			}
 		},
 		"totals": {
-			"sum": "200.00",
-			"total": "200.00",
+			"sum": "200.2020",
+			"total": "200.20",
 			"taxes": {
 				"categories": [
 					{
@@ -81,19 +81,19 @@
 						"rates": [
 							{
 								"key": "standard",
-								"base": "200.00",
+								"base": "200.2020",
 								"percent": "16.0%",
-								"amount": "32.00"
+								"amount": "32.0323"
 							}
 						],
-						"amount": "32.00"
+						"amount": "32.0323"
 					}
 				],
-				"sum": "32.00"
+				"sum": "32.0323"
 			},
-			"tax": "32.00",
-			"total_with_tax": "232.00",
-			"payable": "232.00"
+			"tax": "32.03",
+			"total_with_tax": "232.23",
+			"payable": "232.23"
 		}
 	}
 }

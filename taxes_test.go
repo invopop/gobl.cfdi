@@ -10,28 +10,28 @@ import (
 
 func TestImpuestos(t *testing.T) {
 	t.Run("should return a Document with the Impuestos data", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("bare-minimum-invoice.json")
+		doc, err := test.NewDocumentFrom("invoice.json")
 		require.NoError(t, err)
 
-		assert.Equal(t, "32.00", doc.Impuestos.TotalImpuestosTrasladados)
+		assert.Equal(t, "32.03", doc.Impuestos.TotalImpuestosTrasladados)
 
 		tr := doc.Impuestos.Traslados.Traslado[0]
 
-		assert.Equal(t, "200.00", tr.Base)
-		assert.Equal(t, "32.00", tr.Importe)
+		assert.Equal(t, "200.20", tr.Base)   // SAT expects 2 decimals only
+		assert.Equal(t, "32.03", tr.Importe) // SAT expects 2 decimals only
 		assert.Equal(t, "002", tr.Impuesto)
 		assert.Equal(t, "Tasa", tr.TipoFactor)
 		assert.Equal(t, "0.160000", tr.TasaOCuota)
 	})
 
 	t.Run("should return a Document with the Impuestos data of each Concepto", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("bare-minimum-invoice.json")
+		doc, err := test.NewDocumentFrom("invoice.json")
 		require.NoError(t, err)
 
 		tr := doc.Conceptos.Concepto[0].Impuestos.Traslados.Traslado[0]
 
-		assert.Equal(t, "200.00", tr.Base)
-		assert.Equal(t, "32.00", tr.Importe)
+		assert.Equal(t, "200.2020", tr.Base)
+		assert.Equal(t, "32.0323", tr.Importe)
 		assert.Equal(t, "002", tr.Impuesto)
 		assert.Equal(t, "Tasa", tr.TipoFactor)
 		assert.Equal(t, "0.160000", tr.TasaOCuota)

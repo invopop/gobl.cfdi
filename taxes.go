@@ -2,6 +2,7 @@ package cfdi
 
 import (
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/currency"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/regimes/common"
 	"github.com/invopop/gobl/tax"
@@ -27,10 +28,10 @@ type Traslado struct {
 	TipoFactor string `xml:",attr"`
 }
 
-func newImpuestos(totals *bill.Totals) *Impuestos {
+func newImpuestos(totals *bill.Totals, currency *currency.Code) *Impuestos {
 	impuestos := &Impuestos{
 		TotalImpuestosTrasladados: totals.Tax.String(),
-		Traslados:                 newTraslados(totals.Taxes),
+		Traslados:                 newTraslados(totals.Taxes, currency),
 	}
 
 	return impuestos
@@ -44,7 +45,7 @@ func newImpuestosFromLine(line *bill.Line) *Impuestos {
 	return impuestos
 }
 
-func newTraslados(taxTotal *tax.Total) *Traslados {
+func newTraslados(taxTotal *tax.Total, currency *currency.Code) *Traslados {
 	var traslados []*Traslado
 
 	for _, cat := range taxTotal.Categories {
@@ -53,7 +54,7 @@ func newTraslados(taxTotal *tax.Total) *Traslados {
 		}
 
 		for _, rate := range cat.Rates {
-			traslados = append(traslados, newTraslado(rate))
+			traslados = append(traslados, newTraslado(rate, currency))
 		}
 	}
 
@@ -74,10 +75,12 @@ func newTrasladosFromLine(line *bill.Line) *Traslados {
 	return &Traslados{traslados}
 }
 
-func newTraslado(rate *tax.RateTotal) *Traslado {
+func newTraslado(rate *tax.RateTotal, currency *currency.Code) *Traslado {
+	cu := currency.Def().Units // SAT expects tax total amounts with no more decimals than supported by the currency
+
 	traslado := &Traslado{
-		Base:       rate.Base.String(),
-		Importe:    rate.Amount.String(),
+		Base:       rate.Base.Rescale(cu).String(),
+		Importe:    rate.Amount.Rescale(cu).String(),
 		Impuesto:   ImpuestoIVA,
 		TasaOCuota: formatTaxPercent(rate.Percent),
 		TipoFactor: TipoFactorTasa,

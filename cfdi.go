@@ -24,14 +24,13 @@ const (
 
 // Hard-coded values for (yet) unsupported mappings
 const (
-	FakeNoCertificado        = "00000000000000000000"
-	TipoDeComprobanteIngreso = "I"
-	ExportacionNoAplica      = "01"
-	MetodoPagoUnaExhibicion  = "PUE"
-	ObjetoImpSi              = "02"
-	ImpuestoIVA              = "002"
-	TipoFactorTasa           = "Tasa"
-	RegimenFiscalGeneral     = "601"
+	FakeNoCertificado       = "00000000000000000000"
+	ExportacionNoAplica     = "01"
+	MetodoPagoUnaExhibicion = "PUE"
+	ObjetoImpSi             = "02"
+	ImpuestoIVA             = "002"
+	TipoFactorTasa          = "Tasa"
+	RegimenFiscalGeneral    = "601"
 )
 
 // Document is a pseudo-model for containing the XML document being created
@@ -58,10 +57,11 @@ type Document struct {
 	NoCertificado     string `xml:",attr"`
 	Certificado       string `xml:",attr"`
 
-	Emisor    *Emisor    `xml:"cfdi:Emisor"`
-	Receptor  *Receptor  `xml:"cfdi:Receptor"`
-	Conceptos *Conceptos `xml:"cfdi:Conceptos"` //nolint:misspell
-	Impuestos *Impuestos `xml:"cfdi:Impuestos,omitempty"`
+	CfdiRelacionados *CfdiRelacionados `xml:"cfdi:CfdiRelacionados,omitempty"`
+	Emisor           *Emisor           `xml:"cfdi:Emisor"`
+	Receptor         *Receptor         `xml:"cfdi:Receptor"`
+	Conceptos        *Conceptos        `xml:"cfdi:Conceptos"` //nolint:misspell
+	Impuestos        *Impuestos        `xml:"cfdi:Impuestos,omitempty"`
 }
 
 // NewDocument converts a GOBL envelope into a CFDI document
@@ -77,7 +77,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		SchemaLocation: SchemaLocation,
 		Version:        CFDIVersion,
 
-		TipoDeComprobante: TipoDeComprobanteIngreso,
+		TipoDeComprobante: lookupTipoDeComprobante(inv),
 		Serie:             inv.Series,
 		Folio:             inv.Code,
 		Fecha:             formatIssueDate(inv.IssueDate),
@@ -92,10 +92,11 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 
 		NoCertificado: FakeNoCertificado,
 
-		Emisor:    newEmisor(inv.Supplier),
-		Receptor:  newReceptor(inv.Customer, lookupUsoCFDI(inv)),
-		Conceptos: newConceptos(inv.Lines), // nolint:misspell
-		Impuestos: newImpuestos(inv.Totals, &inv.Currency),
+		CfdiRelacionados: newCfdiRelacionados(inv),
+		Emisor:           newEmisor(inv.Supplier),
+		Receptor:         newReceptor(inv.Customer, lookupUsoCFDI(inv)),
+		Conceptos:        newConceptos(inv.Lines), // nolint:misspell
+		Impuestos:        newImpuestos(inv.Totals, &inv.Currency),
 	}
 
 	return document, nil
@@ -114,6 +115,16 @@ func (d *Document) Bytes() ([]byte, error) {
 func formatIssueDate(date cal.Date) string {
 	dateTime := civil.DateTime{Date: date.Date, Time: civil.Time{}}
 	return dateTime.String()
+}
+
+func lookupTipoDeComprobante(inv *bill.Invoice) string {
+	ss := inv.ScenarioSummary()
+	if ss == nil {
+		return ""
+	}
+
+	code := ss.Codes[mx.KeySATTipoDeComprobante]
+	return code.String()
 }
 
 func lookupFormaPago(inv *bill.Invoice) string {

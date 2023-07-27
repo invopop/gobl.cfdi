@@ -57,7 +57,7 @@ type Document struct {
 	NoCertificado     string `xml:",attr"`
 	Certificado       string `xml:",attr"`
 
-	CfdiRelacionados *CfdiRelacionados `xml:"cfdi:CfdiRelacionados,omitempty"`
+	CFDIRelacionados *CFDIRelacionados `xml:"cfdi:CfdiRelacionados,omitempty"`
 	Emisor           *Emisor           `xml:"cfdi:Emisor"`
 	Receptor         *Receptor         `xml:"cfdi:Receptor"`
 	Conceptos        *Conceptos        `xml:"cfdi:Conceptos"` //nolint:misspell
@@ -92,7 +92,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 
 		NoCertificado: FakeNoCertificado,
 
-		CfdiRelacionados: newCfdiRelacionados(inv),
+		CFDIRelacionados: newCfdiRelacionados(inv),
 		Emisor:           newEmisor(inv.Supplier),
 		Receptor:         newReceptor(inv.Customer, lookupUsoCFDI(inv)),
 		Conceptos:        newConceptos(inv.Lines), // nolint:misspell

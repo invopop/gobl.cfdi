@@ -5,31 +5,31 @@ import (
 	"github.com/invopop/gobl/regimes/mx"
 )
 
-// CfdiRelacionados list the preceding CFDI documents (e.g., the preceding
+// CFDIRelacionados list the preceding CFDI documents (e.g., the preceding
 // invoices of a credit note)
-type CfdiRelacionados struct { // nolint:revive
+type CFDIRelacionados struct { // nolint:revive
 	TipoRelacion    string            `xml:",attr"`
-	CfdiRelacionado []CfdiRelacionado `xml:"cfdi:CfdiRelacionado"`
+	CfdiRelacionado []CFDIRelacionado `xml:"cfdi:CfdiRelacionado"`
 }
 
-// CfdiRelacionado stores the data of a preceding CFDI document
-type CfdiRelacionado struct { // nolint:revive
+// CFDIRelacionado stores the data of a preceding CFDI document
+type CFDIRelacionado struct { // nolint:revive
 	UUID string `xml:",attr"`
 }
 
-func newCfdiRelacionados(inv *bill.Invoice) *CfdiRelacionados {
+func newCfdiRelacionados(inv *bill.Invoice) *CFDIRelacionados {
 	if len(inv.Preceding) == 0 {
 		return nil
 	}
 
-	crs := &CfdiRelacionados{
+	crs := &CFDIRelacionados{
 		TipoRelacion: lookupTipoRelacion(inv),
 	}
 
 	for _, p := range inv.Preceding {
 		uuid := lookupUUID(p)
 		if uuid != "" {
-			cr := CfdiRelacionado{uuid}
+			cr := CFDIRelacionado{uuid}
 			crs.CfdiRelacionado = append(crs.CfdiRelacionado, cr)
 		}
 	}

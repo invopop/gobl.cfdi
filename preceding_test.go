@@ -13,9 +13,9 @@ func TestCfdiRelacionados(t *testing.T) {
 		doc, err := test.NewDocumentFrom("credit_note.json")
 		require.NoError(t, err)
 
-		assert.Equal(t, "01", doc.CfdiRelacionados.TipoRelacion)
+		assert.Equal(t, "01", doc.CFDIRelacionados.TipoRelacion)
 
-		rel := doc.CfdiRelacionados.CfdiRelacionado[0]
+		rel := doc.CFDIRelacionados.CfdiRelacionado[0]
 
 		assert.Equal(t, "1fac4464-1111-0000-1111-cd37179db12e", rel.UUID)
 	})

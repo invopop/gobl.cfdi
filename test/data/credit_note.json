@@ -1,0 +1,134 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "f3ede26e-2b7f-11ee-ab54-e6a7901137ed",
+		"dig": {
+			"alg": "sha256",
+			"val": "ee8772313e12f3ea4bf8703b306c8fb25917db54b3ce12faa17f8cddc4da27fa"
+		},
+		"draft": true
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"series": "CN",
+		"code": "0003",
+		"type": "credit-note",
+		"currency": "MXN",
+		"tax": {
+			"tags": [
+				"use+no-tax-effects"
+			]
+		},
+		"preceding": [
+			{
+				"series": "LMC",
+				"code": "327",
+				"issue_date": "2023-07-20",
+				"stamps": [
+					{
+						"prv": "sat-uuid",
+						"val": "1fac4464-1111-0000-1111-cd37179db12e"
+					}
+				]
+			}
+		],
+		"issue_date": "2023-07-26",
+		"supplier": {
+			"name": "ESCUELA KEMPER URGATE",
+			"tax_id": {
+				"country": "MX",
+				"zone": "21000",
+				"code": "EKU9003173C9"
+			}
+		},
+		"customer": {
+			"name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
+			"tax_id": {
+				"country": "MX",
+				"zone": "86991",
+				"code": "URE180429TM6"
+			}
+		},
+		"lines": [
+			{
+				"i": 1,
+				"quantity": "1.33",
+				"item": {
+					"name": "Cobro por tarjetas",
+					"identities": [
+						{
+							"type": "SAT",
+							"code": "84141602"
+						}
+					],
+					"price": "1.32"
+				},
+				"sum": "1.76",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"rate": "zero",
+						"percent": "0.0%"
+					}
+				],
+				"total": "1.76"
+			},
+			{
+				"i": 2,
+				"quantity": "1",
+				"item": {
+					"name": "Porcentaje sobre GMV",
+					"identities": [
+						{
+							"type": "SAT",
+							"code": "80141628"
+						}
+					],
+					"price": "0.0087",
+					"unit": "service"
+				},
+				"sum": "0.0087",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"rate": "zero",
+						"percent": "0.0%"
+					}
+				],
+				"total": "0.0087"
+			}
+		],
+		"payment": {
+			"terms": {
+				"notes": "Condiciones de pago"
+			},
+			"instructions": {
+				"key": "online+wallet"
+			}
+		},
+		"totals": {
+			"sum": "1.7687",
+			"total": "1.77",
+			"taxes": {
+				"categories": [
+					{
+						"code": "VAT",
+						"rates": [
+							{
+								"key": "zero",
+								"base": "1.7687",
+								"percent": "0.0%",
+								"amount": "0.0000"
+							}
+						],
+						"amount": "0.0000"
+					}
+				],
+				"sum": "0.0000"
+			},
+			"tax": "0.00",
+			"total_with_tax": "1.77",
+			"payable": "1.77"
+		}
+	}
+}

@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestComprobante(t *testing.T) {
+func TestComprobanteIngreso(t *testing.T) {
 	t.Run("should return a Document with the Comprobante data", func(t *testing.T) {
 		doc, err := test.NewDocumentFrom("invoice.json")
 		require.NoError(t, err)
@@ -37,6 +37,17 @@ func TestComprobante(t *testing.T) {
 	})
 }
 
+func TestComprobanteEgreso(t *testing.T) {
+	t.Run("should return a Document with the Comprobante data", func(t *testing.T) {
+		doc, err := test.NewDocumentFrom("credit_note.json")
+		require.NoError(t, err)
+
+		assert.Equal(t, "E", doc.TipoDeComprobante)
+		assert.Equal(t, "CN", doc.Serie)
+		assert.Equal(t, "0003", doc.Folio)
+	})
+}
+
 func TestXMLGeneration(t *testing.T) {
 	schemaPath := filepath.Join(test.GetTestPath(), "schema", "cfdv40.xsd")
 	schema, err := xsd.ParseFromFile(schemaPath)
@@ -46,6 +57,7 @@ func TestXMLGeneration(t *testing.T) {
 	tests := []string{
 		"bare-minimum-invoice.json",
 		"invoice.json",
+		"credit_note.json",
 	}
 
 	for _, testFile := range tests {

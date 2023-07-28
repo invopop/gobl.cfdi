@@ -10,6 +10,7 @@ import (
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
+	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/tax"
 )
@@ -47,6 +48,7 @@ type Document struct {
 	Fecha             string `xml:",attr"`
 	LugarExpedicion   string `xml:",attr"`
 	SubTotal          string `xml:",attr"`
+	Descuento         string `xml:",attr,omitempty"`
 	Total             string `xml:",attr"`
 	Moneda            string `xml:",attr"`
 	Exportacion       string `xml:",attr"`
@@ -71,6 +73,9 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		return nil, fmt.Errorf("invalid type %T", env.Document)
 	}
 
+	discount := totalInvoiceDiscount(inv)
+	subtotal := inv.Totals.Total.Add(discount)
+
 	document := &Document{
 		CFDINamespace:  CFDINamespace,
 		XSINamespace:   XSINamespace,
@@ -82,7 +87,8 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Folio:             inv.Code,
 		Fecha:             formatIssueDate(inv.IssueDate),
 		LugarExpedicion:   inv.Supplier.TaxID.Zone.String(),
-		SubTotal:          inv.Totals.Total.String(),
+		SubTotal:          subtotal.String(),
+		Descuento:         formatOptionalAmount(discount),
 		Total:             inv.Totals.TotalWithTax.String(),
 		Moneda:            string(inv.Currency),
 		Exportacion:       ExportacionNoAplica,
@@ -168,4 +174,20 @@ func paymentTermsNotes(inv *bill.Invoice) string {
 	}
 
 	return inv.Payment.Terms.Notes
+}
+
+func formatOptionalAmount(a num.Amount) string {
+	if a.IsZero() {
+		return ""
+	}
+
+	return a.String()
+}
+
+func totalInvoiceDiscount(i *bill.Invoice) num.Amount {
+	td := i.Currency.Def().Zero() // currency's precision is required by the SAT
+	for _, l := range i.Lines {
+		td = td.Add(totalLineDiscount(l))
+	}
+	return td
 }

@@ -4,7 +4,7 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "5a34385b90f6b352b7568ab1aaff4e4902afad80c59572f53a3966af8e3a17c6"
+			"val": "fef5fed78bc01324e557dd6ab999480142d982dd99595e647b98fe67474183c1"
 		},
 		"draft": true
 	},
@@ -48,10 +48,19 @@
 							"code": "50211502"
 						}
 					],
-					"price": "100.1010",
+					"price": "200.2020",
 					"unit": "piece"
 				},
-				"sum": "200.2020",
+				"sum": "400.4040",
+				"discounts": [
+					{
+						"percent": "25.0%",
+						"amount": "100.1010"
+					},
+					{
+						"amount": "100.1010"
+					}
+				],
 				"taxes": [
 					{
 						"cat": "VAT",
@@ -64,7 +73,6 @@
 		],
 		"payment": {
 			"terms": {
-				"key": "",
 				"notes": "Pago a 30 días."
 			},
 			"instructions": {

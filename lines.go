@@ -2,6 +2,7 @@ package cfdi
 
 import (
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/regimes/mx"
 )
 
@@ -24,6 +25,7 @@ type Concepto struct {
 	Descripcion   string `xml:",attr"` // nolint:misspell
 	ValorUnitario string `xml:",attr"`
 	Importe       string `xml:",attr"`
+	Descuento     string `xml:",attr,omitempty"`
 	ObjetoImp     string `xml:",attr"`
 
 	Impuestos *Impuestos `xml:"cfdi:Impuestos,omitempty"`
@@ -47,7 +49,8 @@ func newConcepto(line *bill.Line) *Concepto {
 		ClaveUnidad:   mapToClaveUnidad(line),
 		Descripcion:   line.Item.Name, // nolint:misspell
 		ValorUnitario: line.Item.Price.String(),
-		Importe:       line.Total.String(),
+		Importe:       line.Sum.String(),
+		Descuento:     formatOptionalAmount(totalLineDiscount(line)),
 		ObjetoImp:     ObjetoImpSi,
 		Impuestos:     newImpuestosFromLine(line),
 	}
@@ -75,4 +78,12 @@ func mapToClaveProdServ(line *bill.Line) string {
 	}
 
 	return ""
+}
+
+func totalLineDiscount(l *bill.Line) num.Amount {
+	td := num.MakeAmount(0, l.Sum.Exp()) // discount's precision must match the "Importe" field's one
+	for _, d := range l.Discounts {
+		td = td.Add(d.Amount)
+	}
+	return td
 }

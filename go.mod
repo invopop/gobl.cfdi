@@ -4,13 +4,19 @@ go 1.20
 
 require (
 	github.com/invopop/gobl v0.52.3
+	github.com/joho/godotenv v1.5.1
 	github.com/magefile/mage v1.15.0
+	github.com/spf13/cobra v1.7.0
+	gitlab.com/flimzy/testy v0.12.4
 )
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/otiai10/copy v1.7.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
 	gopkg.in/xmlpath.v1 v1.0.0-20140413065638-a146725ea6e7 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

@@ -13,7 +13,7 @@ import (
 
 // build data provided by goreleaser and mage setup
 var (
-	name    = "GOBL to CFDI"
+	name    = "gobl.cfdi"
 	version = "dev"
 	date    = ""
 )

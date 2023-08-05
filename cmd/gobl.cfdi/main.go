@@ -1,3 +1,4 @@
+// Package main provides a CLI interface for the library
 package main
 
 import (

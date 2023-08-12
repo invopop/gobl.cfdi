@@ -4,7 +4,7 @@
 		"uuid": "f3ede26e-2b7f-11ee-ab54-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "ee8772313e12f3ea4bf8703b306c8fb25917db54b3ce12faa17f8cddc4da27fa"
+			"val": "0df8c2cd01bf8d83429113c6f4534afd3044d2b78949c2aed303edf600c873d1"
 		},
 		"draft": true
 	},
@@ -14,11 +14,6 @@
 		"code": "0003",
 		"type": "credit-note",
 		"currency": "MXN",
-		"tax": {
-			"tags": [
-				"use+no-tax-effects"
-			]
-		},
 		"preceding": [
 			{
 				"series": "LMC",
@@ -39,7 +34,13 @@
 				"country": "MX",
 				"zone": "21000",
 				"code": "EKU9003173C9"
-			}
+			},
+			"identities": [
+				{
+					"key": "sat-fiscal-regime",
+					"code": "601"
+				}
+			]
 		},
 		"customer": {
 			"name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
@@ -47,7 +48,17 @@
 				"country": "MX",
 				"zone": "86991",
 				"code": "URE180429TM6"
-			}
+			},
+			"identities": [
+				{
+					"key": "sat-fiscal-regime",
+					"code": "601"
+				},
+				{
+					"key": "sat-cfdi-use",
+					"code": "S01"
+				}
+			]
 		},
 		"lines": [
 			{
@@ -57,7 +68,7 @@
 					"name": "Cobro por tarjetas",
 					"identities": [
 						{
-							"type": "SAT",
+							"key": "sat-prod-serv",
 							"code": "84141602"
 						}
 					],
@@ -80,7 +91,7 @@
 					"name": "Porcentaje sobre GMV",
 					"identities": [
 						{
-							"type": "SAT",
+							"key": "sat-prod-serv",
 							"code": "80141628"
 						}
 					],

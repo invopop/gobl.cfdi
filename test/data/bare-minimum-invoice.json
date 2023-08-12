@@ -4,7 +4,7 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "00e36b3bae93ca68a3b8024f300179040592541fa4a8e029c4648d6106dd83b2"
+			"val": "91f4f27a498cdc232e39df86e6cc6f3682e4f680da221426ac75f0ae293ee3b7"
 		},
 		"draft": true
 	},
@@ -14,11 +14,6 @@
 		"code": "0010",
 		"type": "standard",
 		"currency": "MXN",
-		"tax": {
-			"tags": [
-				"use+goods-acquisition"
-			]
-		},
 		"issue_date": "2023-05-29",
 		"supplier": {
 			"name": "ESCUELA KEMPER URGATE",
@@ -26,7 +21,13 @@
 				"country": "MX",
 				"zone": "26015",
 				"code": "EKU9003173C9"
-			}
+			},
+			"identities": [
+				{
+					"key": "sat-fiscal-regime",
+					"code": "601"
+				}
+			]
 		},
 		"customer": {
 			"name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
@@ -34,7 +35,17 @@
 				"country": "MX",
 				"zone": "65000",
 				"code": "URE180429TM6"
-			}
+			},
+			"identities": [
+				{
+					"key": "sat-fiscal-regime",
+					"code": "601"
+				},
+				{
+					"key": "sat-cfdi-use",
+					"code": "G01"
+				}
+			]
 		},
 		"lines": [
 			{
@@ -44,7 +55,7 @@
 					"name": "Cigarros",
 					"identities": [
 						{
-							"type": "SAT",
+							"key": "sat-prod-serv",
 							"code": "50211502"
 						}
 					],

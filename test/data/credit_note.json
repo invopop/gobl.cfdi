@@ -4,7 +4,7 @@
 		"uuid": "f3ede26e-2b7f-11ee-ab54-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "0df8c2cd01bf8d83429113c6f4534afd3044d2b78949c2aed303edf600c873d1"
+			"val": "41e5821e7ae4067163eaf7f4b65dad9d01f2f29a7a4f8ce3d495d6cb99503004"
 		},
 		"draft": true
 	},
@@ -37,7 +37,7 @@
 			},
 			"identities": [
 				{
-					"key": "sat-fiscal-regime",
+					"key": "mx-cfdi-fiscal-regime",
 					"code": "601"
 				}
 			]
@@ -51,11 +51,11 @@
 			},
 			"identities": [
 				{
-					"key": "sat-fiscal-regime",
+					"key": "mx-cfdi-fiscal-regime",
 					"code": "601"
 				},
 				{
-					"key": "sat-cfdi-use",
+					"key": "mx-cfdi-use",
 					"code": "S01"
 				}
 			]
@@ -68,7 +68,7 @@
 					"name": "Cobro por tarjetas",
 					"identities": [
 						{
-							"key": "sat-prod-serv",
+							"key": "mx-cfdi-prod-serv",
 							"code": "84141602"
 						}
 					],
@@ -91,7 +91,7 @@
 					"name": "Porcentaje sobre GMV",
 					"identities": [
 						{
-							"key": "sat-prod-serv",
+							"key": "mx-cfdi-prod-serv",
 							"code": "80141628"
 						}
 					],

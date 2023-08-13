@@ -72,7 +72,7 @@ func mapToClaveProdServ(line *bill.Line) string {
 		return ""
 	}
 
-	id := org.IdentityForKey(line.Item.Identities, mx.IdentityKeyProdServ)
+	id := org.IdentityForKey(line.Item.Identities, mx.IdentityKeyCFDIProdServ)
 	if id != nil {
 		return string(id.Code)
 	}

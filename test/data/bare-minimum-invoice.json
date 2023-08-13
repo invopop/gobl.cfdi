@@ -4,7 +4,7 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "91f4f27a498cdc232e39df86e6cc6f3682e4f680da221426ac75f0ae293ee3b7"
+			"val": "d1407bc66f62659480f777b8ef008d318a40be00981dc12470fc830579fe59de"
 		},
 		"draft": true
 	},
@@ -24,7 +24,7 @@
 			},
 			"identities": [
 				{
-					"key": "sat-fiscal-regime",
+					"key": "mx-cfdi-fiscal-regime",
 					"code": "601"
 				}
 			]
@@ -38,11 +38,11 @@
 			},
 			"identities": [
 				{
-					"key": "sat-fiscal-regime",
+					"key": "mx-cfdi-fiscal-regime",
 					"code": "601"
 				},
 				{
-					"key": "sat-cfdi-use",
+					"key": "mx-cfdi-use",
 					"code": "G01"
 				}
 			]
@@ -55,7 +55,7 @@
 					"name": "Cigarros",
 					"identities": [
 						{
-							"key": "sat-prod-serv",
+							"key": "mx-cfdi-prod-serv",
 							"code": "50211502"
 						}
 					],

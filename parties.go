@@ -23,7 +23,7 @@ type Receptor struct {
 
 func newEmisor(supplier *org.Party) *Emisor {
 	var rf string
-	rfID := org.IdentityForKey(supplier.Identities, mx.IdentityKeyFiscalRegime)
+	rfID := org.IdentityForKey(supplier.Identities, mx.IdentityKeyCFDIFiscalRegime)
 	if rfID != nil {
 		rf = rfID.Code.String()
 	}
@@ -37,7 +37,7 @@ func newEmisor(supplier *org.Party) *Emisor {
 
 func newReceptor(customer *org.Party) *Receptor {
 	var rf, usoCFDI string
-	rfID := org.IdentityForKey(customer.Identities, mx.IdentityKeyFiscalRegime)
+	rfID := org.IdentityForKey(customer.Identities, mx.IdentityKeyCFDIFiscalRegime)
 	if rfID != nil {
 		rf = rfID.Code.String()
 	}

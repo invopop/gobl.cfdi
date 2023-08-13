@@ -31,7 +31,6 @@ const (
 	ObjetoImpSi             = "02"
 	ImpuestoIVA             = "002"
 	TipoFactorTasa          = "Tasa"
-	RegimenFiscalGeneral    = "601"
 )
 
 // Document is a pseudo-model for containing the XML document being created
@@ -100,7 +99,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 
 		CFDIRelacionados: newCfdiRelacionados(inv),
 		Emisor:           newEmisor(inv.Supplier),
-		Receptor:         newReceptor(inv.Customer, lookupUsoCFDI(inv)),
+		Receptor:         newReceptor(inv.Customer),
 		Conceptos:        newConceptos(inv.Lines), // nolint:misspell
 		Impuestos:        newImpuestos(inv.Totals, &inv.Currency),
 	}
@@ -144,17 +143,7 @@ func lookupFormaPago(inv *bill.Invoice) string {
 		return ""
 	}
 
-	code := keyDef.Codes[mx.KeySATFormaPago]
-	return code.String()
-}
-
-func lookupUsoCFDI(inv *bill.Invoice) string {
-	ss := inv.ScenarioSummary()
-	if ss == nil {
-		return ""
-	}
-
-	code := ss.Codes[mx.KeySATUsoCFDI]
+	code := keyDef.Map[mx.KeySATFormaPago]
 	return code.String()
 }
 

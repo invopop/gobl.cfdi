@@ -1,6 +1,9 @@
 package cfdi
 
-import "github.com/invopop/gobl/org"
+import (
+	"github.com/invopop/gobl/org"
+	"github.com/invopop/gobl/regimes/mx"
+)
 
 // Emisor stores the invoice supplier data
 type Emisor struct {
@@ -19,21 +22,34 @@ type Receptor struct {
 }
 
 func newEmisor(supplier *org.Party) *Emisor {
+	var rf string
+	rfID := org.IdentityForKey(supplier.Identities, mx.IdentityKeyCFDIFiscalRegime)
+	if rfID != nil {
+		rf = rfID.Code.String()
+	}
 	emisor := &Emisor{
 		Rfc:           supplier.TaxID.Code.String(),
 		Nombre:        supplier.Name,
-		RegimenFiscal: RegimenFiscalGeneral,
+		RegimenFiscal: rf,
 	}
-
 	return emisor
 }
 
-func newReceptor(customer *org.Party, usoCFDI string) *Receptor {
+func newReceptor(customer *org.Party) *Receptor {
+	var rf, usoCFDI string
+	rfID := org.IdentityForKey(customer.Identities, mx.IdentityKeyCFDIFiscalRegime)
+	if rfID != nil {
+		rf = rfID.Code.String()
+	}
+	useID := org.IdentityForKey(customer.Identities, mx.IdentityKeyCFDIUse)
+	if useID != nil {
+		usoCFDI = useID.Code.String()
+	}
 	receptor := &Receptor{
 		Rfc:                     customer.TaxID.Code.String(),
 		Nombre:                  customer.Name,
 		DomicilioFiscalReceptor: customer.TaxID.Zone.String(),
-		RegimenFiscalReceptor:   RegimenFiscalGeneral,
+		RegimenFiscalReceptor:   rf,
 		UsoCFDI:                 usoCFDI,
 	}
 

@@ -50,6 +50,16 @@ func main {
 }
 ```
 
+### Testing
+
+This package uses [lestrrat-go/libxml2](https://github.com/lestrrat-go/libxml2) for testing purporses, which in turn depends on the libxml-2.0 C library. Ensure you have the development dependency installed. In linux this implies:
+
+```bash
+sudo apt-get install libxml2-dev
+```
+
+Tests can take a while to run as they download the complete XML documents to test against, please be patient.
+
 ## Command Line
 
 The GOBL to CFDI tool also includes a command line helper. You can find pre-built [gobl.cfdi binaries](https://github.com/invopop/gobl.cfdi/releases) in the github repository, or install manually in your Go environment with:

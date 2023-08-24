@@ -22,35 +22,21 @@ type Receptor struct {
 }
 
 func newEmisor(supplier *org.Party) *Emisor {
-	var rf string
-	rfID := org.IdentityForKey(supplier.Identities, mx.IdentityKeyCFDIFiscalRegime)
-	if rfID != nil {
-		rf = rfID.Code.String()
-	}
 	emisor := &Emisor{
 		Rfc:           supplier.TaxID.Code.String(),
 		Nombre:        supplier.Name,
-		RegimenFiscal: rf,
+		RegimenFiscal: supplier.Ext[mx.ExtKeyCFDIFiscalRegime].String(),
 	}
 	return emisor
 }
 
 func newReceptor(customer *org.Party) *Receptor {
-	var rf, usoCFDI string
-	rfID := org.IdentityForKey(customer.Identities, mx.IdentityKeyCFDIFiscalRegime)
-	if rfID != nil {
-		rf = rfID.Code.String()
-	}
-	useID := org.IdentityForKey(customer.Identities, mx.IdentityKeyCFDIUse)
-	if useID != nil {
-		usoCFDI = useID.Code.String()
-	}
 	receptor := &Receptor{
 		Rfc:                     customer.TaxID.Code.String(),
 		Nombre:                  customer.Name,
 		DomicilioFiscalReceptor: customer.TaxID.Zone.String(),
-		RegimenFiscalReceptor:   rf,
-		UsoCFDI:                 usoCFDI,
+		RegimenFiscalReceptor:   customer.Ext[mx.ExtKeyCFDIFiscalRegime].String(),
+		UsoCFDI:                 customer.Ext[mx.ExtKeyCFDIUse].String(),
 	}
 
 	return receptor

@@ -3,7 +3,6 @@ package cfdi
 import (
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/num"
-	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/regimes/mx"
 )
 
@@ -72,12 +71,7 @@ func mapToClaveProdServ(line *bill.Line) string {
 		return ""
 	}
 
-	id := org.IdentityForKey(line.Item.Identities, mx.IdentityKeyCFDIProdServ)
-	if id != nil {
-		return string(id.Code)
-	}
-
-	return ""
+	return string(line.Item.Ext[mx.ExtKeyCFDIProdServ])
 }
 
 func totalLineDiscount(l *bill.Line) num.Amount {

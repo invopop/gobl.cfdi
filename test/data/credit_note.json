@@ -35,12 +35,9 @@
 				"zone": "21000",
 				"code": "EKU9003173C9"
 			},
-			"identities": [
-				{
-					"key": "mx-cfdi-fiscal-regime",
-					"code": "601"
-				}
-			]
+			"ext": {
+				"mx-cfdi-fiscal-regime": "601"
+			}
 		},
 		"customer": {
 			"name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
@@ -49,16 +46,10 @@
 				"zone": "86991",
 				"code": "URE180429TM6"
 			},
-			"identities": [
-				{
-					"key": "mx-cfdi-fiscal-regime",
-					"code": "601"
-				},
-				{
-					"key": "mx-cfdi-use",
-					"code": "S01"
-				}
-			]
+			"ext": {
+				"mx-cfdi-fiscal-regime": "601",
+				"mx-cfdi-use": "G03"
+			}
 		},
 		"lines": [
 			{
@@ -66,12 +57,9 @@
 				"quantity": "1.33",
 				"item": {
 					"name": "Cobro por tarjetas",
-					"identities": [
-						{
-							"key": "mx-cfdi-prod-serv",
-							"code": "84141602"
-						}
-					],
+					"ext": {
+						"mx-cfdi-prod-serv": "84141602"
+					},
 					"price": "1.32"
 				},
 				"sum": "1.76",
@@ -89,12 +77,9 @@
 				"quantity": "1",
 				"item": {
 					"name": "Porcentaje sobre GMV",
-					"identities": [
-						{
-							"key": "mx-cfdi-prod-serv",
-							"code": "80141628"
-						}
-					],
+					"ext": {
+						"mx-cfdi-prod-serv": "80141628"
+					},
 					"price": "0.0087",
 					"unit": "service"
 				},

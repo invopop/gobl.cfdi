@@ -1,5 +1,5 @@
 #
-# Automatically tag a merge with master
+# Automatically tag a merge with master and release it
 #
 
 name: Release
@@ -12,8 +12,8 @@ on:
       - "*"
 
 jobs:
-  tag:
-    name: Tag
+  tag-release:
+    name: Tag and Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

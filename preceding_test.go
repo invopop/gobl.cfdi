@@ -10,7 +10,7 @@ import (
 
 func TestCfdiRelacionados(t *testing.T) {
 	t.Run("should return a Document with the CfdiRelacionados data", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("credit_note.json")
+		doc, err := test.NewDocumentFrom("credit-note.json")
 		require.NoError(t, err)
 
 		assert.Equal(t, "01", doc.CFDIRelacionados.TipoRelacion)

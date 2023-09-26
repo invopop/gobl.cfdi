@@ -40,7 +40,7 @@ func TestComprobanteIngreso(t *testing.T) {
 
 func TestComprobanteEgreso(t *testing.T) {
 	t.Run("should return a Document with the Comprobante data", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("credit_note.json")
+		doc, err := test.NewDocumentFrom("credit-note.json")
 		require.NoError(t, err)
 
 		assert.Equal(t, "E", doc.TipoDeComprobante)
@@ -58,7 +58,7 @@ func TestXMLGeneration(t *testing.T) {
 	tests := []string{
 		"bare-minimum-invoice.json",
 		"invoice.json",
-		"credit_note.json",
+		"credit-note.json",
 	}
 
 	for _, testFile := range tests {

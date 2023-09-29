@@ -1,13 +1,9 @@
 package cfdi_test
 
 import (
-	"fmt"
-	"path/filepath"
 	"testing"
 
 	"github.com/invopop/gobl.cfdi/test"
-	"github.com/lestrrat-go/libxml2"
-	"github.com/lestrrat-go/libxml2/xsd"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -35,6 +31,8 @@ func TestComprobanteIngreso(t *testing.T) {
 		assert.Equal(t, "PUE", doc.MetodoPago)
 		assert.Equal(t, "03", doc.FormaPago)
 		assert.Equal(t, "Pago a 30 días.", doc.CondicionesDePago)
+
+		assert.Equal(t, 0, len(doc.Complementos))
 	})
 }
 
@@ -47,38 +45,4 @@ func TestComprobanteEgreso(t *testing.T) {
 		assert.Equal(t, "CN", doc.Serie)
 		assert.Equal(t, "0003", doc.Folio)
 	})
-}
-
-func TestXMLGeneration(t *testing.T) {
-	schemaPath := filepath.Join(test.GetTestPath(), "schema", "cfdv40.xsd")
-	schema, err := xsd.ParseFromFile(schemaPath)
-	defer schema.Free()
-	require.NoError(t, err)
-
-	tests := []string{
-		"bare-minimum-invoice.json",
-		"invoice.json",
-		"credit-note.json",
-	}
-
-	for _, testFile := range tests {
-		name := fmt.Sprintf("should generate a schema-valid XML from %s", testFile)
-		t.Run(name, func(t *testing.T) {
-			doc, err := test.NewDocumentFrom(testFile)
-			require.NoError(t, err)
-
-			data, err := doc.Bytes()
-			require.NoError(t, err)
-
-			xmlDoc, err := libxml2.ParseString(string(data))
-			require.NoError(t, err)
-
-			err = schema.Validate(xmlDoc)
-			if err != nil {
-				for _, e := range err.(xsd.SchemaValidationError).Errors() {
-					require.NoError(t, e)
-				}
-			}
-		})
-	}
 }

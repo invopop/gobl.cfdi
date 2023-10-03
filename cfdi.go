@@ -40,6 +40,7 @@ type Document struct {
 	CFDINamespace  string   `xml:"xmlns:cfdi,attr"`
 	XSINamespace   string   `xml:"xmlns:xsi,attr"`
 	ECCNamespace   string   `xml:"xmlns:ecc12,attr,omitempty"`
+	VDNamespace    string   `xml:"xmlns:valesdedespensa,attr,omitempty"`
 	SchemaLocation string   `xml:"xsi:schemaLocation,attr"`
 	Version        string   `xml:"Version,attr"`
 
@@ -125,11 +126,13 @@ func (d *Document) Bytes() ([]byte, error) {
 	return append([]byte(xml.Header), bytes...), nil
 }
 
-func addComplementos(d *Document, complements []*schema.Object) error {
+func addComplementos(doc *Document, complements []*schema.Object) error {
 	for _, c := range complements {
 		switch o := c.Instance().(type) {
 		case *mx.FuelAccountBalance:
-			addEstadoCuentaCombustible(d, o)
+			addEstadoCuentaCombustible(doc, o)
+		case *mx.FoodVouchersComplement:
+			addValesDeDespensa(doc, o)
 		default:
 			return fmt.Errorf("unsupported complement %T", o)
 		}

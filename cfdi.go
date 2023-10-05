@@ -12,15 +12,16 @@ import (
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/regimes/mx"
+	"github.com/invopop/gobl/schema"
 	"github.com/invopop/gobl/tax"
 )
 
 // CFDI schema constants
 const (
-	CFDINamespace  = "http://www.sat.gob.mx/cfd/4"
-	XSINamespace   = "http://www.w3.org/2001/XMLSchema-instance"
-	SchemaLocation = "http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd"
-	CFDIVersion    = "4.0"
+	CFDINamespace      = "http://www.sat.gob.mx/cfd/4"
+	CFDISchemaLocation = "http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd"
+	XSINamespace       = "http://www.w3.org/2001/XMLSchema-instance"
+	CFDIVersion        = "4.0"
 )
 
 // Hard-coded values for (yet) unsupported mappings
@@ -38,6 +39,7 @@ type Document struct {
 	XMLName        xml.Name `xml:"cfdi:Comprobante"`
 	CFDINamespace  string   `xml:"xmlns:cfdi,attr"`
 	XSINamespace   string   `xml:"xmlns:xsi,attr"`
+	ECCNamespace   string   `xml:"xmlns:ecc12,attr,omitempty"`
 	SchemaLocation string   `xml:"xsi:schemaLocation,attr"`
 	Version        string   `xml:"Version,attr"`
 
@@ -63,6 +65,8 @@ type Document struct {
 	Receptor         *Receptor         `xml:"cfdi:Receptor"`
 	Conceptos        *Conceptos        `xml:"cfdi:Conceptos"` //nolint:misspell
 	Impuestos        *Impuestos        `xml:"cfdi:Impuestos,omitempty"`
+
+	Complementos []interface{} `xml:"cfdi:Complemento>*,omitempty"`
 }
 
 // NewDocument converts a GOBL envelope into a CFDI document
@@ -78,7 +82,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 	document := &Document{
 		CFDINamespace:  CFDINamespace,
 		XSINamespace:   XSINamespace,
-		SchemaLocation: SchemaLocation,
+		SchemaLocation: formatSchemaLocation(CFDINamespace, CFDISchemaLocation),
 		Version:        CFDIVersion,
 
 		TipoDeComprobante: lookupTipoDeComprobante(inv),
@@ -104,6 +108,10 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Impuestos:        newImpuestos(inv.Totals, &inv.Currency),
 	}
 
+	if err := addComplementos(document, inv.Complements); err != nil {
+		return nil, err
+	}
+
 	return document, nil
 }
 
@@ -115,6 +123,19 @@ func (d *Document) Bytes() ([]byte, error) {
 	}
 
 	return append([]byte(xml.Header), bytes...), nil
+}
+
+func addComplementos(d *Document, complements []*schema.Object) error {
+	for _, c := range complements {
+		switch o := c.Instance().(type) {
+		case *mx.FuelAccountBalance:
+			addEstadoCuentaCombustible(d, o)
+		default:
+			return fmt.Errorf("unsupported complement %T", o)
+		}
+	}
+
+	return nil
 }
 
 func formatIssueDate(date cal.Date) string {
@@ -171,6 +192,10 @@ func formatOptionalAmount(a num.Amount) string {
 	}
 
 	return a.String()
+}
+
+func formatSchemaLocation(namespace, schemaLocation string) string {
+	return fmt.Sprintf("%s %s", namespace, schemaLocation)
 }
 
 func totalInvoiceDiscount(i *bill.Invoice) num.Amount {

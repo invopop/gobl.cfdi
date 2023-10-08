@@ -131,7 +131,7 @@ func addComplementos(doc *Document, complements []*schema.Object) error {
 		switch o := c.Instance().(type) {
 		case *mx.FuelAccountBalance:
 			addEstadoCuentaCombustible(doc, o)
-		case *mx.FoodVouchersComplement:
+		case *mx.FoodVouchers:
 			addValesDeDespensa(doc, o)
 		default:
 			return fmt.Errorf("unsupported complement %T", o)

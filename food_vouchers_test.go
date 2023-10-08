@@ -11,7 +11,7 @@ import (
 
 func TestValesDeDespensa(t *testing.T) {
 	t.Run("should return a Document with the ValesDeDespensa data", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("food-vouchers-complement.json")
+		doc, err := test.NewDocumentFrom("food-vouchers.json")
 		require.NoError(t, err)
 
 		require.Equal(t, 1, len(doc.Complementos))

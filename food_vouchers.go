@@ -38,7 +38,7 @@ type VDConcepto struct {
 	Importe            string `xml:"importe,attr"`
 }
 
-func addValesDeDespensa(doc *Document, fvc *mx.FoodVouchersComplement) {
+func addValesDeDespensa(doc *Document, fvc *mx.FoodVouchers) {
 	vd := &ValesDeDespensa{
 		Version:       VDVersion,
 		TipoOperacion: VDTipoOperacion,

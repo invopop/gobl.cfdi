@@ -94,7 +94,7 @@
 		},
 		"complements": [
 			{
-				"$schema": "https://gobl.org/draft-0/regimes/mx/food-vouchers-complement",
+				"$schema": "https://gobl.org/draft-0/regimes/mx/food-vouchers",
 				"employer_registration": "12345678901234567890",
 				"account_number": "0123456789",
 				"total": "30.52",

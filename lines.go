@@ -4,6 +4,7 @@ import (
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/regimes/mx"
+	"github.com/invopop/gobl/tax"
 )
 
 // Default keys
@@ -28,21 +29,21 @@ type Concepto struct {
 	Descuento     string `xml:",attr,omitempty"`
 	ObjetoImp     string `xml:",attr"`
 
-	Impuestos *Impuestos `xml:"cfdi:Impuestos,omitempty"`
+	Impuestos *ConceptoImpuestos `xml:"cfdi:Impuestos,omitempty"`
 }
 
 // nolint:misspell
-func newConceptos(lines []*bill.Line) *Conceptos {
+func newConceptos(lines []*bill.Line, regime *tax.Regime) *Conceptos {
 	var conceptos []*Concepto
 
 	for _, line := range lines {
-		conceptos = append(conceptos, newConcepto(line))
+		conceptos = append(conceptos, newConcepto(line, regime))
 	}
 
 	return &Conceptos{conceptos}
 }
 
-func newConcepto(line *bill.Line) *Concepto {
+func newConcepto(line *bill.Line, regime *tax.Regime) *Concepto {
 	concepto := &Concepto{
 		ClaveProdServ: mapToClaveProdServ(line),
 		Cantidad:      line.Quantity.String(),
@@ -52,7 +53,7 @@ func newConcepto(line *bill.Line) *Concepto {
 		Importe:       line.Sum.String(),
 		Descuento:     formatOptionalAmount(totalLineDiscount(line)),
 		ObjetoImp:     ObjetoImpSi,
-		Impuestos:     newImpuestosFromLine(line),
+		Impuestos:     newConceptoImpuestos(line, regime),
 	}
 
 	return concepto

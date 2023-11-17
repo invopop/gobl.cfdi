@@ -105,8 +105,8 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		CFDIRelacionados: newCfdiRelacionados(inv),
 		Emisor:           newEmisor(inv.Supplier),
 		Receptor:         newReceptor(inv.Customer),
-		Conceptos:        newConceptos(inv.Lines), // nolint:misspell
-		Impuestos:        newImpuestos(inv.Totals, &inv.Currency),
+		Conceptos:        newConceptos(inv.Lines, inv.TaxRegime()), // nolint:misspell
+		Impuestos:        newImpuestos(inv.Totals, &inv.Currency, inv.TaxRegime()),
 	}
 
 	if err := addComplementos(document, inv.Complements); err != nil {

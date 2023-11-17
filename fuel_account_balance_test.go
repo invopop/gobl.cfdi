@@ -16,7 +16,7 @@ func TestEstadoDeCuentaCombustible(t *testing.T) {
 
 		require.Equal(t, 1, len(doc.Complementos))
 
-		ecc := doc.Complementos[0].(*cfdi.EstadoDeCuentaCombustible)
+		ecc := doc.Complementos[0].Content.(*cfdi.EstadoDeCuentaCombustible)
 
 		assert.Equal(t, "0123456789", ecc.NumeroDeCuenta)
 		assert.Equal(t, "246.13", ecc.SubTotal)

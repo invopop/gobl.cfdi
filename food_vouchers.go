@@ -52,7 +52,7 @@ func addValesDeDespensa(doc *Document, fvc *mx.FoodVouchers) {
 
 	doc.VDNamespace = VDNamespace
 	doc.SchemaLocation = doc.SchemaLocation + " " + formatSchemaLocation(VDNamespace, VDSchemaLocation)
-	doc.Complementos = append(doc.Complementos, vd)
+	doc.Complementos = append(doc.Complementos, &ContentWrapper{vd})
 }
 
 func newVDConceptos(lines []*mx.FoodVouchersLine) []*VDConcepto {

@@ -24,5 +24,4 @@
       <cfdi:Traslado Base="200.20" Importe="32.03" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
     </cfdi:Traslados>
   </cfdi:Impuestos>
-  <cfdi:Complemento></cfdi:Complemento>
 </cfdi:Comprobante>

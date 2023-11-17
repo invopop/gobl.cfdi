@@ -67,7 +67,11 @@ type Document struct {
 	Conceptos        *Conceptos        `xml:"cfdi:Conceptos"` //nolint:misspell
 	Impuestos        *Impuestos        `xml:"cfdi:Impuestos,omitempty"`
 
-	Complementos []interface{} `xml:"cfdi:Complemento>*,omitempty"`
+	Complementos []*ContentWrapper `xml:"cfdi:Complemento,omitempty"`
+
+// ContentWrapper is a struct necessary to wrap any arbitrary XML content within another tag.
+type ContentWrapper struct {
+	Content interface{} `xml:",any"`
 }
 
 // NewDocument converts a GOBL envelope into a CFDI document

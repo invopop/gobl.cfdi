@@ -16,7 +16,7 @@ func TestValesDeDespensa(t *testing.T) {
 
 		require.Equal(t, 1, len(doc.Complementos))
 
-		vd := doc.Complementos[0].(*cfdi.ValesDeDespensa)
+		vd := doc.Complementos[0].Content.(*cfdi.ValesDeDespensa)
 
 		assert.Equal(t, "12345678901234567890", vd.RegistroPatronal)
 		assert.Equal(t, "0123456789", vd.NumeroDeCuenta)

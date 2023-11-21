@@ -24,7 +24,7 @@
       },
       "identities": [
         {
-          "type": "MABE",
+          "key": "mx-mabe-provider",
           "code": "123456"
         }
       ],
@@ -53,7 +53,7 @@
           "price": "100.00",
           "identities": [
             {
-              "type": "MABE",
+              "key": "mx-mabe-item",
               "code": "CODE123"
             }
           ],
@@ -90,7 +90,7 @@
       "code": "9100000000",
       "identities": [
         {
-          "type": "MABE-REF1",
+          "key": "mx-mabe-ref1",
           "code": "123456"
         }
       ]
@@ -112,7 +112,7 @@
         ],
         "identities": [
           {
-            "type": "MABE-PLANT-ID",
+            "key": "mx-mabe-plant",
             "code": "S001"
           }
         ]

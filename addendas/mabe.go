@@ -31,10 +31,11 @@ const (
 
 // Mabe specific identity codes.
 const (
-	MabeIdentityTypeCode        = "MABE"
-	MabeRef1IdentityTypeCode    = "MABE-REF1"
-	MabeRef2IdentityTypeCode    = "MABE-REF2"
-	MabePlantIDIdentityTypeCode = "MABE-PLANT-ID"
+	MabeKeyIdentityProvider = "mx-mabe-provider"
+	MabeKeyIdentityRef1     = "mx-mabe-ref1"
+	MabeKeyIdentityRef2     = "mx-mabe-ref2"
+	MabeKeyIdentityPlant    = "mx-mabe-plant"
+	MabeKeyIdentityItem     = "mx-mabe-item"
 )
 
 // MabeFactura is the root element of the Mabe addendum
@@ -120,7 +121,7 @@ func isMabe(inv *bill.Invoice) bool {
 	if inv.Supplier == nil {
 		return false
 	}
-	id := extractIdentity(inv.Supplier.Identities, MabeIdentityTypeCode)
+	id := extractIdentity(inv.Supplier.Identities, MabeKeyIdentityProvider)
 	return id != cbc.CodeEmpty
 }
 
@@ -143,7 +144,7 @@ func newMabe(inv *bill.Invoice) (*MabeFactura, error) {
 		Folio:         formatMabeFolio(inv),
 		Fecha:         inv.IssueDate.String(),
 		OrdenCompra:   inv.Ordering.Code,
-		Referencia1:   extractIdentity(inv.Ordering.Identities, MabeRef1IdentityTypeCode).String(),
+		Referencia1:   extractIdentity(inv.Ordering.Identities, MabeKeyIdentityRef1).String(),
 		Referencia2:   "NA",
 
 		Moneda:     newMabeMoneda(inv),
@@ -182,7 +183,7 @@ func newMabeProveedor(inv *bill.Invoice) *MabeProveedor {
 	if inv.Supplier == nil {
 		return nil
 	}
-	id := extractIdentity(inv.Supplier.Identities, MabeIdentityTypeCode)
+	id := extractIdentity(inv.Supplier.Identities, MabeKeyIdentityProvider)
 	return &MabeProveedor{
 		Codigo: id.String(),
 	}
@@ -190,7 +191,7 @@ func newMabeProveedor(inv *bill.Invoice) *MabeProveedor {
 
 func newMabeEntrega(inv *bill.Invoice) *MabeEntrega {
 	rec := inv.Delivery.Receiver
-	id := extractIdentity(rec.Identities, MabePlantIDIdentityTypeCode)
+	id := extractIdentity(rec.Identities, MabeKeyIdentityPlant)
 	e := &MabeEntrega{
 		PlantaEntrega: id.String(),
 	}
@@ -225,7 +226,7 @@ func newMabeDetalles(inv *bill.Invoice) *[]*MabeDetalle {
 	var detalles []*MabeDetalle
 
 	for _, line := range inv.Lines {
-		id := extractIdentity(line.Item.Identities, MabeIdentityTypeCode)
+		id := extractIdentity(line.Item.Identities, MabeKeyIdentityItem)
 		d := &MabeDetalle{
 			NoLineaArticulo: line.Index,
 			CodigoArticulo:  id.String(),
@@ -282,12 +283,12 @@ func formatMabeFolio(inv *bill.Invoice) string {
 	return fmt.Sprintf("%s%s", inv.Series, inv.Code)
 }
 
-func extractIdentity(ids []*org.Identity, typ cbc.Code) cbc.Code {
+func extractIdentity(ids []*org.Identity, key cbc.Key) cbc.Code {
 	if ids == nil {
 		return ""
 	}
 	for _, id := range ids {
-		if id.Type == typ {
+		if id.Key == key {
 			return id.Code
 		}
 	}

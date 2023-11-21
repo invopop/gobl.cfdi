@@ -24,7 +24,7 @@
 			},
 			"identities": [
 				{
-					"type": "MABE",
+					"key": "mx-mabe-provider",
 					"code": "123456"
 				}
 			],
@@ -53,7 +53,7 @@
 					"price": "100.00",
 					"identities": [
 						{
-							"type": "MABE",
+							"key": "mx-mabe-item",
 							"code": "CODE123"
 						}
 					],
@@ -76,7 +76,7 @@
 			"code": "91000000",
 			"identities": [
 				{
-					"type": "MABE-REF1",
+					"key": "mx-mabe-ref1",
 					"code": "900900"
 				}
 			]
@@ -91,7 +91,7 @@
 				"name": "ESTUFAS 30",
 				"identities": [
 					{
-						"type": "MABE-PLANT-ID",
+						"key": "mx-mabe-plant",
 						"code": "S001"
 					}
 				]
@@ -120,9 +120,6 @@
 			"tax": "32.00",
 			"total_with_tax": "232.00",
 			"payable": "232.00"
-		},
-		"ext": {
-			"mx-mabe-reference-1": "900900"
 		}
 	}
 }

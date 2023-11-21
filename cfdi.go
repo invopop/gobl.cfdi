@@ -68,6 +68,8 @@ type Document struct {
 	Impuestos        *Impuestos        `xml:"cfdi:Impuestos,omitempty"`
 
 	Complementos []*ContentWrapper `xml:"cfdi:Complemento,omitempty"`
+	Addendas     []*ContentWrapper `xml:"cfdi:Addenda,omitempty"`
+}
 
 // ContentWrapper is a struct necessary to wrap any arbitrary XML content within another tag.
 type ContentWrapper struct {
@@ -117,6 +119,10 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		return nil, err
 	}
 
+	if err := addAddendas(document, inv); err != nil {
+		return nil, err
+	}
+
 	return document, nil
 }
 
@@ -139,6 +145,17 @@ func addComplementos(doc *Document, complements []*schema.Object) error {
 			addValesDeDespensa(doc, o)
 		default:
 			return fmt.Errorf("unsupported complement %T", o)
+		}
+	}
+
+	return nil
+}
+
+func addAddendas(doc *Document, inv *bill.Invoice) error {
+	if mx.IsMabeSupplier(inv) {
+		err := addAddendaMabe(doc, inv)
+		if err != nil {
+			return err
 		}
 	}
 

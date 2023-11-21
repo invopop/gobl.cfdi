@@ -1,0 +1,109 @@
+{
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
+		"dig": {
+			"alg": "sha256",
+			"val": "a8749e521981bc47aa0ff5bc6389e0d809dbe07f8b05c278e7674c3e79b8fe77"
+		},
+		"draft": true
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"type": "standard",
+		"series": "LMC",
+		"code": "0010",
+		"issue_date": "2023-05-29",
+		"currency": "MXN",
+		"supplier": {
+			"name": "ESCUELA KEMPER URGATE",
+			"tax_id": {
+				"country": "MX",
+				"zone": "26015",
+				"code": "EKU9003173C9"
+			},
+			"ext": {
+				"mx-cfdi-fiscal-regime": "601",
+				"mx-mabe-provider-code": "123456"
+			}
+		},
+		"customer": {
+			"name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
+			"tax_id": {
+				"country": "MX",
+				"zone": "65000",
+				"code": "URE180429TM6"
+			},
+			"ext": {
+				"mx-cfdi-fiscal-regime": "601",
+				"mx-cfdi-use": "G01"
+			}
+		},
+		"lines": [
+			{
+				"i": 1,
+				"quantity": "2",
+				"item": {
+					"name": "Cigarros",
+					"price": "100.00",
+					"ext": {
+						"mx-cfdi-prod-serv": "50211502",
+						"mx-mabe-item-code": "CODE123"
+					}
+				},
+				"sum": "200.00",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"rate": "standard",
+						"percent": "16.0%"
+					}
+				],
+				"total": "200.00"
+			}
+		],
+		"ordering": {
+			"code": "91000000"
+		},
+		"payment": {
+			"instructions": {
+				"key": "credit-transfer"
+			}
+		},
+		"delivery": {
+			"receiver": {
+				"name": "ESTUFAS 30",
+				"ext": {
+					"mx-mabe-delivery-plant": "S001"
+				}
+			}
+		},
+		"totals": {
+			"sum": "200.00",
+			"total": "200.00",
+			"taxes": {
+				"categories": [
+					{
+						"code": "VAT",
+						"rates": [
+							{
+								"key": "standard",
+								"base": "200.00",
+								"percent": "16.0%",
+								"amount": "32.00"
+							}
+						],
+						"amount": "32.00"
+					}
+				],
+				"sum": "32.00"
+			},
+			"tax": "32.00",
+			"total_with_tax": "232.00",
+			"payable": "232.00"
+		},
+		"ext": {
+			"mx-mabe-reference-1": "900900"
+		}
+	}
+}

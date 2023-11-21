@@ -32,7 +32,7 @@ func TestComprobanteIngreso(t *testing.T) {
 		assert.Equal(t, "03", doc.FormaPago)
 		assert.Equal(t, "Pago a 30 días.", doc.CondicionesDePago)
 
-		assert.Equal(t, 0, len(doc.Complementos))
+		assert.Nil(t, doc.Complemento)
 	})
 }
 

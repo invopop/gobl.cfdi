@@ -66,7 +66,7 @@ func addEstadoCuentaCombustible(doc *Document, fc *mx.FuelAccountBalance) {
 
 	doc.ECCNamespace = ECCNamespace
 	doc.SchemaLocation = doc.SchemaLocation + " " + format.SchemaLocation(ECCNamespace, ECCSchemaLocation)
-	doc.Complementos = append(doc.Complementos, &ContentWrapper{ecc})
+	doc.AppendComplemento(ecc)
 }
 
 // nolint:misspell

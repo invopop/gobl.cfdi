@@ -70,13 +70,8 @@ type Document struct {
 	Conceptos        *Conceptos        `xml:"cfdi:Conceptos"` //nolint:misspell
 	Impuestos        *Impuestos        `xml:"cfdi:Impuestos,omitempty"`
 
-	Complementos []*ContentWrapper `xml:"cfdi:Complemento,omitempty"`
-	Addendas     []*ContentWrapper `xml:"cfdi:Addenda,omitempty"`
-}
-
-// ContentWrapper is a struct necessary to wrap any arbitrary XML content within another tag.
-type ContentWrapper struct {
-	Content interface{} `xml:",any"`
+	Complemento *internal.Nodes `xml:"cfdi:Complemento,omitempty"`
+	Addenda     *internal.Nodes `xml:"cfdi:Addenda,omitempty"`
 }
 
 // NewDocument converts a GOBL envelope into a CFDI document
@@ -139,6 +134,26 @@ func (d *Document) Bytes() ([]byte, error) {
 	return append([]byte(xml.Header), bytes...), nil
 }
 
+// AppendComplemento appends a complement to the document
+func (d *Document) AppendComplemento(c interface{}) {
+	// We keep it nil unless an element is added so that no empty node is marshalled to XML
+	if d.Complemento == nil {
+		d.Complemento = &internal.Nodes{}
+	}
+
+	d.Complemento.Nodes = append(d.Complemento.Nodes, c)
+}
+
+// AppendAddenda appends an addenda to the document
+func (d *Document) AppendAddenda(c interface{}) {
+	// We keep it nil unless an element is added so that no empty node is marshalled to XML
+	if d.Addenda == nil {
+		d.Addenda = &internal.Nodes{}
+	}
+
+	d.Addenda.Nodes = append(d.Addenda.Nodes, c)
+}
+
 func addComplementos(doc *Document, complements []*schema.Object) error {
 	for _, c := range complements {
 		switch o := c.Instance().(type) {
@@ -159,8 +174,9 @@ func addAddendas(doc *Document, inv *bill.Invoice) error {
 	if err != nil {
 		return err
 	}
+
 	for _, ad := range ads {
-		doc.Addendas = append(doc.Addendas, &ContentWrapper{ad})
+		doc.AppendAddenda(ad)
 	}
 	return nil
 }

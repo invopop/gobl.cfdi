@@ -24,7 +24,7 @@
       },
       "identities": [
         {
-          "key": "mx-mabe-provider",
+          "key": "mx-mabe-provider-id",
           "code": "123456"
         }
       ],
@@ -53,7 +53,7 @@
           "price": "100.00",
           "identities": [
             {
-              "key": "mx-mabe-item",
+              "key": "mx-mabe-item-id",
               "code": "CODE123"
             }
           ],
@@ -112,7 +112,7 @@
         ],
         "identities": [
           {
-            "key": "mx-mabe-plant",
+            "key": "mx-mabe-plant-id",
             "code": "S001"
           }
         ]
@@ -165,9 +165,6 @@
       "tax": "-8.40",
       "total_with_tax": "171.60",
       "payable": "171.60"
-    },
-    "ext": {
-      "mx-mabe-reference-2": "789"
     }
   }
 }

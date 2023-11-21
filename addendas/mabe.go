@@ -31,11 +31,11 @@ const (
 
 // Mabe specific identity codes.
 const (
-	MabeKeyIdentityProvider = "mx-mabe-provider"
-	MabeKeyIdentityRef1     = "mx-mabe-ref1"
-	MabeKeyIdentityRef2     = "mx-mabe-ref2"
-	MabeKeyIdentityPlant    = "mx-mabe-plant"
-	MabeKeyIdentityItem     = "mx-mabe-item"
+	MabeKeyIdentityProviderID = "mx-mabe-provider-id"
+	MabeKeyIdentityRef1       = "mx-mabe-ref1"
+	MabeKeyIdentityRef2       = "mx-mabe-ref2"
+	MabeKeyIdentityPlantID    = "mx-mabe-plant-id"
+	MabeKeyIdentityItemID     = "mx-mabe-item-id"
 )
 
 // MabeFactura is the root element of the Mabe addendum
@@ -121,7 +121,7 @@ func isMabe(inv *bill.Invoice) bool {
 	if inv.Supplier == nil {
 		return false
 	}
-	id := extractIdentity(inv.Supplier.Identities, MabeKeyIdentityProvider)
+	id := extractIdentity(inv.Supplier.Identities, MabeKeyIdentityProviderID)
 	return id != cbc.CodeEmpty
 }
 
@@ -183,7 +183,7 @@ func newMabeProveedor(inv *bill.Invoice) *MabeProveedor {
 	if inv.Supplier == nil {
 		return nil
 	}
-	id := extractIdentity(inv.Supplier.Identities, MabeKeyIdentityProvider)
+	id := extractIdentity(inv.Supplier.Identities, MabeKeyIdentityProviderID)
 	return &MabeProveedor{
 		Codigo: id.String(),
 	}
@@ -191,7 +191,7 @@ func newMabeProveedor(inv *bill.Invoice) *MabeProveedor {
 
 func newMabeEntrega(inv *bill.Invoice) *MabeEntrega {
 	rec := inv.Delivery.Receiver
-	id := extractIdentity(rec.Identities, MabeKeyIdentityPlant)
+	id := extractIdentity(rec.Identities, MabeKeyIdentityPlantID)
 	e := &MabeEntrega{
 		PlantaEntrega: id.String(),
 	}
@@ -226,7 +226,7 @@ func newMabeDetalles(inv *bill.Invoice) *[]*MabeDetalle {
 	var detalles []*MabeDetalle
 
 	for _, line := range inv.Lines {
-		id := extractIdentity(line.Item.Identities, MabeKeyIdentityItem)
+		id := extractIdentity(line.Item.Identities, MabeKeyIdentityItemID)
 		d := &MabeDetalle{
 			NoLineaArticulo: line.Index,
 			CodigoArticulo:  id.String(),

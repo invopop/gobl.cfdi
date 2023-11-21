@@ -52,15 +52,15 @@ type MabeFactura struct {
 	Referencia1   string `xml:"referencia1,attr"`
 	Referencia2   string `xml:"referencia2,attr,omitempty"`
 
-	Moneda    *MabeMoneda     `xml:"mabe:Moneda"`
-	Proveedor *MabeProveedor  `xml:"mabe:Proveedor"`
-	Entrega   *MabeEntrega    `xml:"mabe:Entrega"`
-	Detalles  *[]*MabeDetalle `xml:"mabe:Detalles>mabe:Detalle"`
+	Moneda    *MabeMoneda    `xml:"mabe:Moneda"`
+	Proveedor *MabeProveedor `xml:"mabe:Proveedor"`
+	Entrega   *MabeEntrega   `xml:"mabe:Entrega"`
+	Detalles  *MabeDetalles  `xml:"mabe:Detalles"`
 
 	Descuentos  *MabeDescuentos  `xml:"mabe:Descuentos,omitempty"`
 	Subtotal    *MabeImporte     `xml:"mabe:Subtotal"`
-	Traslados   *[]*MabeImpuesto `xml:"mabe:Traslados>mabe:Traslado"`
-	Retenciones *[]*MabeImpuesto `xml:"mabe:Retenciones>mabe:Retencion"`
+	Traslados   *MabeTraslados   `xml:"mabe:Traslados"`
+	Retenciones *MabeRetenciones `xml:"mabe:Retenciones"`
 	Total       *MabeImporte     `xml:"mabe:Total"`
 }
 
@@ -85,6 +85,11 @@ type MabeEntrega struct {
 	CodigoPostal  string `xml:"codigoPostal,attr,omitempty"`
 }
 
+// MabeDetalles carries the data about an invoice's lines
+type MabeDetalles struct {
+	Detalle []*MabeDetalle `xml:"mabe:Detalle"`
+}
+
 // MabeDetalle carries the data about one invoice's line
 type MabeDetalle struct {
 	NoLineaArticulo int    `xml:"noLineaArticulo,attr"`
@@ -101,6 +106,16 @@ type MabeDetalle struct {
 // MabeImporte carries the data about an invoice's total
 type MabeImporte struct {
 	Importe string `xml:"importe,attr"`
+}
+
+// MabeTraslados carries the data about an invoice's taxes (expect retained ones)
+type MabeTraslados struct {
+	Traslado []*MabeImpuesto `xml:"mabe:Traslado"`
+}
+
+// MabeRetenciones carries the data about an invoice's retained taxes
+type MabeRetenciones struct {
+	Retencion []*MabeImpuesto `xml:"mabe:Retencion"`
 }
 
 // MabeImpuesto carries the data about an invoice's tax
@@ -229,7 +244,7 @@ func newMabeDescuentos(inv *bill.Invoice) *MabeDescuentos {
 	}
 }
 
-func newMabeDetalles(inv *bill.Invoice) *[]*MabeDetalle {
+func newMabeDetalles(inv *bill.Invoice) *MabeDetalles {
 	var detalles []*MabeDetalle
 
 	for _, line := range inv.Lines {
@@ -247,7 +262,11 @@ func newMabeDetalles(inv *bill.Invoice) *[]*MabeDetalle {
 		detalles = append(detalles, d)
 	}
 
-	return &detalles
+	if len(detalles) == 0 {
+		return nil
+	}
+
+	return &MabeDetalles{detalles}
 }
 
 func newMabeImporte(amount num.Amount) *MabeImporte {
@@ -278,11 +297,11 @@ func setMabeTaxes(inv *bill.Invoice, mabe *MabeFactura) {
 	}
 
 	if len(traslados) > 0 {
-		mabe.Traslados = &traslados
+		mabe.Traslados = &MabeTraslados{traslados}
 	}
 
 	if len(retenciones) > 0 {
-		mabe.Retenciones = &retenciones
+		mabe.Retenciones = &MabeRetenciones{retenciones}
 	}
 }
 

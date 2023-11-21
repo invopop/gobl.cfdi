@@ -155,7 +155,11 @@ func addComplementos(doc *Document, complements []*schema.Object) error {
 }
 
 func addAddendas(doc *Document, inv *bill.Invoice) error {
-	for _, ad := range addendas.For(inv) {
+	ads, err := addendas.For(inv)
+	if err != nil {
+		return err
+	}
+	for _, ad := range ads {
 		doc.Addendas = append(doc.Addendas, &ContentWrapper{ad})
 	}
 	return nil

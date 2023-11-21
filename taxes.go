@@ -1,9 +1,9 @@
 package cfdi
 
 import (
+	"github.com/invopop/gobl.cfdi/internal/format"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/currency"
-	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/tax"
 )
@@ -88,7 +88,7 @@ func newImpuesto(rate *tax.RateTotal, currency *currency.Code, catDef *tax.Categ
 		Base:       rate.Base.Rescale(cu).String(),
 		Importe:    rate.Amount.Rescale(cu).String(),
 		Impuesto:   catDef.Map[mx.KeySATImpuesto].String(),
-		TasaOCuota: formatTaxPercent(rate.Percent),
+		TasaOCuota: format.TaxPercent(rate.Percent),
 		TipoFactor: TipoFactorTasa,
 	}
 
@@ -130,13 +130,9 @@ func newConceptoImpuesto(line *bill.Line, tax *tax.Combo, catDef *tax.Category) 
 		Base:       line.Total.String(),
 		Importe:    taxAmount.String(),
 		Impuesto:   catDef.Map[mx.KeySATImpuesto].String(),
-		TasaOCuota: formatTaxPercent(tax.Percent),
+		TasaOCuota: format.TaxPercent(tax.Percent),
 		TipoFactor: TipoFactorTasa,
 	}
 
 	return i
-}
-
-func formatTaxPercent(percent *num.Percentage) string {
-	return percent.Amount.Rescale(6).String()
 }

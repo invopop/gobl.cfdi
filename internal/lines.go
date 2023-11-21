@@ -19,7 +19,7 @@ func ClaveUnidad(line *bill.Line) string {
 	return string(line.Item.Unit.UNECE())
 }
 
-// ClaveProdServe determines the line's Product-Service code
+// ClaveProdServ determines the line's Product-Service code
 func ClaveProdServ(line *bill.Line) string {
 	if line.Item == nil {
 		return ""

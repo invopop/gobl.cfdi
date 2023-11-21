@@ -1,13 +1,17 @@
-package cfdi
+package addendas
 
 import (
 	"encoding/xml"
+	"errors"
 	"fmt"
 
+	"github.com/invopop/gobl.cfdi/internal"
+	"github.com/invopop/gobl.cfdi/internal/format"
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/i18n"
 	"github.com/invopop/gobl/num"
-	"github.com/invopop/gobl/regimes/mx"
+	"github.com/invopop/gobl/org"
 )
 
 // Mabe schema constants
@@ -23,6 +27,14 @@ const (
 	MabeTipoDocumentoFactura     = "FACTURA"
 	MabeTipoDocumentoNotaCredito = "NOTA CREDITO"
 	MabeTipoDocumentoNotaCargo   = "NOTA CARGO"
+)
+
+// Mabe specific identity codes.
+const (
+	MabeIdentityTypeCode        = "MABE"
+	MabeRef1IdentityTypeCode    = "MABE-REF1"
+	MabeRef2IdentityTypeCode    = "MABE-REF2"
+	MabePlantIDIdentityTypeCode = "MABE-PLANT-ID"
 )
 
 // MabeFactura is the root element of the Mabe addendum
@@ -104,23 +116,35 @@ type MabeDescuentos struct {
 	Importe     string `xml:"importe,attr"`
 }
 
-func addAddendaMabe(doc *Document, inv *bill.Invoice) error {
+func isMabe(inv *bill.Invoice) bool {
+	if inv.Supplier == nil {
+		return false
+	}
+	id := extractIdentity(inv.Supplier.Identities, MabeIdentityTypeCode)
+	return id != cbc.CodeEmpty
+}
+
+// newMabe provides a new Mabe addenda.
+func newMabe(inv *bill.Invoice) (*MabeFactura, error) {
 	tipoDocumento, err := mapMabeTipoDocumento(inv)
 	if err != nil {
-		return err
+		return nil, err
+	}
+	if inv.Ordering == nil {
+		return nil, errors.New("missing ordering field")
 	}
 
 	f := &MabeFactura{
 		Namespace:      MabeNamespace,
-		SchemaLocation: formatSchemaLocation(MabeNamespace, MabeSchemaLocation),
+		SchemaLocation: format.SchemaLocation(MabeNamespace, MabeSchemaLocation),
 
 		Version:       MabeVersion,
 		TipoDocumento: tipoDocumento,
 		Folio:         formatMabeFolio(inv),
 		Fecha:         inv.IssueDate.String(),
 		OrdenCompra:   inv.Ordering.Code,
-		Referencia1:   inv.Ext[mx.ExtKeyMabeReference1].String(),
-		Referencia2:   inv.Ext[mx.ExtKeyMabeReference2].String(),
+		Referencia1:   extractIdentity(inv.Ordering.Identities, MabeRef1IdentityTypeCode).String(),
+		Referencia2:   "NA",
 
 		Moneda:     newMabeMoneda(inv),
 		Proveedor:  newMabeProveedor(inv),
@@ -134,9 +158,7 @@ func addAddendaMabe(doc *Document, inv *bill.Invoice) error {
 
 	setMabeTaxes(inv, f)
 
-	doc.Addendas = append(doc.Addendas, &ContentWrapper{f})
-
-	return nil
+	return f, nil
 }
 
 func mapMabeTipoDocumento(inv *bill.Invoice) (string, error) {
@@ -157,16 +179,20 @@ func newMabeMoneda(inv *bill.Invoice) *MabeMoneda {
 }
 
 func newMabeProveedor(inv *bill.Invoice) *MabeProveedor {
+	if inv.Supplier == nil {
+		return nil
+	}
+	id := extractIdentity(inv.Supplier.Identities, MabeIdentityTypeCode)
 	return &MabeProveedor{
-		Codigo: string(inv.Supplier.Ext[mx.ExtKeyMabeProviderCode]),
+		Codigo: id.String(),
 	}
 }
 
 func newMabeEntrega(inv *bill.Invoice) *MabeEntrega {
 	rec := inv.Delivery.Receiver
-
+	id := extractIdentity(rec.Identities, MabePlantIDIdentityTypeCode)
 	e := &MabeEntrega{
-		PlantaEntrega: string(rec.Ext[mx.ExtKeyMabeDeliveryPlant]),
+		PlantaEntrega: id.String(),
 	}
 
 	if len(rec.Addresses) > 0 {
@@ -182,7 +208,7 @@ func newMabeEntrega(inv *bill.Invoice) *MabeEntrega {
 }
 
 func newMabeDescuentos(inv *bill.Invoice) *MabeDescuentos {
-	d := totalInvoiceDiscount(inv)
+	d := internal.TotalInvoiceDiscount(inv)
 
 	if d.IsZero() {
 		return nil
@@ -199,11 +225,12 @@ func newMabeDetalles(inv *bill.Invoice) *[]*MabeDetalle {
 	var detalles []*MabeDetalle
 
 	for _, line := range inv.Lines {
+		id := extractIdentity(line.Item.Identities, MabeIdentityTypeCode)
 		d := &MabeDetalle{
 			NoLineaArticulo: line.Index,
-			CodigoArticulo:  line.Item.Ext[mx.ExtKeyMabeItemCode].String(),
+			CodigoArticulo:  id.String(),
 			Descripcion:     line.Item.Name, //nolint:misspell
-			Unidad:          mapToClaveUnidad(line),
+			Unidad:          internal.ClaveUnidad(line),
 			Cantidad:        line.Quantity.String(),
 			PrecioSinIva:    line.Item.Price.String(),
 			ImporteSinIva:   line.Sum.String(),
@@ -230,7 +257,7 @@ func setMabeTaxes(inv *bill.Invoice, mabe *MabeFactura) {
 		for _, rate := range cat.Rates {
 			t := &MabeImpuesto{
 				Tipo:    catDef.Name.In(i18n.ES),
-				Tasa:    formatTaxPercent(rate.Percent),
+				Tasa:    format.TaxPercent(rate.Percent),
 				Importe: rate.Amount.String(),
 			}
 
@@ -253,4 +280,16 @@ func setMabeTaxes(inv *bill.Invoice, mabe *MabeFactura) {
 
 func formatMabeFolio(inv *bill.Invoice) string {
 	return fmt.Sprintf("%s%s", inv.Series, inv.Code)
+}
+
+func extractIdentity(ids []*org.Identity, typ cbc.Code) cbc.Code {
+	if ids == nil {
+		return ""
+	}
+	for _, id := range ids {
+		if id.Type == typ {
+			return id.Code
+		}
+	}
+	return ""
 }

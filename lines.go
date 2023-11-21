@@ -1,15 +1,9 @@
 package cfdi
 
 import (
+	"github.com/invopop/gobl.cfdi/internal"
 	"github.com/invopop/gobl/bill"
-	"github.com/invopop/gobl/num"
-	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/tax"
-)
-
-// Default keys
-const (
-	DefaultClaveUnidad = "ZZ" // Mutuamente definida
 )
 
 // Conceptos list invoice lines
@@ -45,40 +39,16 @@ func newConceptos(lines []*bill.Line, regime *tax.Regime) *Conceptos {
 
 func newConcepto(line *bill.Line, regime *tax.Regime) *Concepto {
 	concepto := &Concepto{
-		ClaveProdServ: mapToClaveProdServ(line),
+		ClaveProdServ: internal.ClaveProdServ(line),
 		Cantidad:      line.Quantity.String(),
-		ClaveUnidad:   mapToClaveUnidad(line),
+		ClaveUnidad:   internal.ClaveUnidad(line),
 		Descripcion:   line.Item.Name, // nolint:misspell
 		ValorUnitario: line.Item.Price.String(),
 		Importe:       line.Sum.String(),
-		Descuento:     formatOptionalAmount(totalLineDiscount(line)),
+		Descuento:     formatOptionalAmount(internal.TotalLineDiscount(line)),
 		ObjetoImp:     ObjetoImpSi,
 		Impuestos:     newConceptoImpuestos(line, regime),
 	}
 
 	return concepto
-}
-
-func mapToClaveUnidad(line *bill.Line) string {
-	if line.Item.Unit == "" {
-		return DefaultClaveUnidad
-	}
-
-	return string(line.Item.Unit.UNECE())
-}
-
-func mapToClaveProdServ(line *bill.Line) string {
-	if line.Item == nil {
-		return ""
-	}
-
-	return string(line.Item.Ext[mx.ExtKeyCFDIProdServ])
-}
-
-func totalLineDiscount(l *bill.Line) num.Amount {
-	td := num.MakeAmount(0, l.Sum.Exp()) // discount's precision must match the "Importe" field's one
-	for _, d := range l.Discounts {
-		td = td.Add(d.Amount)
-	}
-	return td
 }

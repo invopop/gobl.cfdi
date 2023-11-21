@@ -7,6 +7,9 @@ import (
 
 	"cloud.google.com/go/civil"
 	"github.com/invopop/gobl"
+	"github.com/invopop/gobl.cfdi/addendas"
+	"github.com/invopop/gobl.cfdi/internal"
+	"github.com/invopop/gobl.cfdi/internal/format"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
@@ -83,13 +86,13 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		return nil, fmt.Errorf("invalid type %T", env.Document)
 	}
 
-	discount := totalInvoiceDiscount(inv)
+	discount := internal.TotalInvoiceDiscount(inv)
 	subtotal := inv.Totals.Total.Add(discount)
 
 	document := &Document{
 		CFDINamespace:  CFDINamespace,
 		XSINamespace:   XSINamespace,
-		SchemaLocation: formatSchemaLocation(CFDINamespace, CFDISchemaLocation),
+		SchemaLocation: format.SchemaLocation(CFDINamespace, CFDISchemaLocation),
 		Version:        CFDIVersion,
 
 		TipoDeComprobante: lookupTipoDeComprobante(inv),
@@ -152,13 +155,9 @@ func addComplementos(doc *Document, complements []*schema.Object) error {
 }
 
 func addAddendas(doc *Document, inv *bill.Invoice) error {
-	if mx.IsMabeSupplier(inv) {
-		err := addAddendaMabe(doc, inv)
-		if err != nil {
-			return err
-		}
+	for _, ad := range addendas.For(inv) {
+		doc.Addendas = append(doc.Addendas, &ContentWrapper{ad})
 	}
-
 	return nil
 }
 
@@ -216,16 +215,4 @@ func formatOptionalAmount(a num.Amount) string {
 	}
 
 	return a.String()
-}
-
-func formatSchemaLocation(namespace, schemaLocation string) string {
-	return fmt.Sprintf("%s %s", namespace, schemaLocation)
-}
-
-func totalInvoiceDiscount(i *bill.Invoice) num.Amount {
-	td := i.Currency.Def().Zero() // currency's precision is required by the SAT
-	for _, l := range i.Lines {
-		td = td.Add(totalLineDiscount(l))
-	}
-	return td
 }

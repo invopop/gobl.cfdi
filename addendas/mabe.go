@@ -135,6 +135,13 @@ func newMabe(inv *bill.Invoice) (*MabeFactura, error) {
 		return nil, errors.New("missing ordering field")
 	}
 
+	// Ref2 is not currently used by Mabe, so we set the default
+	// value to "NA".
+	ref2 := extractIdentity(inv.Ordering.Identities, MabeKeyIdentityRef2)
+	if ref2 == "" {
+		ref2 = "NA"
+	}
+
 	f := &MabeFactura{
 		Namespace:      MabeNamespace,
 		SchemaLocation: format.SchemaLocation(MabeNamespace, MabeSchemaLocation),
@@ -145,7 +152,7 @@ func newMabe(inv *bill.Invoice) (*MabeFactura, error) {
 		Fecha:         inv.IssueDate.String(),
 		OrdenCompra:   inv.Ordering.Code,
 		Referencia1:   extractIdentity(inv.Ordering.Identities, MabeKeyIdentityRef1).String(),
-		Referencia2:   "NA",
+		Referencia2:   ref2.String(),
 
 		Moneda:     newMabeMoneda(inv),
 		Proveedor:  newMabeProveedor(inv),

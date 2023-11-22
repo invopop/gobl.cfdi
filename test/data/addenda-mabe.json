@@ -92,6 +92,10 @@
         {
           "key": "mx-mabe-ref1",
           "code": "123456"
+        },
+        {
+          "key": "mx-mabe-ref2",
+          "code": "654321"
         }
       ]
     },

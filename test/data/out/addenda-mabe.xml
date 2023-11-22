@@ -25,7 +25,7 @@
     </cfdi:Traslados>
   </cfdi:Impuestos>
   <cfdi:Addenda>
-    <mabe:Factura xmlns:mabe="https://recepcionfe.mabempresa.com/cfd/addenda/v1" xsi:schemaLocation="https://recepcionfe.mabempresa.com/cfd/addenda/v1 https://recepcionfe.mabempresa.com/cfd/addenda/v1/mabev1.xsd" version="1.0" tipoDocumento="FACTURA" folio="LMC0010" fecha="2023-05-29" ordenCompra="9100000000" referencia1="123456" referencia2="NA">
+    <mabe:Factura xmlns:mabe="https://recepcionfe.mabempresa.com/cfd/addenda/v1" xsi:schemaLocation="https://recepcionfe.mabempresa.com/cfd/addenda/v1 https://recepcionfe.mabempresa.com/cfd/addenda/v1/mabev1.xsd" version="1.0" tipoDocumento="FACTURA" folio="LMC0010" fecha="2023-05-29" ordenCompra="9100000000" referencia1="123456" referencia2="654321">
       <mabe:Moneda tipoMoneda="MXN"></mabe:Moneda>
       <mabe:Proveedor codigo="123456"></mabe:Proveedor>
       <mabe:Entrega plantaEntrega="S001" calle="Calle 1" noInterior="NA" codigoPostal="12345"></mabe:Entrega>

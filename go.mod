@@ -3,7 +3,7 @@ module github.com/invopop/gobl.cfdi
 go 1.20
 
 require (
-	github.com/invopop/gobl v0.62.2-0.20231121175846-f10ffeb5a094
+	github.com/invopop/gobl v0.62.2-0.20231122224337-f193b3066d06
 	github.com/joho/godotenv v1.5.1
 	github.com/magefile/mage v1.15.0
 	github.com/spf13/cobra v1.7.0

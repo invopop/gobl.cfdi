@@ -2,7 +2,6 @@ package addendas
 
 import (
 	"encoding/xml"
-	"errors"
 	"fmt"
 
 	"github.com/invopop/gobl.cfdi/internal"
@@ -12,6 +11,7 @@ import (
 	"github.com/invopop/gobl/i18n"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/org"
+	"github.com/invopop/validation"
 )
 
 // Mabe schema constants
@@ -28,6 +28,13 @@ const (
 	MabeTipoDocumentoNotaCredito = "NOTA CREDITO"
 	MabeTipoDocumentoNotaCargo   = "NOTA CARGO"
 )
+
+// Maps the GOBL invoice types to Mabe's TipoDocumento
+var MabeTipoDocumentoMap = map[cbc.Key]string{
+	bill.InvoiceTypeStandard:   MabeTipoDocumentoFactura,
+	bill.InvoiceTypeCreditNote: MabeTipoDocumentoNotaCredito,
+	bill.InvoiceTypeDebitNote:  MabeTipoDocumentoNotaCargo,
+}
 
 // Mabe specific identity codes.
 const (
@@ -142,12 +149,8 @@ func isMabe(inv *bill.Invoice) bool {
 
 // newMabe provides a new Mabe addenda.
 func newMabe(inv *bill.Invoice) (*MabeFactura, error) {
-	tipoDocumento, err := mapMabeTipoDocumento(inv)
-	if err != nil {
+	if err := validateInvoiceForMabe(inv); err != nil {
 		return nil, err
-	}
-	if inv.Ordering == nil {
-		return nil, errors.New("missing ordering field")
 	}
 
 	// Ref2 is not currently used by Mabe, so we set the default
@@ -162,7 +165,7 @@ func newMabe(inv *bill.Invoice) (*MabeFactura, error) {
 		SchemaLocation: format.SchemaLocation(MabeNamespace, MabeSchemaLocation),
 
 		Version:       MabeVersion,
-		TipoDocumento: tipoDocumento,
+		TipoDocumento: MabeTipoDocumentoMap[inv.Type],
 		Folio:         formatMabeFolio(inv),
 		Fecha:         inv.IssueDate.String(),
 		OrdenCompra:   inv.Ordering.Code,
@@ -182,6 +185,101 @@ func newMabe(inv *bill.Invoice) (*MabeFactura, error) {
 	setMabeTaxes(inv, f)
 
 	return f, nil
+}
+
+func validateInvoiceForMabe(inv *bill.Invoice) error {
+	return validation.ValidateStruct(inv,
+		validation.Field(&inv.Type, validation.In(validMabeInvoiceTypes()...)),
+		validation.Field(&inv.Supplier,
+			validation.By(validateSupplierForMabe),
+		),
+		validation.Field(&inv.Lines,
+			validation.Each(validation.By(validateLineForMabe), validation.Skip),
+			validation.Skip, // prevent GOBL validations from running
+		),
+		validation.Field(&inv.Ordering,
+			validation.Required,
+			validation.By(validateOrderingForMabe),
+		),
+		validation.Field(&inv.Delivery,
+			validation.Required,
+			validation.By(validateDeliveryForMabe),
+		),
+	)
+}
+
+func validateSupplierForMabe(value interface{}) error {
+	sup, _ := value.(*org.Party)
+	if sup == nil {
+		return nil
+	}
+	return validation.ValidateStruct(sup,
+		validation.Field(&sup.Identities, org.HasIdentityKey(MabeKeyIdentityProviderID)),
+	)
+}
+
+func validateLineForMabe(value interface{}) error {
+	line, _ := value.(*bill.Line)
+	if line == nil {
+		return nil
+	}
+	return validation.ValidateStruct(line,
+		validation.Field(&line.Item,
+			validation.By(validateItemForMabe),
+		),
+	)
+}
+
+func validateItemForMabe(value interface{}) error {
+	item, _ := value.(*org.Item)
+	if item == nil {
+		return nil
+	}
+	return validation.ValidateStruct(item,
+		validation.Field(&item.Identities, org.HasIdentityKey(MabeKeyIdentityItemID)),
+	)
+}
+
+func validateDeliveryForMabe(value interface{}) error {
+	del, _ := value.(*bill.Delivery)
+	if del == nil {
+		return nil
+	}
+	return validation.ValidateStruct(del,
+		validation.Field(&del.Receiver,
+			validation.Required,
+			validation.By(validateReceiverForMabe),
+		),
+	)
+}
+
+func validateReceiverForMabe(value interface{}) error {
+	rec, _ := value.(*org.Party)
+	if rec == nil {
+		return nil
+	}
+	return validation.ValidateStruct(rec,
+		validation.Field(&rec.Identities, org.HasIdentityKey(MabeKeyIdentityPlantID)),
+	)
+}
+
+func validateOrderingForMabe(value interface{}) error {
+	ord, _ := value.(*bill.Ordering)
+	if ord == nil {
+		return nil
+	}
+	return validation.ValidateStruct(ord,
+		validation.Field(&ord.Code, validation.Required),
+		validation.Field(&ord.Identities, org.HasIdentityKey(MabeKeyIdentityRef1)),
+	)
+}
+
+func validMabeInvoiceTypes() []interface{} {
+	var types []interface{}
+	for t, _ := range MabeTipoDocumentoMap {
+		types = append(types, t)
+	}
+	return types
 }
 
 func mapMabeTipoDocumento(inv *bill.Invoice) (string, error) {

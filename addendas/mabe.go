@@ -29,7 +29,7 @@ const (
 	MabeTipoDocumentoNotaCargo   = "NOTA CARGO"
 )
 
-// Maps the GOBL invoice types to Mabe's TipoDocumento
+// MabeTipoDocumentoMap maps GOBL invoice types to Mabe's TipoDocumento
 var MabeTipoDocumentoMap = map[cbc.Key]string{
 	bill.InvoiceTypeStandard:   MabeTipoDocumentoFactura,
 	bill.InvoiceTypeCreditNote: MabeTipoDocumentoNotaCredito,
@@ -276,23 +276,10 @@ func validateOrderingForMabe(value interface{}) error {
 
 func validMabeInvoiceTypes() []interface{} {
 	var types []interface{}
-	for t, _ := range MabeTipoDocumentoMap {
+	for t := range MabeTipoDocumentoMap {
 		types = append(types, t)
 	}
 	return types
-}
-
-func mapMabeTipoDocumento(inv *bill.Invoice) (string, error) {
-	switch inv.Type {
-	case bill.InvoiceTypeStandard:
-		return MabeTipoDocumentoFactura, nil
-	case bill.InvoiceTypeCreditNote:
-		return MabeTipoDocumentoNotaCredito, nil
-	case bill.InvoiceTypeDebitNote:
-		return MabeTipoDocumentoNotaCargo, nil
-	default:
-		return "", fmt.Errorf("invalid invoice type: %s", inv.Type)
-	}
 }
 
 func newMabeMoneda(inv *bill.Invoice) *MabeMoneda {

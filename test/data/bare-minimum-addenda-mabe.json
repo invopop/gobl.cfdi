@@ -24,7 +24,7 @@
 			},
 			"identities": [
 				{
-					"key": "mx-mabe-provider-id",
+					"key": "mx-mabe-provider-code",
 					"code": "123456"
 				}
 			],
@@ -53,7 +53,7 @@
 					"price": "100.00",
 					"identities": [
 						{
-							"key": "mx-mabe-item-id",
+							"key": "mx-mabe-article-code",
 							"code": "CODE123"
 						}
 					],
@@ -75,11 +75,11 @@
 		"ordering": {
 			"identities": [
 				{
-					"key": "mx-mabe-order-id",
+					"key": "mx-mabe-purchase-order",
 					"code": "91000000"
 				},
 				{
-					"key": "mx-mabe-ref1",
+					"key": "mx-mabe-reference1",
 					"code": "900900"
 				}
 			]
@@ -94,7 +94,7 @@
 				"name": "ESTUFAS 30",
 				"identities": [
 					{
-						"key": "mx-mabe-plant-id",
+						"key": "mx-mabe-delivery-plant",
 						"code": "S001"
 					}
 				]

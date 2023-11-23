@@ -38,12 +38,12 @@ var MabeTipoDocumentoMap = map[cbc.Key]string{
 
 // Mabe specific identity codes.
 const (
-	MabeKeyIdentityOrderID    = "mx-mabe-order-id"
-	MabeKeyIdentityProviderID = "mx-mabe-provider-id"
-	MabeKeyIdentityRef1       = "mx-mabe-ref1"
-	MabeKeyIdentityRef2       = "mx-mabe-ref2"
-	MabeKeyIdentityPlantID    = "mx-mabe-plant-id"
-	MabeKeyIdentityItemID     = "mx-mabe-item-id"
+	MabeKeyIdentityPurchaseOrder = "mx-mabe-purchase-order"
+	MabeKeyIdentityProviderCode  = "mx-mabe-provider-code"
+	MabeKeyIdentityRef1          = "mx-mabe-reference1"
+	MabeKeyIdentityRef2          = "mx-mabe-reference2"
+	MabeKeyIdentityDeliveryPlant = "mx-mabe-delivery-plant"
+	MabeKeyIdentityArticleCode   = "mx-mabe-article-code"
 )
 
 // MabeFactura is the root element of the Mabe addendum
@@ -144,7 +144,7 @@ func isMabe(inv *bill.Invoice) bool {
 	if inv.Supplier == nil {
 		return false
 	}
-	id := extractIdentity(inv.Supplier.Identities, MabeKeyIdentityProviderID)
+	id := extractIdentity(inv.Supplier.Identities, MabeKeyIdentityProviderCode)
 	return id != cbc.CodeEmpty
 }
 
@@ -169,7 +169,7 @@ func newMabe(inv *bill.Invoice) (*MabeFactura, error) {
 		TipoDocumento: MabeTipoDocumentoMap[inv.Type],
 		Folio:         formatMabeFolio(inv),
 		Fecha:         inv.IssueDate.String(),
-		OrdenCompra:   extractIdentity(inv.Ordering.Identities, MabeKeyIdentityOrderID).String(),
+		OrdenCompra:   extractIdentity(inv.Ordering.Identities, MabeKeyIdentityPurchaseOrder).String(),
 		Referencia1:   extractIdentity(inv.Ordering.Identities, MabeKeyIdentityRef1).String(),
 		Referencia2:   ref2.String(),
 
@@ -215,7 +215,7 @@ func validateSupplierForMabe(value interface{}) error {
 		return nil
 	}
 	return validation.ValidateStruct(sup,
-		validation.Field(&sup.Identities, org.HasIdentityKey(MabeKeyIdentityProviderID)),
+		validation.Field(&sup.Identities, org.HasIdentityKey(MabeKeyIdentityProviderCode)),
 	)
 }
 
@@ -237,7 +237,7 @@ func validateItemForMabe(value interface{}) error {
 		return nil
 	}
 	return validation.ValidateStruct(item,
-		validation.Field(&item.Identities, org.HasIdentityKey(MabeKeyIdentityItemID)),
+		validation.Field(&item.Identities, org.HasIdentityKey(MabeKeyIdentityArticleCode)),
 	)
 }
 
@@ -260,7 +260,7 @@ func validateReceiverForMabe(value interface{}) error {
 		return nil
 	}
 	return validation.ValidateStruct(rec,
-		validation.Field(&rec.Identities, org.HasIdentityKey(MabeKeyIdentityPlantID)),
+		validation.Field(&rec.Identities, org.HasIdentityKey(MabeKeyIdentityDeliveryPlant)),
 	)
 }
 
@@ -271,7 +271,7 @@ func validateOrderingForMabe(value interface{}) error {
 	}
 	return validation.ValidateStruct(ord,
 		validation.Field(&ord.Identities,
-			org.HasIdentityKey(MabeKeyIdentityOrderID),
+			org.HasIdentityKey(MabeKeyIdentityPurchaseOrder),
 			org.HasIdentityKey(MabeKeyIdentityRef1),
 		),
 	)
@@ -293,7 +293,7 @@ func newMabeProveedor(inv *bill.Invoice) *MabeProveedor {
 	if inv.Supplier == nil {
 		return nil
 	}
-	id := extractIdentity(inv.Supplier.Identities, MabeKeyIdentityProviderID)
+	id := extractIdentity(inv.Supplier.Identities, MabeKeyIdentityProviderCode)
 	return &MabeProveedor{
 		Codigo: id.String(),
 	}
@@ -301,7 +301,7 @@ func newMabeProveedor(inv *bill.Invoice) *MabeProveedor {
 
 func newMabeEntrega(inv *bill.Invoice) *MabeEntrega {
 	rec := inv.Delivery.Receiver
-	id := extractIdentity(rec.Identities, MabeKeyIdentityPlantID)
+	id := extractIdentity(rec.Identities, MabeKeyIdentityDeliveryPlant)
 	e := &MabeEntrega{
 		PlantaEntrega: id.String(),
 	}
@@ -336,7 +336,7 @@ func newMabeDetalles(inv *bill.Invoice) *MabeDetalles {
 	var detalles []*MabeDetalle
 
 	for _, line := range inv.Lines {
-		id := extractIdentity(line.Item.Identities, MabeKeyIdentityItemID)
+		id := extractIdentity(line.Item.Identities, MabeKeyIdentityArticleCode)
 		d := &MabeDetalle{
 			NoLineaArticulo: line.Index,
 			CodigoArticulo:  id.String(),

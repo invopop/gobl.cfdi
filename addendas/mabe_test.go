@@ -21,7 +21,7 @@ func TestAddendaMabeValidation(t *testing.T) {
 	inv.Type = bill.InvoiceTypeProforma
 	inv.Supplier.Identities = []*org.Identity{
 		{
-			Key:  addendas.MabeKeyIdentityProviderID,
+			Key:  addendas.MabeKeyIdentityProviderCode,
 			Code: "12345",
 		},
 	}
@@ -38,18 +38,18 @@ func TestAddendaMabeValidation(t *testing.T) {
 		Name: "Test Receiver",
 	}
 
-	assertValidationError(t, inv, "delivery: (receiver: (identities: missing key mx-mabe-plant-id")
+	assertValidationError(t, inv, "delivery: (receiver: (identities: missing key mx-mabe-delivery-plant")
 	inv.Delivery.Receiver.Identities = []*org.Identity{
 		{
-			Key:  addendas.MabeKeyIdentityPlantID,
+			Key:  addendas.MabeKeyIdentityDeliveryPlant,
 			Code: "S001",
 		},
 	}
 
-	assertValidationError(t, inv, "lines: (0: (item: (identities: missing key mx-mabe-item-id")
+	assertValidationError(t, inv, "lines: (0: (item: (identities: missing key mx-mabe-article-code")
 	inv.Lines[0].Item.Identities = []*org.Identity{
 		{
-			Key:  addendas.MabeKeyIdentityItemID,
+			Key:  addendas.MabeKeyIdentityArticleCode,
 			Code: "12345",
 		},
 	}
@@ -57,15 +57,15 @@ func TestAddendaMabeValidation(t *testing.T) {
 	assertValidationError(t, inv, "ordering: cannot be blank")
 	inv.Ordering = &bill.Ordering{}
 
-	assertValidationError(t, inv, "ordering: (identities: missing key mx-mabe-order-id.)")
+	assertValidationError(t, inv, "ordering: (identities: missing key mx-mabe-purchase-order.)")
 	inv.Ordering.Identities = []*org.Identity{
 		{
-			Key:  addendas.MabeKeyIdentityOrderID,
+			Key:  addendas.MabeKeyIdentityPurchaseOrder,
 			Code: "12345",
 		},
 	}
 
-	assertValidationError(t, inv, "ordering: (identities: missing key mx-mabe-ref1")
+	assertValidationError(t, inv, "ordering: (identities: missing key mx-mabe-reference1")
 	inv.Ordering.Identities = append(inv.Ordering.Identities, &org.Identity{
 		Key:  addendas.MabeKeyIdentityRef1,
 		Code: "12345",

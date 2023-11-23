@@ -8,11 +8,11 @@ Each of the addendas currently supported are listed below, with instructions on 
 
 Most of the MABE Addenda fields are determined automatically from the base GOBL Invoice, with the exception of the following:
 
-| MABE Field     | GOBL Invoice Property          | GOBL Invoice Value                                 | Description                                                               |
-| -------------- | ------------------------------ | -------------------------------------------------- | ------------------------------------------------------------------------- |
-| Order Code     | `ordering.identities`          | `[{"key":"mx-mabe-order-id", "code":"-CODE-"}]`    | Provided by Mabe for the order                                            |
-| Provider Code  | `supplier.identities`          | `[{"key":"mx-mabe-provider-id", "code":"-CODE-"}]` | Code issued by Mabe to identify the supplier                              |
-| Delivery Plant | `delivery.receiver.identities` | `[{"key":"mx-mabe-plant-id","code":"-CODE-"}]`     | Delivery Plant Code                                                       |
-| Item Code      | `lines[i].item.identities`     | `[{"key":"mx-mabe-item-id","code":"-CODE-"}]`      | Article code provided by Mabe                                             |
-| Reference 1    | `ordering.identities`          | `[{"key":"mx-mabe-ref1","code":"-CODE-"}]`         | Additional code required by Mabe in certain circumstances while ordering. |
-| Reference 2    | `ordering.identities`          | `[{"key":"mx-mabe-ref2","code":"-CODE-"}]`         | Set to `NA` by default as not currently used by Mabe.                     |
+| MABE Field                          | GOBL Invoice Property          | GOBL Invoice Value                                    | Description                                                               |
+| ----------------------------------- | ------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------- |
+| Purchase Order (Ordén de Compra)    | `ordering.identities`          | `[{"key":"mx-mabe-purchase-order", "code":"-CODE-"}]` | Provided by Mabe for the order                                            |
+| Provider Code (Código de Proveedor) | `supplier.identities`          | `[{"key":"mx-mabe-provider-code", "code":"-CODE-"}]`  | Code issued by Mabe to identify the supplier                              |
+| Delivery Plant (Planta de Entrega)  | `delivery.receiver.identities` | `[{"key":"mx-mabe-delivery-plant","code":"-CODE-"}]`  | Delivery Plant Code                                                       |
+| Article Code (Código de Artículo)   | `lines[i].item.identities`     | `[{"key":"mx-mabe-article-code","code":"-CODE-"}]`    | Article code provided by Mabe                                             |
+| Reference 1                         | `ordering.identities`          | `[{"key":"mx-mabe-reference1","code":"-CODE-"}]`      | Additional code required by Mabe in certain circumstances while ordering. |
+| Reference 2                         | `ordering.identities`          | `[{"key":"mx-mabe-reference2","code":"-CODE-"}]`      | Set to `NA` by default as not currently used by Mabe.                     |

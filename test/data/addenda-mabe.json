@@ -87,8 +87,11 @@
       }
     ],
     "ordering": {
-      "code": "9100000000",
       "identities": [
+        {
+          "key": "mx-mabe-order-id",
+          "code": "9100000000"
+        },
         {
           "key": "mx-mabe-ref1",
           "code": "123456"

@@ -57,16 +57,19 @@ func TestAddendaMabeValidation(t *testing.T) {
 	assertValidationError(t, inv, "ordering: cannot be blank")
 	inv.Ordering = &bill.Ordering{}
 
-	assertValidationError(t, inv, "ordering: (code: cannot be blank")
-	inv.Ordering.Code = "12345"
-
-	assertValidationError(t, inv, "ordering: (identities: missing key mx-mabe-ref1")
+	assertValidationError(t, inv, "ordering: (identities: missing key mx-mabe-order-id.)")
 	inv.Ordering.Identities = []*org.Identity{
 		{
-			Key:  addendas.MabeKeyIdentityRef1,
+			Key:  addendas.MabeKeyIdentityOrderID,
 			Code: "12345",
 		},
 	}
+
+	assertValidationError(t, inv, "ordering: (identities: missing key mx-mabe-ref1")
+	inv.Ordering.Identities = append(inv.Ordering.Identities, &org.Identity{
+		Key:  addendas.MabeKeyIdentityRef1,
+		Code: "12345",
+	})
 
 	// All validation errors must be fixed by now.
 	_, err = addendas.For(inv)

@@ -38,6 +38,7 @@ var MabeTipoDocumentoMap = map[cbc.Key]string{
 
 // Mabe specific identity codes.
 const (
+	MabeKeyIdentityOrderID    = "mx-mabe-order-id"
 	MabeKeyIdentityProviderID = "mx-mabe-provider-id"
 	MabeKeyIdentityRef1       = "mx-mabe-ref1"
 	MabeKeyIdentityRef2       = "mx-mabe-ref2"
@@ -168,7 +169,7 @@ func newMabe(inv *bill.Invoice) (*MabeFactura, error) {
 		TipoDocumento: MabeTipoDocumentoMap[inv.Type],
 		Folio:         formatMabeFolio(inv),
 		Fecha:         inv.IssueDate.String(),
-		OrdenCompra:   inv.Ordering.Code,
+		OrdenCompra:   extractIdentity(inv.Ordering.Identities, MabeKeyIdentityOrderID).String(),
 		Referencia1:   extractIdentity(inv.Ordering.Identities, MabeKeyIdentityRef1).String(),
 		Referencia2:   ref2.String(),
 
@@ -269,8 +270,10 @@ func validateOrderingForMabe(value interface{}) error {
 		return nil
 	}
 	return validation.ValidateStruct(ord,
-		validation.Field(&ord.Code, validation.Required),
-		validation.Field(&ord.Identities, org.HasIdentityKey(MabeKeyIdentityRef1)),
+		validation.Field(&ord.Identities,
+			org.HasIdentityKey(MabeKeyIdentityOrderID),
+			org.HasIdentityKey(MabeKeyIdentityRef1),
+		),
 	)
 }
 

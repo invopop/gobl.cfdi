@@ -10,6 +10,7 @@ import (
 
 	"github.com/invopop/gobl"
 	cfdi "github.com/invopop/gobl.cfdi"
+	"github.com/invopop/gobl/bill"
 )
 
 // NewDocumentFrom creates a CFDI Document from a GOBL file in the `test/data` folder
@@ -20,6 +21,16 @@ func NewDocumentFrom(name string) (*cfdi.Document, error) {
 	}
 
 	return cfdi.NewDocument(env)
+}
+
+// LoadTestInvoice returns a GOBL Invoice from a file in the `test/data` folder
+func LoadTestInvoice(name string) (*bill.Invoice, error) {
+	env, err := LoadTestEnvelope(name)
+	if err != nil {
+		return nil, err
+	}
+
+	return env.Extract().(*bill.Invoice), nil
 }
 
 // LoadTestEnvelope returns a GOBL Envelope from a file in the `test/data` folder
@@ -37,6 +48,16 @@ func LoadTestEnvelope(name string) (*gobl.Envelope, error) {
 	}
 
 	return env, nil
+}
+
+// GenerateCFDIFrom returns a CFDI Document from a GOBL Invoice
+func GenerateCFDIFrom(inv *bill.Invoice) (*cfdi.Document, error) {
+	env, err := gobl.Envelop(inv)
+	if err != nil {
+		return nil, err
+	}
+
+	return cfdi.NewDocument(env)
 }
 
 // GetDataPath returns the path to the `test/data` folder

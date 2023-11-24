@@ -32,6 +32,7 @@ const (
 	FakeNoCertificado       = "00000000000000000000"
 	ExportacionNoAplica     = "01"
 	MetodoPagoUnaExhibicion = "PUE"
+	MetodoPagoParcialidades = "PPD"
 	ObjetoImpSi             = "02"
 	ImpuestoIVA             = "002"
 	TipoFactorTasa          = "Tasa"
@@ -100,8 +101,8 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Total:             inv.Totals.TotalWithTax.String(),
 		Moneda:            string(inv.Currency),
 		Exportacion:       ExportacionNoAplica,
-		MetodoPago:        MetodoPagoUnaExhibicion,
-		FormaPago:         lookupFormaPago(inv),
+		MetodoPago:        metodoPago(inv),
+		FormaPago:         formaPago(inv),
 		CondicionesDePago: paymentTermsNotes(inv),
 
 		NoCertificado: FakeNoCertificado,
@@ -196,7 +197,15 @@ func lookupTipoDeComprobante(inv *bill.Invoice) string {
 	return code.String()
 }
 
-func lookupFormaPago(inv *bill.Invoice) string {
+func metodoPago(inv *bill.Invoice) string {
+	if inv.Totals.Due != nil && inv.Totals.Due.IsZero() {
+		return MetodoPagoUnaExhibicion
+	}
+
+	return MetodoPagoParcialidades
+}
+
+func formaPago(inv *bill.Invoice) string {
 	r := inv.TaxRegime()
 	if r == nil {
 		return ""

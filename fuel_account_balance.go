@@ -3,6 +3,7 @@ package cfdi
 import (
 	"encoding/xml"
 
+	"github.com/invopop/gobl.cfdi/internal/format"
 	"github.com/invopop/gobl/regimes/mx"
 )
 
@@ -64,8 +65,8 @@ func addEstadoCuentaCombustible(doc *Document, fc *mx.FuelAccountBalance) {
 	}
 
 	doc.ECCNamespace = ECCNamespace
-	doc.SchemaLocation = doc.SchemaLocation + " " + formatSchemaLocation(ECCNamespace, ECCSchemaLocation)
-	doc.Complementos = append(doc.Complementos, ecc)
+	doc.SchemaLocation = doc.SchemaLocation + " " + format.SchemaLocation(ECCNamespace, ECCSchemaLocation)
+	doc.AppendComplemento(ecc)
 }
 
 // nolint:misspell

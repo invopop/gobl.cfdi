@@ -18,7 +18,6 @@ import (
 var updateOut = flag.Bool("update", false, "Update the XML files in the test/data/out directory")
 
 func TestXMLGeneration(t *testing.T) {
-
 	schema, err := loadSchema()
 	require.NoError(t, err)
 
@@ -40,6 +39,7 @@ func TestXMLGeneration(t *testing.T) {
 					assert.NoError(t, e)
 				}
 				if len(errs) > 0 {
+					assert.Fail(t, "Invalid XML:\n"+string(data))
 					return
 				}
 

@@ -3,6 +3,7 @@ package cfdi
 import (
 	"encoding/xml"
 
+	"github.com/invopop/gobl.cfdi/internal/format"
 	"github.com/invopop/gobl/regimes/mx"
 )
 
@@ -51,8 +52,8 @@ func addValesDeDespensa(doc *Document, fvc *mx.FoodVouchers) {
 	}
 
 	doc.VDNamespace = VDNamespace
-	doc.SchemaLocation = doc.SchemaLocation + " " + formatSchemaLocation(VDNamespace, VDSchemaLocation)
-	doc.Complementos = append(doc.Complementos, vd)
+	doc.SchemaLocation = doc.SchemaLocation + " " + format.SchemaLocation(VDNamespace, VDSchemaLocation)
+	doc.AppendComplemento(vd)
 }
 
 func newVDConceptos(lines []*mx.FoodVouchersLine) []*VDConcepto {

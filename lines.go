@@ -1,14 +1,9 @@
 package cfdi
 
 import (
+	"github.com/invopop/gobl.cfdi/internal"
 	"github.com/invopop/gobl/bill"
-	"github.com/invopop/gobl/num"
-	"github.com/invopop/gobl/regimes/mx"
-)
-
-// Default keys
-const (
-	DefaultClaveUnidad = "ZZ" // Mutuamente definida
+	"github.com/invopop/gobl/tax"
 )
 
 // Conceptos list invoice lines
@@ -28,56 +23,32 @@ type Concepto struct {
 	Descuento     string `xml:",attr,omitempty"`
 	ObjetoImp     string `xml:",attr"`
 
-	Impuestos *Impuestos `xml:"cfdi:Impuestos,omitempty"`
+	Impuestos *ConceptoImpuestos `xml:"cfdi:Impuestos,omitempty"`
 }
 
 // nolint:misspell
-func newConceptos(lines []*bill.Line) *Conceptos {
+func newConceptos(lines []*bill.Line, regime *tax.Regime) *Conceptos {
 	var conceptos []*Concepto
 
 	for _, line := range lines {
-		conceptos = append(conceptos, newConcepto(line))
+		conceptos = append(conceptos, newConcepto(line, regime))
 	}
 
 	return &Conceptos{conceptos}
 }
 
-func newConcepto(line *bill.Line) *Concepto {
+func newConcepto(line *bill.Line, regime *tax.Regime) *Concepto {
 	concepto := &Concepto{
-		ClaveProdServ: mapToClaveProdServ(line),
+		ClaveProdServ: internal.ClaveProdServ(line),
 		Cantidad:      line.Quantity.String(),
-		ClaveUnidad:   mapToClaveUnidad(line),
+		ClaveUnidad:   internal.ClaveUnidad(line),
 		Descripcion:   line.Item.Name, // nolint:misspell
 		ValorUnitario: line.Item.Price.String(),
 		Importe:       line.Sum.String(),
-		Descuento:     formatOptionalAmount(totalLineDiscount(line)),
+		Descuento:     formatOptionalAmount(internal.TotalLineDiscount(line)),
 		ObjetoImp:     ObjetoImpSi,
-		Impuestos:     newImpuestosFromLine(line),
+		Impuestos:     newConceptoImpuestos(line, regime),
 	}
 
 	return concepto
-}
-
-func mapToClaveUnidad(line *bill.Line) string {
-	if line.Item.Unit == "" {
-		return DefaultClaveUnidad
-	}
-
-	return string(line.Item.Unit.UNECE())
-}
-
-func mapToClaveProdServ(line *bill.Line) string {
-	if line.Item == nil {
-		return ""
-	}
-
-	return string(line.Item.Ext[mx.ExtKeyCFDIProdServ])
-}
-
-func totalLineDiscount(l *bill.Line) num.Amount {
-	td := num.MakeAmount(0, l.Sum.Exp()) // discount's precision must match the "Importe" field's one
-	for _, d := range l.Discounts {
-		td = td.Add(d.Amount)
-	}
-	return td
 }

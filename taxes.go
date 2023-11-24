@@ -1,109 +1,138 @@
 package cfdi
 
 import (
+	"github.com/invopop/gobl.cfdi/internal/format"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/currency"
-	"github.com/invopop/gobl/num"
-	"github.com/invopop/gobl/regimes/common"
+	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/tax"
 )
 
 // Impuestos store the invoice tax totals
 type Impuestos struct {
-	TotalImpuestosTrasladados string     `xml:",attr,omitempty"`
-	Traslados                 *Traslados `xml:"cfdi:Traslados,omitempty"`
+	TotalImpuestosTrasladados string       `xml:",attr,omitempty"`
+	TotalImpuestosRetenidos   string       `xml:",attr,omitempty"`
+	Retenciones               *Retenciones `xml:"cfdi:Retenciones,omitempty"`
+	Traslados                 *Traslados   `xml:"cfdi:Traslados,omitempty"`
 }
 
-// Traslados list the applicable taxes of the invoice or a line
+// ConceptoImpuestos store the line tax totals
+type ConceptoImpuestos struct {
+	Traslados   *Traslados   `xml:"cfdi:Traslados,omitempty"`
+	Retenciones *Retenciones `xml:"cfdi:Retenciones,omitempty"`
+}
+
+// Traslados lists the non-retained taxes of a line or the invoice
 type Traslados struct {
-	Traslado []*Traslado `xml:"cfdi:Traslado"`
+	Traslado []*Impuesto `xml:"cfdi:Traslado"`
 }
 
-// Traslado stores the tax data of the invoice or a line
-type Traslado struct {
-	Base       string `xml:",attr"`
+// Retenciones lists the retained taxes of a line or the invoice
+type Retenciones struct {
+	Retencion []*Impuesto `xml:"cfdi:Retencion"`
+}
+
+// Impuesto stores the tax data of the invoice or a line
+type Impuesto struct {
+	Base       string `xml:",attr,omitempty"`
 	Importe    string `xml:",attr,omitempty"`
 	Impuesto   string `xml:",attr"`
 	TasaOCuota string `xml:",attr,omitempty"`
-	TipoFactor string `xml:",attr"`
+	TipoFactor string `xml:",attr,omitempty"`
 }
 
-func newImpuestos(totals *bill.Totals, currency *currency.Code) *Impuestos {
-	impuestos := &Impuestos{
-		TotalImpuestosTrasladados: totals.Tax.String(),
-		Traslados:                 newTraslados(totals.Taxes, currency),
-	}
+func newImpuestos(totals *bill.Totals, currency *currency.Code, regime *tax.Regime) *Impuestos {
+	var traslados, retenciones []*Impuesto
+	totalTraslados, totalRetenciones := currency.Def().Zero(), currency.Def().Zero()
 
-	return impuestos
-}
-
-func newImpuestosFromLine(line *bill.Line) *Impuestos {
-	impuestos := &Impuestos{
-		Traslados: newTrasladosFromLine(line),
-	}
-
-	return impuestos
-}
-
-func newTraslados(taxTotal *tax.Total, currency *currency.Code) *Traslados {
-	var traslados []*Traslado
-
-	for _, cat := range taxTotal.Categories {
-		if cat.Code != common.TaxCategoryVAT {
-			continue
-		}
+	for _, cat := range totals.Taxes.Categories {
+		catDef := regime.Category(cat.Code)
 
 		for _, rate := range cat.Rates {
-			traslados = append(traslados, newTraslado(rate, currency))
+			imp := newImpuesto(rate, currency, catDef)
+
+			if catDef.Retained {
+				// Clear out fields not supported by retained totals
+				imp.Base = ""
+				imp.TasaOCuota = ""
+				imp.TipoFactor = ""
+
+				retenciones = append(retenciones, imp)
+				totalRetenciones = totalRetenciones.Add(rate.Amount)
+			} else {
+				traslados = append(traslados, imp)
+				totalTraslados = totalTraslados.Add(rate.Amount)
+			}
 		}
 	}
 
-	return &Traslados{traslados}
-}
+	impuestos := &Impuestos{}
 
-func newTrasladosFromLine(line *bill.Line) *Traslados {
-	var traslados []*Traslado
-
-	for _, tax := range line.Taxes {
-		if tax.Category != common.TaxCategoryVAT {
-			continue
-		}
-
-		traslados = append(traslados, newTrasladoFromLineTax(line, tax))
+	if len(traslados) > 0 {
+		impuestos.Traslados = &Traslados{traslados}
+		impuestos.TotalImpuestosTrasladados = totalTraslados.String()
 	}
 
-	return &Traslados{traslados}
+	if len(retenciones) > 0 {
+		impuestos.Retenciones = &Retenciones{retenciones}
+		impuestos.TotalImpuestosRetenidos = totalRetenciones.String()
+	}
+
+	return impuestos
 }
 
-func newTraslado(rate *tax.RateTotal, currency *currency.Code) *Traslado {
+func newImpuesto(rate *tax.RateTotal, currency *currency.Code, catDef *tax.Category) *Impuesto {
 	cu := currency.Def().Units // SAT expects tax total amounts with no more decimals than supported by the currency
 
-	traslado := &Traslado{
+	imp := &Impuesto{
 		Base:       rate.Base.Rescale(cu).String(),
 		Importe:    rate.Amount.Rescale(cu).String(),
-		Impuesto:   ImpuestoIVA,
-		TasaOCuota: formatTaxPercent(rate.Percent),
+		Impuesto:   catDef.Map[mx.KeySATImpuesto].String(),
+		TasaOCuota: format.TaxPercent(rate.Percent),
 		TipoFactor: TipoFactorTasa,
 	}
 
-	return traslado
+	return imp
 }
 
-func newTrasladoFromLineTax(line *bill.Line, tax *tax.Combo) *Traslado {
+func newConceptoImpuestos(line *bill.Line, regime *tax.Regime) *ConceptoImpuestos {
+	var traslados, retenciones []*Impuesto
+
+	for _, tax := range line.Taxes {
+		catDef := regime.Category(tax.Category)
+		imp := newConceptoImpuesto(line, tax, catDef)
+
+		if catDef.Retained {
+			retenciones = append(retenciones, imp)
+		} else {
+			traslados = append(traslados, imp)
+		}
+	}
+
+	impuestos := &ConceptoImpuestos{}
+
+	if len(traslados) > 0 {
+		impuestos.Traslados = &Traslados{traslados}
+	}
+
+	if len(retenciones) > 0 {
+		impuestos.Retenciones = &Retenciones{retenciones}
+	}
+
+	return impuestos
+}
+
+func newConceptoImpuesto(line *bill.Line, tax *tax.Combo, catDef *tax.Category) *Impuesto {
 	// GOBL doesn't provide an amount at line level, so we calculate it
 	taxAmount := tax.Percent.Of(line.Total)
 
-	traslado := &Traslado{
+	i := &Impuesto{
 		Base:       line.Total.String(),
 		Importe:    taxAmount.String(),
-		Impuesto:   ImpuestoIVA,
-		TasaOCuota: formatTaxPercent(tax.Percent),
+		Impuesto:   catDef.Map[mx.KeySATImpuesto].String(),
+		TasaOCuota: format.TaxPercent(tax.Percent),
 		TipoFactor: TipoFactorTasa,
 	}
 
-	return traslado
-}
-
-func formatTaxPercent(percent *num.Percentage) string {
-	return percent.Amount.Rescale(6).String()
+	return i
 }

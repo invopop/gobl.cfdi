@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<!-- Add here the schemas of any namespace used in the XML files to be tested -->
-	<xs:import namespace="http://www.sat.gob.mx/cfd/4" schemaLocation="http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd" />
-	<xs:import namespace="http://www.sat.gob.mx/EstadoDeCuentaCombustible12" schemaLocation="http://www.sat.gob.mx/sitio_internet/cfd/EstadoDeCuentaCombustible/ecc12.xsd" />
-	<xs:import namespace="http://www.sat.gob.mx/valesdedespensa" schemaLocation="http://www.sat.gob.mx/sitio_internet/cfd/valesdedespensa/valesdedespensa.xsd" />
+	<xs:import namespace="http://www.sat.gob.mx/cfd/4" schemaLocation="./cfdv40.xsd" />
+	<xs:import namespace="http://www.sat.gob.mx/EstadoDeCuentaCombustible12" schemaLocation="./ecc12.xsd" />
+	<xs:import namespace="http://www.sat.gob.mx/valesdedespensa" schemaLocation="./valesdedespensa.xsd" />
+	<xs:import namespace="https://recepcionfe.mabempresa.com/cfd/addenda/v1" schemaLocation="./mabev1.xsd" />
 </xs:schema>

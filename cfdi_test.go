@@ -25,14 +25,14 @@ func TestComprobanteIngreso(t *testing.T) {
 		assert.Equal(t, "26015", doc.LugarExpedicion)
 		assert.Equal(t, "400.40", doc.SubTotal)
 		assert.Equal(t, "200.20", doc.Descuento)
-		assert.Equal(t, "232.23", doc.Total)
+		assert.Equal(t, "190.86", doc.Total)
 		assert.Equal(t, "MXN", doc.Moneda)
 		assert.Equal(t, "01", doc.Exportacion)
 		assert.Equal(t, "PUE", doc.MetodoPago)
 		assert.Equal(t, "03", doc.FormaPago)
 		assert.Equal(t, "Pago a 30 días.", doc.CondicionesDePago)
 
-		assert.Equal(t, 0, len(doc.Complementos))
+		assert.Nil(t, doc.Complemento)
 	})
 }
 

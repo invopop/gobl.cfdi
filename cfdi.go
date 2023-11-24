@@ -7,6 +7,9 @@ import (
 
 	"cloud.google.com/go/civil"
 	"github.com/invopop/gobl"
+	"github.com/invopop/gobl.cfdi/addendas"
+	"github.com/invopop/gobl.cfdi/internal"
+	"github.com/invopop/gobl.cfdi/internal/format"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
@@ -67,7 +70,8 @@ type Document struct {
 	Conceptos        *Conceptos        `xml:"cfdi:Conceptos"` //nolint:misspell
 	Impuestos        *Impuestos        `xml:"cfdi:Impuestos,omitempty"`
 
-	Complementos []interface{} `xml:"cfdi:Complemento>*,omitempty"`
+	Complemento *internal.Nodes `xml:"cfdi:Complemento,omitempty"`
+	Addenda     *internal.Nodes `xml:"cfdi:Addenda,omitempty"`
 }
 
 // NewDocument converts a GOBL envelope into a CFDI document
@@ -77,13 +81,13 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		return nil, fmt.Errorf("invalid type %T", env.Document)
 	}
 
-	discount := totalInvoiceDiscount(inv)
+	discount := internal.TotalInvoiceDiscount(inv)
 	subtotal := inv.Totals.Total.Add(discount)
 
 	document := &Document{
 		CFDINamespace:  CFDINamespace,
 		XSINamespace:   XSINamespace,
-		SchemaLocation: formatSchemaLocation(CFDINamespace, CFDISchemaLocation),
+		SchemaLocation: format.SchemaLocation(CFDINamespace, CFDISchemaLocation),
 		Version:        CFDIVersion,
 
 		TipoDeComprobante: lookupTipoDeComprobante(inv),
@@ -105,11 +109,15 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		CFDIRelacionados: newCfdiRelacionados(inv),
 		Emisor:           newEmisor(inv.Supplier),
 		Receptor:         newReceptor(inv.Customer),
-		Conceptos:        newConceptos(inv.Lines), // nolint:misspell
-		Impuestos:        newImpuestos(inv.Totals, &inv.Currency),
+		Conceptos:        newConceptos(inv.Lines, inv.TaxRegime()), // nolint:misspell
+		Impuestos:        newImpuestos(inv.Totals, &inv.Currency, inv.TaxRegime()),
 	}
 
 	if err := addComplementos(document, inv.Complements); err != nil {
+		return nil, err
+	}
+
+	if err := addAddendas(document, inv); err != nil {
 		return nil, err
 	}
 
@@ -126,6 +134,26 @@ func (d *Document) Bytes() ([]byte, error) {
 	return append([]byte(xml.Header), bytes...), nil
 }
 
+// AppendComplemento appends a complement to the document
+func (d *Document) AppendComplemento(c interface{}) {
+	// We keep it nil unless an element is added so that no empty node is marshalled to XML
+	if d.Complemento == nil {
+		d.Complemento = &internal.Nodes{}
+	}
+
+	d.Complemento.Nodes = append(d.Complemento.Nodes, c)
+}
+
+// AppendAddenda appends an addenda to the document
+func (d *Document) AppendAddenda(c interface{}) {
+	// We keep it nil unless an element is added so that no empty node is marshalled to XML
+	if d.Addenda == nil {
+		d.Addenda = &internal.Nodes{}
+	}
+
+	d.Addenda.Nodes = append(d.Addenda.Nodes, c)
+}
+
 func addComplementos(doc *Document, complements []*schema.Object) error {
 	for _, c := range complements {
 		switch o := c.Instance().(type) {
@@ -138,6 +166,18 @@ func addComplementos(doc *Document, complements []*schema.Object) error {
 		}
 	}
 
+	return nil
+}
+
+func addAddendas(doc *Document, inv *bill.Invoice) error {
+	ads, err := addendas.For(inv)
+	if err != nil {
+		return err
+	}
+
+	for _, ad := range ads {
+		doc.AppendAddenda(ad)
+	}
 	return nil
 }
 
@@ -195,16 +235,4 @@ func formatOptionalAmount(a num.Amount) string {
 	}
 
 	return a.String()
-}
-
-func formatSchemaLocation(namespace, schemaLocation string) string {
-	return fmt.Sprintf("%s %s", namespace, schemaLocation)
-}
-
-func totalInvoiceDiscount(i *bill.Invoice) num.Amount {
-	td := i.Currency.Def().Zero() // currency's precision is required by the SAT
-	for _, l := range i.Lines {
-		td = td.Add(totalLineDiscount(l))
-	}
-	return td
 }

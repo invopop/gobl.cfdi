@@ -60,6 +60,10 @@ sudo apt-get install libxml2-dev
 
 Tests can take a while to run as they download the complete XML documents to test against, please be patient.
 
+## Addendas
+
+For details on support for converting Addendas, please see the [addendas package](addendas).
+
 ## Command Line
 
 The GOBL to CFDI tool also includes a command line helper. You can find pre-built [gobl.cfdi binaries](https://github.com/invopop/gobl.cfdi/releases) in the github repository, or install manually in your Go environment with:

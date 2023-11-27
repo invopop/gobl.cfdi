@@ -10,7 +10,7 @@ Most of the MABE Addenda fields are determined automatically from the base GOBL 
 
 | MABE Field                          | GOBL Invoice Property          | GOBL Invoice Value                                    | Description                                                               |
 | ----------------------------------- | ------------------------------ | ----------------------------------------------------- | ------------------------------------------------------------------------- |
-| Purchase Order (Ordén de Compra)    | `ordering.identities`          | `[{"key":"mx-mabe-purchase-order", "code":"-CODE-"}]` | Provided by Mabe for the order                                            |
+| Purchase Order (Orden de Compra)    | `ordering.identities`          | `[{"key":"mx-mabe-purchase-order", "code":"-CODE-"}]` | Provided by Mabe for the order                                            |
 | Provider Code (Código de Proveedor) | `supplier.identities`          | `[{"key":"mx-mabe-provider-code", "code":"-CODE-"}]`  | Code issued by Mabe to identify the supplier                              |
 | Delivery Plant (Planta de Entrega)  | `delivery.receiver.identities` | `[{"key":"mx-mabe-delivery-plant","code":"-CODE-"}]`  | Delivery Plant Code                                                       |
 | Article Code (Código de Artículo)   | `lines[i].item.identities`     | `[{"key":"mx-mabe-article-code","code":"-CODE-"}]`    | Article code provided by Mabe                                             |

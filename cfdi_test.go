@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/invopop/gobl.cfdi/test"
+	"github.com/invopop/gobl/num"
+	"github.com/invopop/gobl/pay"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -33,6 +35,35 @@ func TestComprobanteIngreso(t *testing.T) {
 		assert.Equal(t, "Pago a 30 días.", doc.CondicionesDePago)
 
 		assert.Nil(t, doc.Complemento)
+	})
+
+	t.Run("should return the proper MetodoPago", func(t *testing.T) {
+		inv, _ := test.LoadTestInvoice("invoice.json")
+
+		// No advances
+		inv.Payment.Advances = nil
+		doc, _ := test.GenerateCFDIFrom(inv)
+		assert.Equal(t, "PPD", doc.MetodoPago)
+
+		// Partial settlement
+		inv.Payment.Advances = []*pay.Advance{
+			{
+				Amount:      inv.Totals.Payable.Divide(num.MakeAmount(2, 0)),
+				Description: "Partial settlement",
+			},
+		}
+		doc, _ = test.GenerateCFDIFrom(inv)
+		assert.Equal(t, "PPD", doc.MetodoPago)
+
+		// Full settlement
+		inv.Payment.Advances = []*pay.Advance{
+			{
+				Amount:      inv.Totals.Payable,
+				Description: "Full settlement",
+			},
+		}
+		doc, _ = test.GenerateCFDIFrom(inv)
+		assert.Equal(t, "PUE", doc.MetodoPago)
 	})
 }
 

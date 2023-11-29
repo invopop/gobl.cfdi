@@ -4,7 +4,7 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "fb0df5bea43b678ae4966c14dfd25998e3be7787e61c7351ff007d0b954c4bef"
+			"val": "e9a3636402ea508b69819bf1b271af26bad73c564f35d813dc8d6b9e553b8849"
 		},
 		"draft": true
 	},
@@ -82,6 +82,13 @@
 			"terms": {
 				"notes": "Pago a 30 días."
 			},
+			"advances": [
+				{
+					"desc": "Top-up payment",
+					"percent": "100%",
+					"amount": "190.86"
+				}
+			],
 			"instructions": {
 				"key": "credit-transfer"
 			}
@@ -132,7 +139,9 @@
 			},
 			"tax": "-9.34",
 			"total_with_tax": "190.86",
-			"payable": "190.86"
+			"payable": "190.86",
+			"advance": "190.86",
+			"due": "0.00"
 		}
 	}
 }

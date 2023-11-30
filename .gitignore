@@ -16,5 +16,6 @@
 
 # ENV files
 .env
+/tmp
 
 /gobl.cfdi

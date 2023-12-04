@@ -30,7 +30,7 @@
       <mabe:Proveedor codigo="123456"></mabe:Proveedor>
       <mabe:Entrega plantaEntrega="S001" calle="Calle 1" noInterior="NA" codigoPostal="12345"></mabe:Entrega>
       <mabe:Detalles>
-        <mabe:Detalle noLineaArticulo="1" codigoArticulo="CODE123" descripcion="Cigarros" unidad="ZZ" cantidad="2" precioSinIva="100.00" importeSinIva="200.00"></mabe:Detalle>
+        <mabe:Detalle noLineaArticulo="1" codigoArticulo="CODE123" descripcion="Cigarros" unidad="UN" cantidad="2" precioSinIva="100.00" importeSinIva="200.00"></mabe:Detalle>
       </mabe:Detalles>
       <mabe:Descuentos tipo="NA" descripcion="NA" importe="20.00"></mabe:Descuentos>
       <mabe:Subtotal importe="180.00"></mabe:Subtotal>

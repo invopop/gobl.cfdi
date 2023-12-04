@@ -44,6 +44,7 @@ const (
 	MabeKeyIdentityRef2          = "mx-mabe-reference2"
 	MabeKeyIdentityDeliveryPlant = "mx-mabe-delivery-plant"
 	MabeKeyIdentityArticleCode   = "mx-mabe-article-code"
+	MabeKeyIdentityUnit          = "mx-mabe-unit"
 )
 
 // MabeFactura is the root element of the Mabe addendum
@@ -337,11 +338,15 @@ func newMabeDetalles(inv *bill.Invoice) *MabeDetalles {
 
 	for _, line := range inv.Lines {
 		id := extractIdentity(line.Item.Identities, MabeKeyIdentityArticleCode)
+		unit := extractIdentity(line.Item.Identities, MabeKeyIdentityUnit)
+		if unit == cbc.CodeEmpty {
+			unit = internal.ClaveUnidad(line)
+		}
 		d := &MabeDetalle{
 			NoLineaArticulo: line.Index,
 			CodigoArticulo:  id.String(),
 			Descripcion:     line.Item.Name, //nolint:misspell
-			Unidad:          internal.ClaveUnidad(line),
+			Unidad:          unit.String(),
 			Cantidad:        line.Quantity.String(),
 			PrecioSinIva:    line.Item.Price.String(),
 			ImporteSinIva:   line.Sum.String(),
@@ -406,5 +411,5 @@ func extractIdentity(ids []*org.Identity, key cbc.Key) cbc.Code {
 			return id.Code
 		}
 	}
-	return ""
+	return cbc.CodeEmpty
 }

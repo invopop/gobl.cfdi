@@ -2,6 +2,7 @@ package internal
 
 import (
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/regimes/mx"
 )
 
@@ -11,19 +12,19 @@ const (
 )
 
 // ClaveUnidad determines the line item's "ClaveUnidad" value.
-func ClaveUnidad(line *bill.Line) string {
+func ClaveUnidad(line *bill.Line) cbc.Code {
 	if line.Item.Unit == "" {
 		return DefaultClaveUnidad
 	}
 
-	return string(line.Item.Unit.UNECE())
+	return line.Item.Unit.UNECE()
 }
 
 // ClaveProdServ determines the line's Product-Service code
-func ClaveProdServ(line *bill.Line) string {
+func ClaveProdServ(line *bill.Line) cbc.Code {
 	if line.Item == nil {
 		return ""
 	}
 
-	return string(line.Item.Ext[mx.ExtKeyCFDIProdServ])
+	return line.Item.Ext[mx.ExtKeyCFDIProdServ]
 }

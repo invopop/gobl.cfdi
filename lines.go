@@ -39,9 +39,9 @@ func newConceptos(lines []*bill.Line, regime *tax.Regime) *Conceptos {
 
 func newConcepto(line *bill.Line, regime *tax.Regime) *Concepto {
 	concepto := &Concepto{
-		ClaveProdServ: internal.ClaveProdServ(line),
+		ClaveProdServ: internal.ClaveProdServ(line).String(),
 		Cantidad:      line.Quantity.String(),
-		ClaveUnidad:   internal.ClaveUnidad(line),
+		ClaveUnidad:   internal.ClaveUnidad(line).String(),
 		Descripcion:   line.Item.Name, // nolint:misspell
 		ValorUnitario: line.Item.Price.String(),
 		Importe:       line.Sum.String(),

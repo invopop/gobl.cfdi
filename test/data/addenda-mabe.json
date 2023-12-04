@@ -55,6 +55,10 @@
             {
               "key": "mx-mabe-article-code",
               "code": "CODE123"
+            },
+            {
+              "key": "mx-mabe-unit",
+              "code": "UN"
             }
           ],
           "ext": {

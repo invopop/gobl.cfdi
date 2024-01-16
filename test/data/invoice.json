@@ -4,7 +4,7 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "e9a3636402ea508b69819bf1b271af26bad73c564f35d813dc8d6b9e553b8849"
+			"val": "c965150884666e2bae569a17ebe498417798681fd711cea3564d6504b6f7a029"
 		},
 		"draft": true
 	},
@@ -84,14 +84,12 @@
 			},
 			"advances": [
 				{
+					"key": "credit-transfer",
 					"desc": "Top-up payment",
 					"percent": "100%",
 					"amount": "190.86"
 				}
-			],
-			"instructions": {
-				"key": "credit-transfer"
-			}
+			]
 		},
 		"totals": {
 			"sum": "200.20",

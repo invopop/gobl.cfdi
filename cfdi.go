@@ -14,6 +14,7 @@ import (
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/num"
+	"github.com/invopop/gobl/pay"
 	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/schema"
 	"github.com/invopop/gobl/tax"
@@ -33,6 +34,7 @@ const (
 	ExportacionNoAplica     = "01"
 	MetodoPagoUnaExhibicion = "PUE"
 	MetodoPagoParcialidades = "PPD"
+	FormaPagoPorDefinir     = "99"
 	ObjetoImpSi             = "02"
 	ImpuestoIVA             = "002"
 	TipoFactorTasa          = "Tasa"
@@ -198,7 +200,7 @@ func lookupTipoDeComprobante(inv *bill.Invoice) string {
 }
 
 func metodoPago(inv *bill.Invoice) string {
-	if inv.Totals.Due != nil && inv.Totals.Due.IsZero() {
+	if isPrepaid(inv) {
 		return MetodoPagoUnaExhibicion
 	}
 
@@ -206,18 +208,38 @@ func metodoPago(inv *bill.Invoice) string {
 }
 
 func formaPago(inv *bill.Invoice) string {
+	if !isPrepaid(inv) {
+		return FormaPagoPorDefinir
+	}
+
 	r := inv.TaxRegime()
 	if r == nil {
 		return ""
 	}
 
-	keyDef := findKeyDef(r.PaymentMeansKeys, inv.Payment.Instructions.Key)
+	keyDef := findKeyDef(r.PaymentMeansKeys, largestAdvance(inv).Key)
 	if keyDef == nil {
 		return ""
 	}
 
 	code := keyDef.Map[mx.KeySATFormaPago]
 	return code.String()
+}
+
+func isPrepaid(inv *bill.Invoice) bool {
+	return inv.Totals.Due != nil && inv.Totals.Due.IsZero()
+}
+
+func largestAdvance(inv *bill.Invoice) *pay.Advance {
+	la := inv.Payment.Advances[0]
+
+	for _, a := range inv.Payment.Advances {
+		if a.Amount.Compare(la.Amount) == 1 {
+			la = a
+		}
+	}
+
+	return la
 }
 
 func findKeyDef(keyDefs []*tax.KeyDefinition, key cbc.Key) *tax.KeyDefinition {

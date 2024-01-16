@@ -21,7 +21,7 @@ func ClaveUnidad(line *bill.Line) cbc.Code {
 }
 
 // ClaveProdServ determines the line's Product-Service code
-func ClaveProdServ(line *bill.Line) cbc.Code {
+func ClaveProdServ(line *bill.Line) cbc.KeyOrCode {
 	if line.Item == nil {
 		return ""
 	}

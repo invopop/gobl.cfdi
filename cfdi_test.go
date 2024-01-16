@@ -6,6 +6,7 @@ import (
 	"github.com/invopop/gobl.cfdi/test"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/pay"
+	"github.com/invopop/gobl/regimes/mx"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -37,33 +38,34 @@ func TestComprobanteIngreso(t *testing.T) {
 		assert.Nil(t, doc.Complemento)
 	})
 
-	t.Run("should return the proper MetodoPago", func(t *testing.T) {
+	t.Run("should return the proper MetodoPago and FormaPago", func(t *testing.T) {
 		inv, _ := test.LoadTestInvoice("invoice.json")
 
 		// No advances
 		inv.Payment.Advances = nil
 		doc, _ := test.GenerateCFDIFrom(inv)
 		assert.Equal(t, "PPD", doc.MetodoPago)
+		assert.Equal(t, "99", doc.FormaPago)
 
 		// Partial settlement
-		inv.Payment.Advances = []*pay.Advance{
-			{
-				Amount:      inv.Totals.Payable.Divide(num.MakeAmount(2, 0)),
-				Description: "Partial settlement",
-			},
-		}
+		inv.Payment.Advances = append(inv.Payment.Advances, &pay.Advance{
+			Percent:     num.NewPercentage(40, 2),
+			Description: "First partial settlement",
+			Key:         pay.MeansKeyCash,
+		})
 		doc, _ = test.GenerateCFDIFrom(inv)
 		assert.Equal(t, "PPD", doc.MetodoPago)
+		assert.Equal(t, "99", doc.FormaPago)
 
 		// Full settlement
-		inv.Payment.Advances = []*pay.Advance{
-			{
-				Amount:      inv.Totals.Payable,
-				Description: "Full settlement",
-			},
-		}
+		inv.Payment.Advances = append(inv.Payment.Advances, &pay.Advance{
+			Percent:     num.NewPercentage(60, 2),
+			Description: "Second partial settlement",
+			Key:         pay.MeansKeyOnline.With(mx.MeansKeyWallet),
+		})
 		doc, _ = test.GenerateCFDIFrom(inv)
 		assert.Equal(t, "PUE", doc.MetodoPago)
+		assert.Equal(t, "05", doc.FormaPago)
 	})
 }
 

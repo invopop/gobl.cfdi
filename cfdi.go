@@ -17,7 +17,6 @@ import (
 	"github.com/invopop/gobl/pay"
 	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/schema"
-	"github.com/invopop/gobl/tax"
 )
 
 // CFDI schema constants
@@ -97,7 +96,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Serie:             inv.Series,
 		Folio:             inv.Code,
 		Fecha:             formatIssueDate(inv.IssueDate),
-		LugarExpedicion:   inv.Supplier.TaxID.Zone.String(),
+		LugarExpedicion:   inv.Supplier.Ext[mx.ExtKeyCFDIPostCode].String(),
 		SubTotal:          subtotal.String(),
 		Descuento:         formatOptionalAmount(discount),
 		Total:             inv.Totals.TotalWithTax.String(),
@@ -242,7 +241,7 @@ func largestAdvance(inv *bill.Invoice) *pay.Advance {
 	return la
 }
 
-func findKeyDef(keyDefs []*tax.KeyDefinition, key cbc.Key) *tax.KeyDefinition {
+func findKeyDef(keyDefs []*cbc.KeyDefinition, key cbc.Key) *cbc.KeyDefinition {
 	for _, keyDef := range keyDefs {
 		if keyDef.Key == key {
 			return keyDef

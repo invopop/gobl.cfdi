@@ -17,7 +17,6 @@ import (
 	"github.com/invopop/gobl/pay"
 	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/schema"
-	"github.com/invopop/gobl/tax"
 )
 
 // CFDI schema constants
@@ -242,7 +241,7 @@ func largestAdvance(inv *bill.Invoice) *pay.Advance {
 	return la
 }
 
-func findKeyDef(keyDefs []*tax.KeyDefinition, key cbc.Key) *tax.KeyDefinition {
+func findKeyDef(keyDefs []*cbc.KeyDefinition, key cbc.Key) *cbc.KeyDefinition {
 	for _, keyDef := range keyDefs {
 		if keyDef.Key == key {
 			return keyDef

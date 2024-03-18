@@ -4,17 +4,17 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "d1407bc66f62659480f777b8ef008d318a40be00981dc12470fc830579fe59de"
+			"val": "efe25874e83274979473a753620c02231cc573a0e4d0adbacb7417da33d87d79"
 		},
 		"draft": true
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"type": "standard",
 		"series": "LMC",
 		"code": "0010",
-		"type": "standard",
-		"currency": "MXN",
 		"issue_date": "2023-05-29",
+		"currency": "MXN",
 		"supplier": {
 			"name": "ESCUELA KEMPER URGATE",
 			"tax_id": {
@@ -44,10 +44,10 @@
 				"quantity": "2",
 				"item": {
 					"name": "Cigarros",
+					"price": "100.00",
 					"ext": {
 						"mx-cfdi-prod-serv": "50211502"
-					},
-					"price": "100.00"
+					}
 				},
 				"sum": "200.00",
 				"taxes": [

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd" Version="4.0" TipoDeComprobante="E" Serie="CN" Folio="0003" Fecha="2023-07-26T00:00:00" LugarExpedicion="21000" SubTotal="1.77" Total="1.77" Moneda="MXN" Exportacion="01" MetodoPago="PPD" FormaPago="99" CondicionesDePago="Condiciones de pago" Sello="" NoCertificado="00000000000000000000" Certificado="">
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd" Version="4.0" TipoDeComprobante="E" Serie="CN" Folio="0003" Fecha="2023-07-26T00:00:00" LugarExpedicion="21000" SubTotal="1.76" Total="1.76" Moneda="MXN" Exportacion="01" MetodoPago="PPD" FormaPago="99" CondicionesDePago="Condiciones de pago" Sello="" NoCertificado="00000000000000000000" Certificado="">
   <cfdi:CfdiRelacionados TipoRelacion="01">
     <cfdi:CfdiRelacionado UUID="1fac4464-1111-0000-1111-cd37179db12e"></cfdi:CfdiRelacionado>
   </cfdi:CfdiRelacionados>
@@ -23,7 +23,7 @@
   </cfdi:Conceptos>
   <cfdi:Impuestos TotalImpuestosTrasladados="0.00">
     <cfdi:Traslados>
-      <cfdi:Traslado Base="1.77" Importe="0.00" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"></cfdi:Traslado>
+      <cfdi:Traslado Base="1.76" Importe="0.00" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"></cfdi:Traslado>
     </cfdi:Traslados>
   </cfdi:Impuestos>
 </cfdi:Comprobante>

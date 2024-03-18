@@ -4,15 +4,16 @@
 		"uuid": "f3ede26e-2b7f-11ee-ab54-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "41e5821e7ae4067163eaf7f4b65dad9d01f2f29a7a4f8ce3d495d6cb99503004"
+			"val": "8aa235c9de121ce5e483365bc4d4ff67a2b024749e39d697ac65368fc9d9ae03"
 		},
 		"draft": true
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"type": "credit-note",
 		"series": "CN",
 		"code": "0003",
-		"type": "credit-note",
+		"issue_date": "2023-07-26",
 		"currency": "MXN",
 		"preceding": [
 			{
@@ -27,7 +28,6 @@
 				]
 			}
 		],
-		"issue_date": "2023-07-26",
 		"supplier": {
 			"name": "ESCUELA KEMPER URGATE",
 			"tax_id": {
@@ -57,10 +57,10 @@
 				"quantity": "1.33",
 				"item": {
 					"name": "Cobro por tarjetas",
+					"price": "1.32",
 					"ext": {
 						"mx-cfdi-prod-serv": "84141602"
-					},
-					"price": "1.32"
+					}
 				},
 				"sum": "1.76",
 				"taxes": [
@@ -77,11 +77,11 @@
 				"quantity": "1",
 				"item": {
 					"name": "Porcentaje sobre GMV",
+					"price": "0.0087",
+					"unit": "service",
 					"ext": {
 						"mx-cfdi-prod-serv": "80141628"
-					},
-					"price": "0.0087",
-					"unit": "service"
+					}
 				},
 				"sum": "0.0087",
 				"taxes": [
@@ -103,8 +103,8 @@
 			}
 		},
 		"totals": {
-			"sum": "1.7687",
-			"total": "1.77",
+			"sum": "1.76",
+			"total": "1.76",
 			"taxes": {
 				"categories": [
 					{
@@ -112,19 +112,19 @@
 						"rates": [
 							{
 								"key": "zero",
-								"base": "1.7687",
+								"base": "1.76",
 								"percent": "0.0%",
-								"amount": "0.0000"
+								"amount": "0.00"
 							}
 						],
-						"amount": "0.0000"
+						"amount": "0.00"
 					}
 				],
-				"sum": "0.0000"
+				"sum": "0.00"
 			},
 			"tax": "0.00",
-			"total_with_tax": "1.77",
-			"payable": "1.77"
+			"total_with_tax": "1.76",
+			"payable": "1.76"
 		}
 	}
 }

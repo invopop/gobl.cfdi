@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "XXX"
+			"val": "e1dd952639e099f2c85d22bc0da9aebde1c2b854483571f2ff28d9b96b8f282e"
 		},
 		"draft": true
 	},
@@ -50,13 +50,13 @@
 				"quantity": "2",
 				"item": {
 					"name": "Cigarros",
-					"price": "100.00",
 					"identities": [
 						{
 							"key": "mx-mabe-article-code",
 							"code": "CODE123"
 						}
 					],
+					"price": "100.00",
 					"ext": {
 						"mx-cfdi-prod-serv": "50211502"
 					}

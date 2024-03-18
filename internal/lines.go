@@ -4,6 +4,7 @@ import (
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/regimes/mx"
+	"github.com/invopop/gobl/tax"
 )
 
 // Default keys
@@ -21,7 +22,7 @@ func ClaveUnidad(line *bill.Line) cbc.Code {
 }
 
 // ClaveProdServ determines the line's Product-Service code
-func ClaveProdServ(line *bill.Line) cbc.KeyOrCode {
+func ClaveProdServ(line *bill.Line) tax.ExtValue {
 	if line.Item == nil {
 		return ""
 	}

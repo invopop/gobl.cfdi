@@ -97,7 +97,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Serie:             inv.Series,
 		Folio:             inv.Code,
 		Fecha:             formatIssueDate(inv.IssueDate),
-		LugarExpedicion:   inv.Supplier.TaxID.Zone.String(),
+		LugarExpedicion:   inv.Supplier.Ext[mx.ExtKeyCFDIPostCode].String(),
 		SubTotal:          subtotal.String(),
 		Descuento:         formatOptionalAmount(discount),
 		Total:             inv.Totals.TotalWithTax.String(),

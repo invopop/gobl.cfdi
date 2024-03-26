@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd" Version="4.0" TipoDeComprobante="I" Serie="LMC" Folio="0010" Fecha="2023-05-29T00:00:00" LugarExpedicion="26015" SubTotal="400.40" Descuento="200.20" Total="190.86" Moneda="MXN" Exportacion="01" MetodoPago="PUE" FormaPago="03" CondicionesDePago="Pago a 30 días." Sello="" NoCertificado="00000000000000000000" Certificado="">
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/4 http://www.sat.gob.mx/sitio_internet/cfd/4/cfdv40.xsd" Version="4.0" TipoDeComprobante="I" Serie="LMC" Folio="0010" Fecha="2023-05-29T00:00:00" LugarExpedicion="26015" SubTotal="410.90" Descuento="200.20" Total="201.36" Moneda="MXN" Exportacion="01" MetodoPago="PUE" FormaPago="03" CondicionesDePago="Pago a 30 días." Sello="" NoCertificado="00000000000000000000" Certificado="">
   <cfdi:Emisor Rfc="EKU9003173C9" Nombre="ESCUELA KEMPER URGATE" RegimenFiscal="601"></cfdi:Emisor>
   <cfdi:Receptor Rfc="URE180429TM6" Nombre="UNIVERSIDAD ROBOTICA ESPAÑOLA" DomicilioFiscalReceptor="65000" RegimenFiscalReceptor="601" UsoCFDI="G01"></cfdi:Receptor>
   <cfdi:Conceptos>
@@ -14,6 +14,13 @@
         </cfdi:Retenciones>
       </cfdi:Impuestos>
     </cfdi:Concepto>
+    <cfdi:Concepto ClaveProdServ="50211502" Cantidad="1" ClaveUnidad="H87" Descripcion="Cerveza" ValorUnitario="10.50" Importe="10.50" ObjetoImp="02">
+      <cfdi:Impuestos>
+        <cfdi:Traslados>
+          <cfdi:Traslado Base="10.50" Importe="0.00" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"></cfdi:Traslado>
+        </cfdi:Traslados>
+      </cfdi:Impuestos>
+    </cfdi:Concepto>
   </cfdi:Conceptos>
   <cfdi:Impuestos TotalImpuestosTrasladados="32.03" TotalImpuestosRetenidos="41.37">
     <cfdi:Retenciones>
@@ -22,6 +29,7 @@
     </cfdi:Retenciones>
     <cfdi:Traslados>
       <cfdi:Traslado Base="200.20" Importe="32.03" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
+      <cfdi:Traslado Base="10.50" Importe="0.00" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"></cfdi:Traslado>
     </cfdi:Traslados>
   </cfdi:Impuestos>
 </cfdi:Comprobante>

@@ -4,6 +4,7 @@ import (
 	"github.com/invopop/gobl.cfdi/internal/format"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/currency"
+	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/tax"
 )
@@ -84,11 +85,16 @@ func newImpuestos(totals *bill.Totals, currency *currency.Code, regime *tax.Regi
 func newImpuesto(rate *tax.RateTotal, currency *currency.Code, catDef *tax.Category) *Impuesto {
 	cu := currency.Def().Units // SAT expects tax total amounts with no more decimals than supported by the currency
 
+	ratePercent := rate.Percent
+	if ratePercent == nil {
+		ratePercent = num.NewPercentage(0, 3)
+	}
+
 	imp := &Impuesto{
 		Base:       rate.Base.Rescale(cu).String(),
 		Importe:    rate.Amount.Rescale(cu).String(),
 		Impuesto:   catDef.Map[mx.KeySATImpuesto].String(),
-		TasaOCuota: format.TaxPercent(rate.Percent),
+		TasaOCuota: format.TaxPercent(ratePercent),
 		TipoFactor: TipoFactorTasa,
 	}
 
@@ -124,13 +130,17 @@ func newConceptoImpuestos(line *bill.Line, regime *tax.Regime) *ConceptoImpuesto
 
 func newConceptoImpuesto(line *bill.Line, tax *tax.Combo, catDef *tax.Category) *Impuesto {
 	// GOBL doesn't provide an amount at line level, so we calculate it
-	taxAmount := tax.Percent.Of(line.Total)
+	taxPercent := tax.Percent
+	if taxPercent == nil {
+		taxPercent = num.NewPercentage(0, 3)
+	}
+	taxAmount := taxPercent.Of(line.Total)
 
 	i := &Impuesto{
 		Base:       line.Total.String(),
 		Importe:    taxAmount.String(),
 		Impuesto:   catDef.Map[mx.KeySATImpuesto].String(),
-		TasaOCuota: format.TaxPercent(tax.Percent),
+		TasaOCuota: format.TaxPercent(taxPercent),
 		TipoFactor: TipoFactorTasa,
 	}
 

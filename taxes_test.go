@@ -35,5 +35,13 @@ func TestImpuestos(t *testing.T) {
 		assert.Equal(t, "002", tr.Impuesto)
 		assert.Equal(t, "Tasa", tr.TipoFactor)
 		assert.Equal(t, "0.160000", tr.TasaOCuota)
+
+		tr = doc.Conceptos.Concepto[1].Impuestos.Traslados.Traslado[0]
+
+		assert.Equal(t, "10.50", tr.Base)
+		assert.Equal(t, "0.00", tr.Importe)
+		assert.Equal(t, "002", tr.Impuesto)
+		assert.Equal(t, "Tasa", tr.TipoFactor)
+		assert.Equal(t, "0.000000", tr.TasaOCuota)
 	})
 }

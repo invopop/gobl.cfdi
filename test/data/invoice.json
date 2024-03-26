@@ -4,7 +4,7 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "cfc0d98c1eacf969b4b7b2a51a7c5f2f80a1f9451b78ffc33c82eb477ec1ecec"
+			"val": "390c8e092e58ac47a8b1d2680cff0d2da7ac0997301373f5c17c5fdc47466d0f"
 		},
 		"draft": true
 	},
@@ -76,6 +76,26 @@
 					}
 				],
 				"total": "200.2020"
+			},
+			{
+				"i": 2,
+				"quantity": "1",
+				"item": {
+					"name": "Cerveza",
+					"price": "10.50",
+					"unit": "piece",
+					"ext": {
+						"mx-cfdi-prod-serv": "50211502"
+					}
+				},
+				"sum": "10.50",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"rate": "exempt"
+					}
+				],
+				"total": "10.50"
 			}
 		],
 		"payment": {
@@ -87,13 +107,13 @@
 					"key": "credit-transfer",
 					"description": "Top-up payment",
 					"percent": "100%",
-					"amount": "190.86"
+					"amount": "201.36"
 				}
 			]
 		},
 		"totals": {
-			"sum": "200.20",
-			"total": "200.20",
+			"sum": "210.70",
+			"total": "210.70",
 			"taxes": {
 				"categories": [
 					{
@@ -104,6 +124,11 @@
 								"base": "200.20",
 								"percent": "16.0%",
 								"amount": "32.03"
+							},
+							{
+								"key": "exempt",
+								"base": "10.50",
+								"amount": "0.00"
 							}
 						],
 						"amount": "32.03"
@@ -136,9 +161,9 @@
 				"sum": "-9.34"
 			},
 			"tax": "-9.34",
-			"total_with_tax": "190.86",
-			"payable": "190.86",
-			"advance": "190.86",
+			"total_with_tax": "201.36",
+			"payable": "201.36",
+			"advance": "201.36",
 			"due": "0.00"
 		}
 	}

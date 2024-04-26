@@ -83,7 +83,7 @@ func newImpuestos(totals *bill.Totals, currency *currency.Code, regime *tax.Regi
 }
 
 func newImpuesto(rate *tax.RateTotal, currency *currency.Code, catDef *tax.Category) *Impuesto {
-	cu := currency.Def().Units // SAT expects tax total amounts with no more decimals than supported by the currency
+	cu := currency.Def().Subunits // SAT expects tax total amounts with no more decimals than supported by the currency
 
 	ratePercent := rate.Percent
 	if ratePercent == nil {

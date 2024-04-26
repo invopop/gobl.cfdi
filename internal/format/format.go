@@ -24,5 +24,5 @@ func SchemaLocation(namespace, schemaLocation string) string {
 // TaxPercent provides a string with the tax percentage rescaled according to
 // CFDI requirements.
 func TaxPercent(percent *num.Percentage) string {
-	return percent.Amount.Rescale(6).String()
+	return percent.Base().Rescale(6).String()
 }

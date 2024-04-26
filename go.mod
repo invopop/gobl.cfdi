@@ -3,7 +3,8 @@ module github.com/invopop/gobl.cfdi
 go 1.20
 
 require (
-	github.com/invopop/gobl v0.69.0
+	github.com/google/go-querystring v1.1.0
+	github.com/invopop/gobl v0.74.2-0.20240426131605-605d48f0b769
 	github.com/joho/godotenv v1.5.1
 	github.com/magefile/mage v1.15.0
 	github.com/spf13/cobra v1.7.0
@@ -15,6 +16,7 @@ require (
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/invopop/yaml v0.3.1 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/otiai10/copy v1.7.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -29,7 +31,7 @@ require (
 	cloud.google.com/go v0.110.2
 	github.com/Masterminds/semver/v3 v3.2.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
-	github.com/google/uuid v1.3.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/invopop/jsonschema v0.12.0 // indirect
 	github.com/invopop/validation v0.3.0
 	github.com/lestrrat-go/libxml2 v0.0.0-20201123224832-e6d9de61b80d

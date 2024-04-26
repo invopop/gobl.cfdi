@@ -39,7 +39,7 @@ func newCfdiRelacionados(inv *bill.Invoice) *CFDIRelacionados {
 
 func lookupUUID(p *bill.Preceding) string {
 	for _, s := range p.Stamps {
-		if s.Provider == mx.StampProviderSATUUID {
+		if s.Provider == mx.StampSATUUID {
 			return s.Value
 		}
 	}

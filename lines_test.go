@@ -25,9 +25,11 @@ func TestConceptos(t *testing.T) {
 		assert.Equal(t, "400.4040", c.Importe)
 		assert.Equal(t, "02", c.ObjetoImp)
 		assert.Equal(t, "H87", c.ClaveUnidad)
+		assert.Len(t, c.Impuestos.Traslados.Traslado, 1)
 
 		c = doc.Conceptos.Concepto[1]
 		assert.Equal(t, "01", c.ObjetoImp)
+		assert.Nil(t, c.Impuestos)
 	})
 
 	t.Run("should return the default ClaveUnidad when no unit is given", func(t *testing.T) {

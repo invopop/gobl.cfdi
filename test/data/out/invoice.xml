@@ -14,13 +14,7 @@
         </cfdi:Retenciones>
       </cfdi:Impuestos>
     </cfdi:Concepto>
-    <cfdi:Concepto ClaveProdServ="50211502" Cantidad="1" ClaveUnidad="H87" Descripcion="Cerveza" ValorUnitario="10.50" Importe="10.50" ObjetoImp="02">
-      <cfdi:Impuestos>
-        <cfdi:Traslados>
-          <cfdi:Traslado Base="10.50" Importe="0.00" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"></cfdi:Traslado>
-        </cfdi:Traslados>
-      </cfdi:Impuestos>
-    </cfdi:Concepto>
+    <cfdi:Concepto ClaveProdServ="50211502" Cantidad="1" ClaveUnidad="H87" Descripcion="Cerveza" ValorUnitario="10.50" Importe="10.50" ObjetoImp="01"></cfdi:Concepto>
   </cfdi:Conceptos>
   <cfdi:Impuestos TotalImpuestosTrasladados="32.03" TotalImpuestosRetenidos="41.37">
     <cfdi:Retenciones>
@@ -29,7 +23,6 @@
     </cfdi:Retenciones>
     <cfdi:Traslados>
       <cfdi:Traslado Base="200.20" Importe="32.03" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
-      <cfdi:Traslado Base="10.50" Importe="0.00" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"></cfdi:Traslado>
     </cfdi:Traslados>
   </cfdi:Impuestos>
 </cfdi:Comprobante>

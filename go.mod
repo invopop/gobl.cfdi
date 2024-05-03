@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/google/go-querystring v1.1.0
-	github.com/invopop/gobl v0.74.2-0.20240426131605-605d48f0b769
+	github.com/invopop/gobl v0.74.2-0.20240429205753-51d26c7ca2f8
 	github.com/joho/godotenv v1.5.1
 	github.com/magefile/mage v1.15.0
 	github.com/spf13/cobra v1.7.0

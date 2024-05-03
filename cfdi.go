@@ -34,9 +34,14 @@ const (
 	MetodoPagoUnaExhibicion = "PUE"
 	MetodoPagoParcialidades = "PPD"
 	FormaPagoPorDefinir     = "99"
-	ObjetoImpSi             = "02"
 	ImpuestoIVA             = "002"
 	TipoFactorTasa          = "Tasa"
+)
+
+// Subject to tax constants
+const (
+	ObjetoImpNo = "01" // not subject to tax
+	ObjetoImpSi = "02" // subject to tax
 )
 
 // Document is a pseudo-model for containing the XML document being created

@@ -4,17 +4,23 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "390c8e092e58ac47a8b1d2680cff0d2da7ac0997301373f5c17c5fdc47466d0f"
+			"val": "e42b6b68f2cbc0cef7bf7d26d5a71db2e78b19c98be2579f927a65ffabd1d592"
 		},
 		"draft": true
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"uuid": "018f5299-3dfb-7562-9cac-7125207161f5",
 		"type": "standard",
 		"series": "LMC",
 		"code": "0010",
 		"issue_date": "2023-05-29",
 		"currency": "MXN",
+		"tax": {
+			"ext": {
+				"mx-cfdi-issue-place": "26015"
+			}
+		},
 		"supplier": {
 			"name": "ESCUELA KEMPER URGATE",
 			"tax_id": {
@@ -22,8 +28,7 @@
 				"code": "EKU9003173C9"
 			},
 			"ext": {
-				"mx-cfdi-fiscal-regime": "601",
-				"mx-cfdi-post-code": "26015"
+				"mx-cfdi-fiscal-regime": "601"
 			}
 		},
 		"customer": {
@@ -96,6 +101,20 @@
 					}
 				],
 				"total": "10.50"
+			},
+			{
+				"i": 3,
+				"quantity": "1",
+				"item": {
+					"name": "No Tax",
+					"price": "10.00",
+					"unit": "piece",
+					"ext": {
+						"mx-cfdi-prod-serv": "50211502"
+					}
+				},
+				"sum": "10.00",
+				"total": "10.00"
 			}
 		],
 		"payment": {
@@ -107,13 +126,13 @@
 					"key": "credit-transfer",
 					"description": "Top-up payment",
 					"percent": "100%",
-					"amount": "201.36"
+					"amount": "211.36"
 				}
 			]
 		},
 		"totals": {
-			"sum": "210.70",
-			"total": "210.70",
+			"sum": "220.70",
+			"total": "220.70",
 			"taxes": {
 				"categories": [
 					{
@@ -161,9 +180,9 @@
 				"sum": "-9.34"
 			},
 			"tax": "-9.34",
-			"total_with_tax": "201.36",
-			"payable": "201.36",
-			"advance": "201.36",
+			"total_with_tax": "211.36",
+			"payable": "211.36",
+			"advance": "211.36",
 			"due": "0.00"
 		}
 	}

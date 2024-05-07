@@ -5,6 +5,7 @@ import (
 
 	"github.com/invopop/gobl.cfdi/internal/format"
 	"github.com/invopop/gobl/regimes/mx"
+	"github.com/invopop/gobl/tax"
 )
 
 // ECC Schema constants
@@ -97,9 +98,22 @@ func newECCTraslados(taxes []*mx.FuelAccountTax) []*ECCTraslado {
 	ts := make([]*ECCTraslado, len(taxes))
 
 	for i, t := range taxes {
+		tasa := ""
+		if t.Percent != nil {
+			tasa = t.Percent.Base().String()
+		} else if t.Rate != nil {
+			tasa = t.Rate.String()
+		}
+		impuesto := ""
+		switch t.Category {
+		case tax.CategoryVAT:
+			impuesto = "IVA"
+		case mx.TaxCategoryIEPS:
+			impuesto = "IEPS"
+		}
 		ts[i] = &ECCTraslado{
-			Impuesto:   t.Code.String(),
-			TasaOCuota: t.Rate.String(),
+			Impuesto:   impuesto,
+			TasaOCuota: tasa,
 			Importe:    t.Amount.String(),
 		}
 	}

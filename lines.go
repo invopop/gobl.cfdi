@@ -46,9 +46,16 @@ func newConcepto(line *bill.Line, regime *tax.Regime) *Concepto {
 		ValorUnitario: line.Item.Price.String(),
 		Importe:       line.Sum.String(),
 		Descuento:     formatOptionalAmount(internal.TotalLineDiscount(line)),
-		ObjetoImp:     ObjetoImpSi,
+		ObjetoImp:     lineSubjectToTax(line),
 		Impuestos:     newConceptoImpuestos(line, regime),
 	}
 
 	return concepto
+}
+
+func lineSubjectToTax(line *bill.Line) string {
+	if len(line.Taxes) == 0 {
+		return ObjetoImpNo
+	}
+	return ObjetoImpSi
 }

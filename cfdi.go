@@ -34,9 +34,20 @@ const (
 	MetodoPagoUnaExhibicion = "PUE"
 	MetodoPagoParcialidades = "PPD"
 	FormaPagoPorDefinir     = "99"
-	ObjetoImpSi             = "02"
 	ImpuestoIVA             = "002"
-	TipoFactorTasa          = "Tasa"
+)
+
+// TipoFactor definitions.
+const (
+	TipoFactorTasa   = "Tasa"
+	TipoFactorCuota  = "Cuota" // Not supported
+	TipoFactorExento = "Exento"
+)
+
+// Subject to tax constants
+const (
+	ObjetoImpNo = "01" // not subject to tax
+	ObjetoImpSi = "02" // subject to tax
 )
 
 // Document is a pseudo-model for containing the XML document being created
@@ -96,7 +107,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Serie:             inv.Series,
 		Folio:             inv.Code,
 		Fecha:             formatIssueDate(inv.IssueDate),
-		LugarExpedicion:   inv.Supplier.Ext[mx.ExtKeyCFDIPostCode].String(),
+		LugarExpedicion:   issuePlace(inv),
 		SubTotal:          subtotal.String(),
 		Descuento:         formatOptionalAmount(discount),
 		Total:             inv.Totals.TotalWithTax.String(),
@@ -124,6 +135,14 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 	}
 
 	return document, nil
+}
+
+func issuePlace(inv *bill.Invoice) string {
+	if inv.Tax != nil && inv.Tax.Ext.Has(mx.ExtKeyCFDIIssuePlace) {
+		return inv.Tax.Ext[mx.ExtKeyCFDIIssuePlace].String()
+	}
+	// Fallback
+	return inv.Supplier.Ext[mx.ExtKeyCFDIIssuePlace].String()
 }
 
 // Bytes returns the XML representation of the document in bytes

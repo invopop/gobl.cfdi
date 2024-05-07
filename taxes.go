@@ -108,10 +108,6 @@ func newConceptoImpuestos(line *bill.Line, regime *tax.Regime) *ConceptoImpuesto
 	var traslados, retenciones []*Impuesto
 
 	for _, tax := range line.Taxes {
-		if tax.Percent == nil {
-			// skip exempt taxes
-			continue
-		}
 		catDef := regime.Category(tax.Category)
 		imp := newConceptoImpuesto(line, tax, catDef)
 		if catDef.Retained {
@@ -148,7 +144,11 @@ func newConceptoImpuesto(line *bill.Line, tax *tax.Combo, catDef *tax.Category) 
 		Importe:    taxAmount.String(),
 		Impuesto:   catDef.Map[mx.KeySATImpuesto].String(),
 		TasaOCuota: format.TaxPercent(taxPercent),
-		TipoFactor: TipoFactorTasa,
+	}
+	if tax.Percent == nil {
+		i.TipoFactor = TipoFactorExento
+	} else {
+		i.TipoFactor = TipoFactorTasa
 	}
 
 	return i

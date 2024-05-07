@@ -46,25 +46,16 @@ func newConcepto(line *bill.Line, regime *tax.Regime) *Concepto {
 		ValorUnitario: line.Item.Price.String(),
 		Importe:       line.Sum.String(),
 		Descuento:     formatOptionalAmount(internal.TotalLineDiscount(line)),
-		ObjetoImp:     lineSubjectToTax(line, regime),
+		ObjetoImp:     lineSubjectToTax(line),
 		Impuestos:     newConceptoImpuestos(line, regime),
 	}
 
 	return concepto
 }
 
-func lineSubjectToTax(line *bill.Line, r *tax.Regime) string {
+func lineSubjectToTax(line *bill.Line) string {
 	if len(line.Taxes) == 0 {
 		return ObjetoImpNo
-	}
-	// Check if the line's VAT is exempt from VAT
-	for _, combo := range line.Taxes {
-		if combo.Category == tax.CategoryVAT {
-			rate := r.Rate(combo.Category, combo.Rate)
-			if rate != nil && rate.Exempt {
-				return ObjetoImpNo
-			}
-		}
 	}
 	return ObjetoImpSi
 }

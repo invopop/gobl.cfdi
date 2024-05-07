@@ -35,7 +35,13 @@ const (
 	MetodoPagoParcialidades = "PPD"
 	FormaPagoPorDefinir     = "99"
 	ImpuestoIVA             = "002"
-	TipoFactorTasa          = "Tasa"
+)
+
+// TipoFactor definitions.
+const (
+	TipoFactorTasa   = "Tasa"
+	TipoFactorCuota  = "Cuota" // Not supported
+	TipoFactorExento = "Exento"
 )
 
 // Subject to tax constants

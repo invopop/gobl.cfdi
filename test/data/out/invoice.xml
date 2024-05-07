@@ -17,7 +17,7 @@
     <cfdi:Concepto ClaveProdServ="50211502" Cantidad="1" ClaveUnidad="H87" Descripcion="Cerveza" ValorUnitario="10.50" Importe="10.50" ObjetoImp="02">
       <cfdi:Impuestos>
         <cfdi:Traslados>
-          <cfdi:Traslado Base="10.50" Importe="0.00" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Exento"></cfdi:Traslado>
+          <cfdi:Traslado Base="10.50" Impuesto="002" TipoFactor="Exento"></cfdi:Traslado>
         </cfdi:Traslados>
       </cfdi:Impuestos>
     </cfdi:Concepto>

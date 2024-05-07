@@ -30,6 +30,7 @@
     </cfdi:Retenciones>
     <cfdi:Traslados>
       <cfdi:Traslado Base="200.20" Importe="32.03" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
+      <cfdi:Traslado Base="10.50" Impuesto="002" TipoFactor="Exento"></cfdi:Traslado>
     </cfdi:Traslados>
   </cfdi:Impuestos>
 </cfdi:Comprobante>

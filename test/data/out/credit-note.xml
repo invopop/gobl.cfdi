@@ -21,7 +21,7 @@
       </cfdi:Impuestos>
     </cfdi:Concepto>
   </cfdi:Conceptos>
-  <cfdi:Impuestos TotalImpuestosTrasladados="0.00">
+  <cfdi:Impuestos>
     <cfdi:Traslados>
       <cfdi:Traslado Base="1.76" Importe="0.00" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"></cfdi:Traslado>
     </cfdi:Traslados>

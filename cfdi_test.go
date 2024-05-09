@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/invopop/gobl.cfdi/test"
+	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/pay"
 	"github.com/invopop/gobl/regimes/mx"
@@ -66,6 +67,17 @@ func TestComprobanteIngreso(t *testing.T) {
 		doc, _ = test.GenerateCFDIFrom(inv)
 		assert.Equal(t, "PUE", doc.MetodoPago)
 		assert.Equal(t, "05", doc.FormaPago)
+
+		// Total amount is zero
+		inv.Lines = inv.Lines[:1]
+		inv.Lines[0].Discounts = []*bill.LineDiscount{{Percent: num.NewPercentage(100, 2)}}
+		inv.Payment.Advances = []*pay.Advance{{
+			Description: "No payment needed",
+			Key:         pay.MeansKeyCash,
+		}}
+		doc, _ = test.GenerateCFDIFrom(inv)
+		assert.Equal(t, "PUE", doc.MetodoPago)
+		assert.Equal(t, "01", doc.FormaPago)
 	})
 }
 

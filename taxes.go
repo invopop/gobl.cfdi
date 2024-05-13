@@ -69,16 +69,12 @@ func newImpuestos(totals *bill.Totals, currency *currency.Code, regime *tax.Regi
 	empty := true
 	if len(traslados) > 0 {
 		impuestos.Traslados = &Traslados{traslados}
-		if !totalTraslados.IsZero() {
-			impuestos.TotalImpuestosTrasladados = totalTraslados.String()
-		}
+		impuestos.TotalImpuestosTrasladados = totalTraslados.String()
 		empty = false
 	}
 	if len(retenciones) > 0 {
 		impuestos.Retenciones = &Retenciones{retenciones}
-		if !totalRetenciones.IsZero() {
-			impuestos.TotalImpuestosRetenidos = totalRetenciones.String()
-		}
+		impuestos.TotalImpuestosRetenidos = totalRetenciones.String()
 		empty = false
 	}
 	if empty {

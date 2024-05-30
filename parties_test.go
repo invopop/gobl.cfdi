@@ -10,7 +10,7 @@ import (
 
 func TestEmisor(t *testing.T) {
 	t.Run("should return a Document with the Emisor data", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("bare-minimum-invoice.json")
+		doc, err := test.NewDocumentFrom("invoice-b2b-bare.json")
 		require.NoError(t, err)
 
 		e := doc.Emisor
@@ -23,7 +23,7 @@ func TestEmisor(t *testing.T) {
 
 func TestReceptor(t *testing.T) {
 	t.Run("should return a Document with the Receptor data", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("bare-minimum-invoice.json")
+		doc, err := test.NewDocumentFrom("invoice-b2b-bare.json")
 		require.NoError(t, err)
 
 		r := doc.Receptor

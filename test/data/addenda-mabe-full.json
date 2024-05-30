@@ -4,17 +4,23 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "28fd3cc0c09a6c87e0ffdcb75dbc39069c2c42ab8fe74f31273e48056e0d7fec"
+			"val": "8b2bf8ac0f15a1f85a2266320599d3e7a93d1c3bf59bcfdbf8f5b478f6d74f2a"
 		},
 		"draft": true
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"uuid": "018fc8dd-9c77-717c-9e75-f82c8aedbedf",
 		"type": "standard",
 		"series": "LMC",
 		"code": "0010",
 		"issue_date": "2023-05-29",
 		"currency": "MXN",
+		"tax": {
+			"ext": {
+				"mx-cfdi-issue-place": "26015"
+			}
+		},
 		"supplier": {
 			"name": "ESCUELA KEMPER URGATE",
 			"tax_id": {
@@ -28,8 +34,7 @@
 				}
 			],
 			"ext": {
-				"mx-cfdi-fiscal-regime": "601",
-				"mx-cfdi-post-code": "26015"
+				"mx-cfdi-fiscal-regime": "601"
 			}
 		},
 		"customer": {

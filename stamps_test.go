@@ -12,7 +12,7 @@ import (
 )
 
 func TestStamp(t *testing.T) {
-	env, err := test.LoadTestEnvelope("invoice.json")
+	env, err := test.LoadTestEnvelope("invoice-b2b-full.json")
 	require.NoError(t, err)
 
 	sd := &cfdi.StampData{

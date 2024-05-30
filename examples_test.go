@@ -1,6 +1,7 @@
 package cfdi_test
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -8,6 +9,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/invopop/gobl"
+	cfdi "github.com/invopop/gobl.cfdi"
 	"github.com/invopop/gobl.cfdi/test"
 	"github.com/lestrrat-go/libxml2"
 	"github.com/lestrrat-go/libxml2/xsd"
@@ -15,7 +18,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var updateOut = flag.Bool("update", false, "Update the XML files in the test/data/out directory")
+var updateOut = flag.Bool("update", false, "Update the JSON and XML files in test/data and test/data/out")
 
 func TestXMLGeneration(t *testing.T) {
 	schema, err := loadSchema()
@@ -28,7 +31,7 @@ func TestXMLGeneration(t *testing.T) {
 		name := fmt.Sprintf("should convert %s example file successfully", example)
 
 		t.Run(name, func(t *testing.T) {
-			data, err := convertExample(example)
+			data, env, err := convertExample(example)
 			require.NoError(t, err)
 
 			outPath := filepath.Join(test.GetDataPath(), "out", strings.TrimSuffix(example, ".json")+".xml")
@@ -43,7 +46,13 @@ func TestXMLGeneration(t *testing.T) {
 					return
 				}
 
+				// Write the XML file
 				err = os.WriteFile(outPath, data, 0644)
+				require.NoError(t, err)
+
+				// Update the (just re-calculated) GOBL file as well
+				jsData, _ := json.MarshalIndent(env, "", "\t")
+				err = os.WriteFile(filepath.Join(test.GetDataPath(), example), append(jsData, '\n'), 0644)
 				require.NoError(t, err)
 
 				return
@@ -81,18 +90,23 @@ func lookupExamples() ([]string, error) {
 	return examples, nil
 }
 
-func convertExample(example string) ([]byte, error) {
-	doc, err := test.NewDocumentFrom(example)
+func convertExample(example string) ([]byte, *gobl.Envelope, error) {
+	env, err := test.LoadTestEnvelope(example)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
+	}
+
+	doc, err := cfdi.NewDocument(env)
+	if err != nil {
+		return nil, nil, err
 	}
 
 	data, err := doc.Bytes()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return append(data, '\n'), nil
+	return append(data, '\n'), env, nil
 }
 
 func validateDoc(schema *xsd.Schema, doc []byte) []error {

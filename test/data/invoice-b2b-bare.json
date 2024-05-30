@@ -1,35 +1,34 @@
 {
 	"$schema": "https://gobl.org/draft-0/envelope",
 	"head": {
-		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
+		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "30bde7b3ee76358038debe345010de42a355f686351cba4b35c2bf1215bd24d2"
+			"val": "258238860fd6ddaa4fabb0e38a59cc0dfcf3983b14cefe2b17609151239b6442"
 		},
 		"draft": true
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"uuid": "018fc8dc-2903-76aa-a68c-4c3873667023",
 		"type": "standard",
 		"series": "LMC",
 		"code": "0010",
 		"issue_date": "2023-05-29",
 		"currency": "MXN",
+		"tax": {
+			"ext": {
+				"mx-cfdi-issue-place": "26015"
+			}
+		},
 		"supplier": {
 			"name": "ESCUELA KEMPER URGATE",
 			"tax_id": {
 				"country": "MX",
 				"code": "EKU9003173C9"
 			},
-			"identities": [
-				{
-					"key": "mx-mabe-provider-code",
-					"code": "123456"
-				}
-			],
 			"ext": {
-				"mx-cfdi-fiscal-regime": "601",
-				"mx-cfdi-post-code": "26015"
+				"mx-cfdi-fiscal-regime": "601"
 			}
 		},
 		"customer": {
@@ -50,12 +49,6 @@
 				"quantity": "2",
 				"item": {
 					"name": "Cigarros",
-					"identities": [
-						{
-							"key": "mx-mabe-article-code",
-							"code": "CODE123"
-						}
-					],
 					"price": "100.00",
 					"ext": {
 						"mx-cfdi-prod-serv": "50211502"
@@ -72,32 +65,9 @@
 				"total": "200.00"
 			}
 		],
-		"ordering": {
-			"identities": [
-				{
-					"key": "mx-mabe-purchase-order",
-					"code": "91000000"
-				},
-				{
-					"key": "mx-mabe-reference1",
-					"code": "900900"
-				}
-			]
-		},
 		"payment": {
 			"instructions": {
 				"key": "credit-transfer"
-			}
-		},
-		"delivery": {
-			"receiver": {
-				"name": "ESTUFAS 30",
-				"identities": [
-					{
-						"key": "mx-mabe-delivery-plant",
-						"code": "S001"
-					}
-				]
 			}
 		},
 		"totals": {

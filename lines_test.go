@@ -11,7 +11,7 @@ import (
 func TestConceptos(t *testing.T) {
 	// nolint:misspell
 	t.Run("should return a Document with the Conceptos data", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("invoice.json")
+		doc, err := test.NewDocumentFrom("invoice-b2b-full.json")
 		require.NoError(t, err)
 
 		c := doc.Conceptos.Concepto[0]
@@ -39,7 +39,7 @@ func TestConceptos(t *testing.T) {
 	})
 
 	t.Run("should return the default ClaveUnidad when no unit is given", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("bare-minimum-invoice.json")
+		doc, err := test.NewDocumentFrom("invoice-b2b-bare.json")
 		require.NoError(t, err)
 
 		c := doc.Conceptos.Concepto[0]

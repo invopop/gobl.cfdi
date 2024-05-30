@@ -4,12 +4,13 @@
 		"uuid": "f3ede26e-2b7f-11ee-ab54-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "964832f4827b40e94aa707116dbe5cfe5c3329c0f72e7bf85ed67e5850662ec4"
+			"val": "05f97e1bc987faf824b743a02ddb7118c39dee7a013eb66d2ba6cc6857588298"
 		},
 		"draft": true
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"uuid": "018fc8dd-9c95-7e00-8754-86548830072d",
 		"type": "credit-note",
 		"series": "CN",
 		"code": "0003",
@@ -28,6 +29,11 @@
 				]
 			}
 		],
+		"tax": {
+			"ext": {
+				"mx-cfdi-issue-place": "21000"
+			}
+		},
 		"supplier": {
 			"name": "ESCUELA KEMPER URGATE",
 			"tax_id": {
@@ -35,8 +41,7 @@
 				"code": "EKU9003173C9"
 			},
 			"ext": {
-				"mx-cfdi-fiscal-regime": "601",
-				"mx-cfdi-post-code": "21000"
+				"mx-cfdi-fiscal-regime": "601"
 			}
 		},
 		"customer": {

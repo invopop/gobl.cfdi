@@ -12,7 +12,7 @@ import (
 )
 
 func TestAddendaMabeValidation(t *testing.T) {
-	env, err := test.LoadTestEnvelope("bare-minimum-invoice.json")
+	env, err := test.LoadTestEnvelope("invoice-b2b-bare.json")
 	require.NoError(t, err)
 
 	inv := env.Extract().(*bill.Invoice)

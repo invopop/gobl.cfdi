@@ -10,7 +10,7 @@ import (
 
 func TestImpuestos(t *testing.T) {
 	t.Run("should return a Document with the Impuestos data", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("invoice.json")
+		doc, err := test.NewDocumentFrom("invoice-b2b-full.json")
 		require.NoError(t, err)
 
 		assert.Equal(t, "32.03", doc.Impuestos.TotalImpuestosTrasladados)
@@ -25,7 +25,7 @@ func TestImpuestos(t *testing.T) {
 	})
 
 	t.Run("should return a Document with the Impuestos data of each Concepto", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("invoice.json")
+		doc, err := test.NewDocumentFrom("invoice-b2b-full.json")
 		require.NoError(t, err)
 
 		tr := doc.Conceptos.Concepto[0].Impuestos.Traslados.Traslado[0]

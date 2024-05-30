@@ -14,7 +14,7 @@ import (
 
 func TestComprobanteIngreso(t *testing.T) {
 	t.Run("should return a Document with the Comprobante data", func(t *testing.T) {
-		doc, err := test.NewDocumentFrom("invoice.json")
+		doc, err := test.NewDocumentFrom("invoice-b2b-full.json")
 		require.NoError(t, err)
 
 		assert.Equal(t, "http://www.sat.gob.mx/cfd/4", doc.CFDINamespace)
@@ -40,7 +40,7 @@ func TestComprobanteIngreso(t *testing.T) {
 	})
 
 	t.Run("should return the proper MetodoPago and FormaPago", func(t *testing.T) {
-		inv, _ := test.LoadTestInvoice("invoice.json")
+		inv, _ := test.LoadTestInvoice("invoice-b2b-full.json")
 
 		// No advances
 		inv.Payment.Advances = nil

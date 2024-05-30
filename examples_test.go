@@ -87,7 +87,12 @@ func convertExample(example string) ([]byte, error) {
 		return nil, err
 	}
 
-	return doc.Bytes()
+	data, err := doc.Bytes()
+	if err != nil {
+		return nil, err
+	}
+
+	return append(data, '\n'), nil
 }
 
 func validateDoc(schema *xsd.Schema, doc []byte) []error {

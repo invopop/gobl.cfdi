@@ -29,12 +29,23 @@ const (
 
 // Hard-coded values for (yet) unsupported mappings
 const (
-	FakeNoCertificado       = "00000000000000000000"
-	ExportacionNoAplica     = "01"
+	FakeNoCertificado   = "00000000000000000000"
+	ExportacionNoAplica = "01"
+	FormaPagoPorDefinir = "99"
+	ImpuestoIVA         = "002"
+)
+
+// MetodoPago definitions
+const (
 	MetodoPagoUnaExhibicion = "PUE"
 	MetodoPagoParcialidades = "PPD"
-	FormaPagoPorDefinir     = "99"
-	ImpuestoIVA             = "002"
+)
+
+// Generic supplier constants
+const (
+	NombreReceptorGenerico       = "PÚBLICO EN GENERAL"
+	RegimenFiscalSinObligaciones = "616" // no tax obligations
+	UsoCFDISinEfectos            = "S01" // no tax effects
 )
 
 // TipoFactor definitions.
@@ -96,6 +107,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 
 	discount := internal.TotalInvoiceDiscount(inv)
 	subtotal := inv.Totals.Total.Add(discount)
+	issuePlace := issuePlace(inv)
 
 	document := &Document{
 		CFDINamespace:  CFDINamespace,
@@ -107,7 +119,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Serie:             inv.Series,
 		Folio:             inv.Code,
 		Fecha:             formatIssueDate(inv.IssueDate),
-		LugarExpedicion:   issuePlace(inv),
+		LugarExpedicion:   issuePlace,
 		SubTotal:          subtotal.String(),
 		Descuento:         formatOptionalAmount(discount),
 		Total:             inv.Totals.TotalWithTax.String(),
@@ -121,7 +133,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 
 		CFDIRelacionados: newCfdiRelacionados(inv),
 		Emisor:           newEmisor(inv.Supplier),
-		Receptor:         newReceptor(inv.Customer),
+		Receptor:         newReceptor(inv.Customer, issuePlace),
 		Conceptos:        newConceptos(inv.Lines, inv.TaxRegime()), // nolint:misspell
 		Impuestos:        newImpuestos(inv.Totals, &inv.Currency, inv.TaxRegime()),
 	}

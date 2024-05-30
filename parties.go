@@ -30,21 +30,22 @@ func newEmisor(supplier *org.Party) *Emisor {
 	return emisor
 }
 
-func newReceptor(customer *org.Party) *Receptor {
+func newReceptor(customer *org.Party, issuePlace string) *Receptor {
 	if customer == nil {
-		return nil
+		return &Receptor{
+			Nombre:                  NombreReceptorGenerico,
+			Rfc:                     mx.TaxIdentityCodeGeneric.String(),
+			RegimenFiscalReceptor:   RegimenFiscalSinObligaciones,
+			UsoCFDI:                 UsoCFDISinEfectos,
+			DomicilioFiscalReceptor: issuePlace,
+		}
 	}
 
-	receptor := new(Receptor)
-
-	receptor.Nombre = customer.Name
-	if customer.TaxID != nil {
-		receptor.Rfc = customer.TaxID.Code.String()
+	return &Receptor{
+		Nombre:                  customer.Name,
+		Rfc:                     customer.TaxID.Code.String(),
+		RegimenFiscalReceptor:   customer.Ext[mx.ExtKeyCFDIFiscalRegime].String(),
+		UsoCFDI:                 customer.Ext[mx.ExtKeyCFDIUse].String(),
+		DomicilioFiscalReceptor: customer.Ext[mx.ExtKeyCFDIPostCode].String(),
 	}
-
-	receptor.DomicilioFiscalReceptor = customer.Ext[mx.ExtKeyCFDIPostCode].String()
-	receptor.RegimenFiscalReceptor = customer.Ext[mx.ExtKeyCFDIFiscalRegime].String()
-	receptor.UsoCFDI = customer.Ext[mx.ExtKeyCFDIUse].String()
-
-	return receptor
 }

@@ -49,7 +49,7 @@ func TestStamp(t *testing.T) {
 		{
 			name:  "URL",
 			stamp: mx.StampSATURL,
-			value: "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id=fd53505e-d737-43ab-815c-8090edec3655&tt=211.36&re=EKU9003173C9&rr=URE180429TM6&fe=bUthyQ==",
+			value: "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id=fd53505e-d737-43ab-815c-8090edec3655&tt=211.36&re=EKU9003173C9&rr=URE180429TM6&fe=izCINQ==",
 		},
 		{
 			name:  "Provider RFC",

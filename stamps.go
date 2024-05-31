@@ -99,7 +99,7 @@ func Stamp(env *gobl.Envelope, sd *StampData, doc *Document) error {
 		fmt.Sprintf("tt=%s", doc.Total),
 		fmt.Sprintf("re=%s", doc.Emisor.Rfc),
 		fmt.Sprintf("rr=%s", doc.Receptor.Rfc),
-		fmt.Sprintf("fe=%s", sd.SAT.Value[len(sd.SAT.Value)-8:]),
+		fmt.Sprintf("fe=%s", sd.CFDI.Value[len(sd.CFDI.Value)-8:]),
 	}
 	base.RawQuery = strings.Join(q, "&")
 	env.Head.AddStamp(&head.Stamp{

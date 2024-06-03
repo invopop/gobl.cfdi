@@ -31,14 +31,15 @@ const (
 const (
 	FakeNoCertificado   = "00000000000000000000"
 	ExportacionNoAplica = "01"
-	FormaPagoPorDefinir = "99"
 	ImpuestoIVA         = "002"
 )
 
-// MetodoPago definitions
+// MetodoPago & FormaPago definitions
 const (
 	MetodoPagoUnaExhibicion = "PUE"
 	MetodoPagoParcialidades = "PPD"
+
+	FormaPagoPorDefinir = "99"
 )
 
 // Generic supplier constants

@@ -1,13 +1,11 @@
 package cfdi
 
 import (
-	"errors"
 	"fmt"
 	"net/url"
 	"strings"
 
 	"github.com/invopop/gobl"
-	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/head"
 	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/validation"
@@ -46,14 +44,9 @@ func NewSignature(serial, value string) *Signature {
 // Stamp takes the provided structured stamp data and applies it to the envelope.
 // This should be done after the CFDI document has been processed and signed
 // by a PAC (Proveedor Autorizado de Certificación) in Mexico.
-func Stamp(env *gobl.Envelope, sd *StampData) error {
+func Stamp(env *gobl.Envelope, sd *StampData, doc *Document) error {
 	if err := sd.Validate(); err != nil {
 		return err
-	}
-
-	inv, ok := env.Extract().(*bill.Invoice)
-	if !ok {
-		return errors.New("expected an invoice")
 	}
 
 	// Add all the stamps
@@ -103,15 +96,11 @@ func Stamp(env *gobl.Envelope, sd *StampData) error {
 	// correctly :facepalm:.
 	q := []string{
 		fmt.Sprintf("id=%s", sd.UUID),
-		fmt.Sprintf("tt=%s", inv.Totals.TotalWithTax.String()),
+		fmt.Sprintf("tt=%s", doc.Total),
+		fmt.Sprintf("re=%s", doc.Emisor.Rfc),
+		fmt.Sprintf("rr=%s", doc.Receptor.Rfc),
+		fmt.Sprintf("fe=%s", sd.CFDI.Value[len(sd.CFDI.Value)-8:]),
 	}
-	if inv.Supplier.TaxID != nil {
-		q = append(q, fmt.Sprintf("re=%s", inv.Supplier.TaxID.Code.String()))
-	}
-	if inv.Customer.TaxID != nil {
-		q = append(q, fmt.Sprintf("rr=%s", inv.Supplier.TaxID.Code.String()))
-	}
-	q = append(q, fmt.Sprintf("fe=%s", sd.SAT.Value[len(sd.SAT.Value)-8:]))
 	base.RawQuery = strings.Join(q, "&")
 	env.Head.AddStamp(&head.Stamp{
 		Provider: mx.StampSATURL,

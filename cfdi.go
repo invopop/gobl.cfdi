@@ -13,10 +13,12 @@ import (
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
+	"github.com/invopop/gobl/currency"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/pay"
 	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/schema"
+	"github.com/invopop/gobl/tax"
 )
 
 // CFDI schema constants
@@ -29,12 +31,23 @@ const (
 
 // Hard-coded values for (yet) unsupported mappings
 const (
-	FakeNoCertificado       = "00000000000000000000"
-	ExportacionNoAplica     = "01"
+	FakeNoCertificado   = "00000000000000000000"
+	ExportacionNoAplica = "01"
+	FormaPagoPorDefinir = "99"
+	ImpuestoIVA         = "002"
+)
+
+// MetodoPago definitions
+const (
 	MetodoPagoUnaExhibicion = "PUE"
 	MetodoPagoParcialidades = "PPD"
-	FormaPagoPorDefinir     = "99"
-	ImpuestoIVA             = "002"
+)
+
+// Generic supplier constants
+const (
+	NombreReceptorGenerico       = "PÚBLICO EN GENERAL"
+	RegimenFiscalSinObligaciones = "616" // no tax obligations
+	UsoCFDISinEfectos            = "S01" // no tax effects
 )
 
 // TipoFactor definitions.
@@ -94,8 +107,13 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		return nil, fmt.Errorf("invalid type %T", env.Document)
 	}
 
+	if err := validateSupport(inv); err != nil {
+		return nil, err
+	}
+
 	discount := internal.TotalInvoiceDiscount(inv)
 	subtotal := inv.Totals.Total.Add(discount)
+	issuePlace := issuePlace(inv)
 
 	document := &Document{
 		CFDINamespace:  CFDINamespace,
@@ -107,7 +125,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Serie:             inv.Series,
 		Folio:             inv.Code,
 		Fecha:             formatIssueDate(inv.IssueDate),
-		LugarExpedicion:   issuePlace(inv),
+		LugarExpedicion:   issuePlace,
 		SubTotal:          subtotal.String(),
 		Descuento:         formatOptionalAmount(discount),
 		Total:             inv.Totals.TotalWithTax.String(),
@@ -121,7 +139,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 
 		CFDIRelacionados: newCfdiRelacionados(inv),
 		Emisor:           newEmisor(inv.Supplier),
-		Receptor:         newReceptor(inv.Customer),
+		Receptor:         newReceptor(inv.Customer, issuePlace),
 		Conceptos:        newConceptos(inv.Lines, inv.TaxRegime()), // nolint:misspell
 		Impuestos:        newImpuestos(inv.Totals, &inv.Currency, inv.TaxRegime()),
 	}
@@ -135,6 +153,48 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 	}
 
 	return document, nil
+}
+
+func validateSupport(inv *bill.Invoice) error {
+	if len(inv.Charges) > 0 {
+		return fmt.Errorf("charges are not supported")
+	}
+
+	for _, l := range inv.Lines {
+		if len(l.Charges) > 0 {
+			return fmt.Errorf("line charges are not supported")
+		}
+	}
+
+	if len(inv.Outlays) > 0 {
+		return fmt.Errorf("outlays are not supported")
+	}
+
+	if inv.Tax != nil {
+		if inv.Tax.ContainsTag(tax.TagReverseCharge) {
+			return fmt.Errorf("reverse charge is not supported")
+		}
+
+		if inv.Tax.ContainsTag(tax.TagSelfBilled) {
+			return fmt.Errorf("self-billed is not supported")
+		}
+
+		if inv.Tax.ContainsTag(tax.TagCustomerRates) {
+			return fmt.Errorf("customer rates are not supported")
+		}
+	}
+
+	if inv.Currency != currency.MXN {
+		return fmt.Errorf("currencies other than MXN are not supported")
+	}
+
+	for _, l := range inv.Lines {
+		if l.Item.Currency != currency.CodeEmpty && l.Item.Currency != currency.MXN {
+			return fmt.Errorf("line currencies other than MXN are not supported")
+		}
+	}
+
+	return nil
 }
 
 func issuePlace(inv *bill.Invoice) string {

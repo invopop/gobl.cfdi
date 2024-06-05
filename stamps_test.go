@@ -15,6 +15,9 @@ func TestStamp(t *testing.T) {
 	env, err := test.LoadTestEnvelope("invoice-b2b-full.json")
 	require.NoError(t, err)
 
+	doc, err := cfdi.NewDocument(env)
+	require.NoError(t, err)
+
 	sd := &cfdi.StampData{
 		UUID: "fd53505e-d737-43ab-815c-8090edec3655",
 		CFDI: cfdi.NewSignature(
@@ -30,7 +33,7 @@ func TestStamp(t *testing.T) {
 		Timestamp:   "2022-09-05T13:04:29",
 	}
 
-	err = cfdi.Stamp(env, sd)
+	err = cfdi.Stamp(env, sd, doc)
 	assert.NoError(t, err)
 
 	tests := []struct {
@@ -46,7 +49,7 @@ func TestStamp(t *testing.T) {
 		{
 			name:  "URL",
 			stamp: mx.StampSATURL,
-			value: "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id=fd53505e-d737-43ab-815c-8090edec3655&tt=211.36&re=EKU9003173C9&rr=EKU9003173C9&fe=bUthyQ==",
+			value: "https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id=fd53505e-d737-43ab-815c-8090edec3655&tt=211.36&re=EKU9003173C9&rr=URE180429TM6&fe=izCINQ==",
 		},
 		{
 			name:  "Provider RFC",

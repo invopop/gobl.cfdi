@@ -1,6 +1,7 @@
 package cfdi
 
 import (
+	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/regimes/mx"
 )
@@ -19,6 +20,8 @@ type Receptor struct {
 	DomicilioFiscalReceptor string `xml:",attr"`
 	RegimenFiscalReceptor   string `xml:",attr"`
 	UsoCFDI                 string `xml:",attr"`
+	NumRegIdTrib            string `xml:",attr,omitempty"` //nolint:revive
+	ResidenciaFiscal        string `xml:",attr,omitempty"`
 }
 
 func newEmisor(supplier *org.Party) *Emisor {
@@ -30,21 +33,34 @@ func newEmisor(supplier *org.Party) *Emisor {
 	return emisor
 }
 
-func newReceptor(customer *org.Party) *Receptor {
+func newReceptor(customer *org.Party, issuePlace string) *Receptor {
 	if customer == nil {
-		return nil
+		return &Receptor{
+			Nombre:                  NombreReceptorGenerico,
+			Rfc:                     mx.TaxIdentityCodeGeneric.String(),
+			RegimenFiscalReceptor:   RegimenFiscalSinObligaciones,
+			UsoCFDI:                 UsoCFDISinEfectos,
+			DomicilioFiscalReceptor: issuePlace,
+		}
 	}
 
-	receptor := new(Receptor)
-
-	receptor.Nombre = customer.Name
-	if customer.TaxID != nil {
-		receptor.Rfc = customer.TaxID.Code.String()
+	if customer.TaxID.Country != l10n.MX {
+		return &Receptor{
+			Nombre:                  customer.Name,
+			Rfc:                     mx.TaxIdentityCodeForeign.String(),
+			RegimenFiscalReceptor:   RegimenFiscalSinObligaciones,
+			UsoCFDI:                 UsoCFDISinEfectos,
+			DomicilioFiscalReceptor: issuePlace,
+			NumRegIdTrib:            customer.TaxID.Code.String(),
+			ResidenciaFiscal:        customer.TaxID.Country.Alpha3(),
+		}
 	}
 
-	receptor.DomicilioFiscalReceptor = customer.Ext[mx.ExtKeyCFDIPostCode].String()
-	receptor.RegimenFiscalReceptor = customer.Ext[mx.ExtKeyCFDIFiscalRegime].String()
-	receptor.UsoCFDI = customer.Ext[mx.ExtKeyCFDIUse].String()
-
-	return receptor
+	return &Receptor{
+		Nombre:                  customer.Name,
+		Rfc:                     customer.TaxID.Code.String(),
+		RegimenFiscalReceptor:   customer.Ext[mx.ExtKeyCFDIFiscalRegime].String(),
+		UsoCFDI:                 customer.Ext[mx.ExtKeyCFDIUse].String(),
+		DomicilioFiscalReceptor: customer.Ext[mx.ExtKeyCFDIPostCode].String(),
+	}
 }

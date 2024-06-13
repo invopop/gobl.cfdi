@@ -171,16 +171,8 @@ func validateSupport(inv *bill.Invoice) error {
 	}
 
 	if inv.Tax != nil {
-		if inv.Tax.ContainsTag(tax.TagReverseCharge) {
-			return fmt.Errorf("reverse charge is not supported")
-		}
-
 		if inv.Tax.ContainsTag(tax.TagSelfBilled) {
 			return fmt.Errorf("self-billed is not supported")
-		}
-
-		if inv.Tax.ContainsTag(tax.TagCustomerRates) {
-			return fmt.Errorf("customer rates are not supported")
 		}
 	}
 

@@ -174,6 +174,10 @@ func validateSupport(inv *bill.Invoice) error {
 		if inv.Tax.ContainsTag(tax.TagSelfBilled) {
 			return fmt.Errorf("self-billed is not supported")
 		}
+
+		if inv.Tax.ContainsTag(tax.TagCustomerRates) {
+			return fmt.Errorf("customer rates are not supported")
+		}
 	}
 
 	if inv.Currency != currency.MXN {

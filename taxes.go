@@ -69,7 +69,15 @@ func newImpuestos(totals *bill.Totals, currency *currency.Code, regime *tax.Regi
 	empty := true
 	if len(traslados) > 0 {
 		impuestos.Traslados = &Traslados{traslados}
-		impuestos.TotalImpuestosTrasladados = totalTraslados.String()
+
+		// Set tax total only if there are non-exempt taxes
+		for _, t := range traslados {
+			if t.TipoFactor != TipoFactorExento {
+				impuestos.TotalImpuestosTrasladados = totalTraslados.String()
+				break
+			}
+		}
+
 		empty = false
 	}
 	if len(retenciones) > 0 {

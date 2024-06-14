@@ -3,6 +3,7 @@ package cfdi
 
 import (
 	"encoding/xml"
+	"errors"
 	"fmt"
 
 	"cloud.google.com/go/civil"
@@ -19,6 +20,7 @@ import (
 	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/schema"
 	"github.com/invopop/gobl/tax"
+	"github.com/invopop/validation"
 )
 
 // CFDI schema constants
@@ -62,6 +64,9 @@ const (
 	ObjetoImpNo = "01" // not subject to tax
 	ObjetoImpSi = "02" // subject to tax
 )
+
+// ErrNotSupported is returned when the conversion of the invoice is not supported
+var ErrNotSupported = errors.New("not supported")
 
 // Document is a pseudo-model for containing the XML document being created
 type Document struct {
@@ -156,34 +161,44 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 }
 
 func validateSupport(inv *bill.Invoice) error {
+	errs := validation.Errors{}
+
 	if len(inv.Charges) > 0 {
-		return fmt.Errorf("charges are not supported")
+		errs["charges"] = ErrNotSupported
 	}
 
 	for _, l := range inv.Lines {
 		if len(l.Charges) > 0 {
-			return fmt.Errorf("line charges are not supported")
+			errs["line charges"] = ErrNotSupported
 		}
 	}
 
 	if len(inv.Outlays) > 0 {
-		return fmt.Errorf("outlays are not supported")
+		errs["outlays"] = ErrNotSupported
 	}
 
 	if inv.Tax != nil {
 		if inv.Tax.ContainsTag(tax.TagSelfBilled) {
-			return fmt.Errorf("self-billed is not supported")
+			errs["self-billed"] = ErrNotSupported
+		}
+
+		if inv.Tax.ContainsTag(tax.TagCustomerRates) {
+			errs["customer-rates"] = ErrNotSupported
 		}
 	}
 
 	if inv.Currency != currency.MXN {
-		return fmt.Errorf("currencies other than MXN are not supported")
+		errs["currency"] = ErrNotSupported
 	}
 
 	for _, l := range inv.Lines {
 		if l.Item.Currency != currency.CodeEmpty && l.Item.Currency != currency.MXN {
-			return fmt.Errorf("line currencies other than MXN are not supported")
+			errs["line currency"] = ErrNotSupported
 		}
+	}
+
+	if len(errs) > 0 {
+		return errs
 	}
 
 	return nil

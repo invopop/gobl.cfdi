@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/invopop/gobl.cfdi/test"
+	"github.com/invopop/gobl/tax"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -22,6 +23,18 @@ func TestImpuestos(t *testing.T) {
 		assert.Equal(t, "002", tr.Impuesto)
 		assert.Equal(t, "Tasa", tr.TipoFactor)
 		assert.Equal(t, "0.160000", tr.TasaOCuota)
+	})
+
+	t.Run("should return a Document with the Impuestos data when all taxes are exempt", func(t *testing.T) {
+		inv, err := test.LoadTestInvoice("invoice-b2b-bare.json")
+		require.NoError(t, err)
+
+		inv.Lines[0].Taxes[0].Rate = tax.RateExempt
+
+		doc, err := test.GenerateCFDIFrom(inv)
+		require.NoError(t, err)
+
+		assert.Equal(t, "", doc.Impuestos.TotalImpuestosTrasladados)
 	})
 
 	t.Run("should return a Document with the Impuestos data of each Concepto", func(t *testing.T) {

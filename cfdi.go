@@ -87,6 +87,7 @@ type Document struct {
 	Descuento         string `xml:",attr,omitempty"`
 	Total             string `xml:",attr"`
 	Moneda            string `xml:",attr"`
+	TipoCambio        string `xml:",attr,omitempty"`
 	Exportacion       string `xml:",attr"`
 	MetodoPago        string `xml:",attr,omitempty"`
 	FormaPago         string `xml:",attr,omitempty"`
@@ -135,6 +136,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Descuento:         formatOptionalAmount(discount),
 		Total:             inv.Totals.TotalWithTax.String(),
 		Moneda:            string(inv.Currency),
+		TipoCambio:        tipoCambio(inv),
 		Exportacion:       ExportacionNoAplica,
 		MetodoPago:        metodoPago(inv),
 		FormaPago:         formaPago(inv),
@@ -184,16 +186,6 @@ func validateSupport(inv *bill.Invoice) error {
 
 		if inv.Tax.ContainsTag(tax.TagCustomerRates) {
 			errs["customer-rates"] = ErrNotSupported
-		}
-	}
-
-	if inv.Currency != currency.MXN {
-		errs["currency"] = ErrNotSupported
-	}
-
-	for _, l := range inv.Lines {
-		if l.Item.Currency != currency.CodeEmpty && l.Item.Currency != currency.MXN {
-			errs["line currency"] = ErrNotSupported
 		}
 	}
 
@@ -282,6 +274,15 @@ func lookupTipoDeComprobante(inv *bill.Invoice) string {
 
 	code := ss.Codes[mx.KeySATTipoDeComprobante]
 	return code.String()
+}
+
+func tipoCambio(inv *bill.Invoice) string {
+	r := currency.MatchExchangeRate(inv.ExchangeRates, inv.Currency, currency.MXN)
+	if r == nil {
+		return ""
+	}
+
+	return r.Amount.String()
 }
 
 func metodoPago(inv *bill.Invoice) string {

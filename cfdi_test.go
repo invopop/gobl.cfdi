@@ -79,6 +79,14 @@ func TestComprobanteIngreso(t *testing.T) {
 		assert.Equal(t, "PUE", doc.MetodoPago)
 		assert.Equal(t, "01", doc.FormaPago)
 	})
+
+	t.Run("should return TipoCambio when the currency is not MXN", func(t *testing.T) {
+		doc, err := test.NewDocumentFrom("invoice-multi-currency.json")
+		require.NoError(t, err)
+
+		assert.Equal(t, "USD", doc.Moneda)
+		assert.Equal(t, "17.46", doc.TipoCambio)
+	})
 }
 
 func TestComprobanteEgreso(t *testing.T) {

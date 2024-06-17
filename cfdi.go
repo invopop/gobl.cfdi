@@ -189,12 +189,6 @@ func validateSupport(inv *bill.Invoice) error {
 		}
 	}
 
-	for _, l := range inv.Lines {
-		if l.Item.Currency != currency.CodeEmpty && l.Item.Currency != inv.Currency {
-			errs["item currency"] = ErrNotSupported
-		}
-	}
-
 	if len(errs) > 0 {
 		return errs
 	}

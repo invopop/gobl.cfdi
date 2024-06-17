@@ -277,13 +277,12 @@ func lookupTipoDeComprobante(inv *bill.Invoice) string {
 }
 
 func tipoCambio(inv *bill.Invoice) string {
-	for _, r := range inv.ExchangeRates {
-		if r.From == inv.Currency && r.To == currency.MXN {
-			return r.Amount.String()
-		}
+	r := currency.MatchExchangeRate(inv.ExchangeRates, inv.Currency, currency.MXN)
+	if r == nil {
+		return ""
 	}
 
-	return ""
+	return r.Amount.String()
 }
 
 func metodoPago(inv *bill.Invoice) string {

@@ -69,13 +69,13 @@ For details on support for converting Addendas, please see the [addendas package
 The GOBL to CFDI tool also includes a command line helper. You can find pre-built [gobl.cfdi binaries](https://github.com/invopop/gobl.cfdi/releases) in the github repository, or install manually in your Go environment with:
 
 ```bash
-go install github.com/invopop/gobl.cfdi
+go install ./cmd/gobl.cfdi
 ```
 
 Usage is very straightforward:
 
 ```bash
-gobl.cfdi convert ./test/data/invoice.json
+gobl.cfdi convert ./test/data/invoice-b2b-bare.json
 ```
 
 Which should produce something like:

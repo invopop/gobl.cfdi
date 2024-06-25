@@ -59,8 +59,8 @@ func addEstadoCuentaCombustible(doc *Document, fc *mx.FuelAccountBalance) {
 		TipoOperacion: ECCTipoOperacion,
 
 		NumeroDeCuenta: fc.AccountNumber,
-		SubTotal:       fc.Subtotal.String(),
-		Total:          fc.Total.String(),
+		SubTotal:       fc.Subtotal.RescaleRange(1, 2).String(),
+		Total:          fc.Total.RescaleRange(1, 2).String(),
 
 		Conceptos: newECCConceptos(fc.Lines), // nolint:misspell
 	}
@@ -80,13 +80,13 @@ func newECCConceptos(lines []*mx.FuelAccountLine) []*ECCConcepto {
 			Fecha:             l.PurchaseDateTime.String(),
 			Rfc:               l.VendorTaxCode.String(),
 			ClaveEstacion:     l.ServiceStationCode.String(),
-			Cantidad:          l.Quantity.String(),
+			Cantidad:          l.Quantity.RescaleRange(1, 3).String(),
 			TipoCombustible:   l.Item.Type.String(),
 			Unidad:            l.Item.Unit.UNECE().String(),
 			NombreCombustible: l.Item.Name,
 			FolioOperacion:    l.PurchaseCode.String(),
-			ValorUnitario:     l.Item.Price.String(),
-			Importe:           l.Total.String(),
+			ValorUnitario:     l.Item.Price.RescaleRange(1, 3).String(),
+			Importe:           l.Total.RescaleRange(1, 2).String(),
 			Traslados:         newECCTraslados(l.Taxes),
 		}
 	}
@@ -100,9 +100,9 @@ func newECCTraslados(taxes []*mx.FuelAccountTax) []*ECCTraslado {
 	for i, t := range taxes {
 		tasa := ""
 		if t.Percent != nil {
-			tasa = t.Percent.Base().String()
+			tasa = t.Percent.Base().RescaleDown(6).String()
 		} else if t.Rate != nil {
-			tasa = t.Rate.String()
+			tasa = t.Rate.RescaleDown(6).String()
 		}
 		impuesto := ""
 		switch t.Category {
@@ -114,7 +114,7 @@ func newECCTraslados(taxes []*mx.FuelAccountTax) []*ECCTraslado {
 		ts[i] = &ECCTraslado{
 			Impuesto:   impuesto,
 			TasaOCuota: tasa,
-			Importe:    t.Amount.String(),
+			Importe:    t.Amount.RescaleRange(1, 2).String(),
 		}
 	}
 

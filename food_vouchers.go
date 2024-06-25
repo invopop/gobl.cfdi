@@ -46,7 +46,7 @@ func addValesDeDespensa(doc *Document, fvc *mx.FoodVouchers) {
 
 		RegistroPatronal: fvc.EmployerRegistration,
 		NumeroDeCuenta:   fvc.AccountNumber,
-		Total:            fvc.Total.String(),
+		Total:            fvc.Total.RescaleDown(2).String(),
 
 		Conceptos: newVDConceptos(fvc.Lines), // nolint:misspell
 	}
@@ -67,7 +67,7 @@ func newVDConceptos(lines []*mx.FoodVouchersLine) []*VDConcepto {
 			Curp:               l.Employee.CURP.String(),
 			Nombre:             l.Employee.Name,
 			NumSeguridadSocial: l.Employee.SocialSecurity.String(),
-			Importe:            l.Amount.String(),
+			Importe:            l.Amount.RescaleDown(2).String(),
 		}
 	}
 

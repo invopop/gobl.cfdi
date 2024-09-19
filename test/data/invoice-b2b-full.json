@@ -4,12 +4,15 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "e42b6b68f2cbc0cef7bf7d26d5a71db2e78b19c98be2579f927a65ffabd1d592"
-		},
-		"draft": true
+			"val": "583dc1f58cb1ef7a263b1dff20e8c87750ceee44e278df5337c1f8e78c236db3"
+		}
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "MX",
+		"$addons": [
+			"mx-cfdi-v4"
+		],
 		"uuid": "018f5299-3dfb-7562-9cac-7125207161f5",
 		"type": "standard",
 		"series": "LMC",
@@ -18,6 +21,7 @@
 		"currency": "MXN",
 		"tax": {
 			"ext": {
+				"mx-cfdi-doc-type": "I",
 				"mx-cfdi-issue-place": "26015"
 			}
 		},
@@ -69,15 +73,24 @@
 					{
 						"cat": "VAT",
 						"rate": "standard",
-						"percent": "16.0%"
+						"percent": "16.0%",
+						"ext": {
+							"mx-cfdi-tax-type": "002"
+						}
 					},
 					{
 						"cat": "RVAT",
-						"percent": "10.6667%"
+						"percent": "10.6667%",
+						"ext": {
+							"mx-cfdi-tax-type": "002"
+						}
 					},
 					{
 						"cat": "ISR",
-						"percent": "10%"
+						"percent": "10%",
+						"ext": {
+							"mx-cfdi-tax-type": "001"
+						}
 					}
 				],
 				"total": "200.2020"
@@ -97,7 +110,10 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "exempt"
+						"rate": "exempt",
+						"ext": {
+							"mx-cfdi-tax-type": "002"
+						}
 					}
 				],
 				"total": "10.50"
@@ -126,7 +142,10 @@
 					"key": "credit-transfer",
 					"description": "Top-up payment",
 					"percent": "100%",
-					"amount": "211.36"
+					"amount": "211.36",
+					"ext": {
+						"mx-cfdi-payment-means": "03"
+					}
 				}
 			]
 		},
@@ -140,12 +159,18 @@
 						"rates": [
 							{
 								"key": "standard",
+								"ext": {
+									"mx-cfdi-tax-type": "002"
+								},
 								"base": "200.20",
 								"percent": "16.0%",
 								"amount": "32.03"
 							},
 							{
 								"key": "exempt",
+								"ext": {
+									"mx-cfdi-tax-type": "002"
+								},
 								"base": "10.50",
 								"amount": "0.00"
 							}
@@ -157,6 +182,9 @@
 						"retained": true,
 						"rates": [
 							{
+								"ext": {
+									"mx-cfdi-tax-type": "002"
+								},
 								"base": "200.20",
 								"percent": "10.6667%",
 								"amount": "21.35"
@@ -169,6 +197,9 @@
 						"retained": true,
 						"rates": [
 							{
+								"ext": {
+									"mx-cfdi-tax-type": "001"
+								},
 								"base": "200.20",
 								"percent": "10%",
 								"amount": "20.02"

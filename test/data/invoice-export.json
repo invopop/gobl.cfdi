@@ -4,12 +4,15 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "2bcf93e8a1dacba6cc2465cfcb281fe54da1f9b231eef23f4da5dbe1388cee53"
-		},
-		"draft": true
+			"val": "8fae39eaf55700f6c4e3f70643eed020a934fde64136904b9a5f9931088fdb9b"
+		}
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "MX",
+		"$addons": [
+			"mx-cfdi-v4"
+		],
 		"uuid": "018fc8dc-2903-76aa-a68c-4c3873667023",
 		"type": "standard",
 		"series": "LMC",
@@ -18,6 +21,7 @@
 		"currency": "MXN",
 		"tax": {
 			"ext": {
+				"mx-cfdi-doc-type": "I",
 				"mx-cfdi-issue-place": "26015"
 			}
 		},
@@ -35,8 +39,8 @@
 			"name": "EXAMPLE CUSTOMER S.A.S.",
 			"tax_id": {
 				"country": "CO",
-				"type": "tin",
-				"code": "9014514805"
+				"code": "9014514805",
+				"type": "tin"
 			}
 		},
 		"lines": [
@@ -55,7 +59,10 @@
 					{
 						"cat": "VAT",
 						"rate": "standard",
-						"percent": "16.0%"
+						"percent": "16.0%",
+						"ext": {
+							"mx-cfdi-tax-type": "002"
+						}
 					}
 				],
 				"total": "200.00"
@@ -63,7 +70,10 @@
 		],
 		"payment": {
 			"instructions": {
-				"key": "credit-transfer"
+				"key": "credit-transfer",
+				"ext": {
+					"mx-cfdi-payment-means": "03"
+				}
 			}
 		},
 		"totals": {
@@ -76,6 +86,9 @@
 						"rates": [
 							{
 								"key": "standard",
+								"ext": {
+									"mx-cfdi-tax-type": "002"
+								},
 								"base": "200.00",
 								"percent": "16.0%",
 								"amount": "32.00"

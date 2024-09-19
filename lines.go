@@ -27,7 +27,7 @@ type Concepto struct {
 }
 
 // nolint:misspell
-func newConceptos(lines []*bill.Line, regime *tax.Regime) *Conceptos {
+func newConceptos(lines []*bill.Line, regime *tax.RegimeDef) *Conceptos {
 	var conceptos []*Concepto
 
 	for _, line := range lines {
@@ -37,7 +37,7 @@ func newConceptos(lines []*bill.Line, regime *tax.Regime) *Conceptos {
 	return &Conceptos{conceptos}
 }
 
-func newConcepto(line *bill.Line, regime *tax.Regime) *Concepto {
+func newConcepto(line *bill.Line, regime *tax.RegimeDef) *Concepto {
 	concepto := &Concepto{
 		ClaveProdServ: internal.ClaveProdServ(line).String(),
 		Cantidad:      line.Quantity.String(),

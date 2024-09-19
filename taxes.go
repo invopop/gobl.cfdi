@@ -2,9 +2,9 @@ package cfdi
 
 import (
 	"github.com/invopop/gobl.cfdi/internal/format"
+	addon "github.com/invopop/gobl/addons/mx/cfdi"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/currency"
-	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/tax"
 )
 
@@ -41,15 +41,15 @@ type Impuesto struct {
 	TipoFactor string `xml:",attr,omitempty"`
 }
 
-func newImpuestos(totals *bill.Totals, currency *currency.Code, regime *tax.Regime) *Impuestos {
+func newImpuestos(totals *bill.Totals, currency *currency.Code, regime *tax.RegimeDef) *Impuestos {
 	var traslados, retenciones []*Impuesto
 	totalTraslados, totalRetenciones := currency.Def().Zero(), currency.Def().Zero()
 
 	for _, cat := range totals.Taxes.Categories {
-		catDef := regime.Category(cat.Code)
+		catDef := regime.CategoryDef(cat.Code)
 
 		for _, rate := range cat.Rates {
-			imp := newImpuesto(rate, currency, catDef)
+			imp := newImpuesto(rate, currency)
 			if catDef.Retained {
 				// Clear out fields not supported by retained totals
 				imp.Base = ""
@@ -92,14 +92,13 @@ func newImpuestos(totals *bill.Totals, currency *currency.Code, regime *tax.Regi
 	return impuestos
 }
 
-func newImpuesto(rate *tax.RateTotal, currency *currency.Code, catDef *tax.Category) *Impuesto {
+func newImpuesto(rate *tax.RateTotal, currency *currency.Code) *Impuesto {
 	cu := currency.Def().Subunits // SAT expects tax total amounts with no more decimals than supported by the currency
-	impuesto := catDef.Map[mx.KeySATImpuesto].String()
 
 	if rate.Percent == nil {
 		return &Impuesto{
 			Base:       rate.Base.Rescale(cu).String(),
-			Impuesto:   impuesto,
+			Impuesto:   rate.Ext[addon.ExtKeyTaxType].String(),
 			TipoFactor: TipoFactorExento,
 		}
 	}
@@ -107,18 +106,18 @@ func newImpuesto(rate *tax.RateTotal, currency *currency.Code, catDef *tax.Categ
 	return &Impuesto{
 		Base:       rate.Base.Rescale(cu).String(),
 		Importe:    rate.Amount.Rescale(cu).String(),
-		Impuesto:   impuesto,
+		Impuesto:   rate.Ext[addon.ExtKeyTaxType].String(),
 		TasaOCuota: format.TaxPercent(rate.Percent),
 		TipoFactor: TipoFactorTasa,
 	}
 }
 
-func newConceptoImpuestos(line *bill.Line, regime *tax.Regime) *ConceptoImpuestos {
+func newConceptoImpuestos(line *bill.Line, regime *tax.RegimeDef) *ConceptoImpuestos {
 	var traslados, retenciones []*Impuesto
 
 	for _, tax := range line.Taxes {
-		catDef := regime.Category(tax.Category)
-		imp := newConceptoImpuesto(line, tax, catDef)
+		catDef := regime.CategoryDef(tax.Category)
+		imp := newConceptoImpuesto(line, tax)
 		if catDef.Retained {
 			retenciones = append(retenciones, imp)
 		} else {
@@ -140,12 +139,11 @@ func newConceptoImpuestos(line *bill.Line, regime *tax.Regime) *ConceptoImpuesto
 	return impuestos
 }
 
-func newConceptoImpuesto(line *bill.Line, tax *tax.Combo, catDef *tax.Category) *Impuesto {
-	imp := catDef.Map[mx.KeySATImpuesto].String()
+func newConceptoImpuesto(line *bill.Line, tax *tax.Combo) *Impuesto {
 	if tax.Percent == nil {
 		return &Impuesto{
 			Base:       line.Total.String(),
-			Impuesto:   imp,
+			Impuesto:   tax.Ext[addon.ExtKeyTaxType].String(),
 			TipoFactor: TipoFactorExento,
 		}
 	}
@@ -155,7 +153,7 @@ func newConceptoImpuesto(line *bill.Line, tax *tax.Combo, catDef *tax.Category) 
 	return &Impuesto{
 		Base:       line.Total.String(),
 		Importe:    taxAmount.String(),
-		Impuesto:   imp,
+		Impuesto:   tax.Ext[addon.ExtKeyTaxType].String(),
 		TasaOCuota: format.TaxPercent(tax.Percent),
 		TipoFactor: TipoFactorTasa,
 	}

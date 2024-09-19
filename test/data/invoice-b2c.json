@@ -4,12 +4,18 @@
 		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "239697a119d3e3e8ba190887b3fd7e205523c95906fb8290d1ace112648840d3"
-		},
-		"draft": true
+			"val": "36fcb3dc283bddb13d4a1dfd99f094a900bed11d93a6acfc489f4b983f777ebf"
+		}
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "MX",
+		"$addons": [
+			"mx-cfdi-v4"
+		],
+		"$tags": [
+			"simplified"
+		],
 		"uuid": "018fc8dc-2903-76aa-a68c-4c3873667023",
 		"type": "standard",
 		"series": "LMC",
@@ -17,10 +23,8 @@
 		"issue_date": "2023-05-29",
 		"currency": "MXN",
 		"tax": {
-			"tags": [
-				"simplified"
-			],
 			"ext": {
+				"mx-cfdi-doc-type": "I",
 				"mx-cfdi-issue-place": "26015"
 			}
 		},
@@ -50,7 +54,10 @@
 					{
 						"cat": "VAT",
 						"rate": "standard",
-						"percent": "16.0%"
+						"percent": "16.0%",
+						"ext": {
+							"mx-cfdi-tax-type": "002"
+						}
 					}
 				],
 				"total": "200.00"
@@ -58,7 +65,10 @@
 		],
 		"payment": {
 			"instructions": {
-				"key": "credit-transfer"
+				"key": "credit-transfer",
+				"ext": {
+					"mx-cfdi-payment-means": "03"
+				}
 			}
 		},
 		"totals": {
@@ -71,6 +81,9 @@
 						"rates": [
 							{
 								"key": "standard",
+								"ext": {
+									"mx-cfdi-tax-type": "002"
+								},
 								"base": "200.00",
 								"percent": "16.0%",
 								"amount": "32.00"

@@ -216,7 +216,7 @@ func validateSupplierForMabe(value interface{}) error {
 		return nil
 	}
 	return validation.ValidateStruct(sup,
-		validation.Field(&sup.Identities, org.HasIdentityKey(MabeKeyIdentityProviderCode)),
+		validation.Field(&sup.Identities, org.RequireIdentityKey(MabeKeyIdentityProviderCode)),
 	)
 }
 
@@ -238,7 +238,7 @@ func validateItemForMabe(value interface{}) error {
 		return nil
 	}
 	return validation.ValidateStruct(item,
-		validation.Field(&item.Identities, org.HasIdentityKey(MabeKeyIdentityArticleCode)),
+		validation.Field(&item.Identities, org.RequireIdentityKey(MabeKeyIdentityArticleCode)),
 	)
 }
 
@@ -261,7 +261,7 @@ func validateReceiverForMabe(value interface{}) error {
 		return nil
 	}
 	return validation.ValidateStruct(rec,
-		validation.Field(&rec.Identities, org.HasIdentityKey(MabeKeyIdentityDeliveryPlant)),
+		validation.Field(&rec.Identities, org.RequireIdentityKey(MabeKeyIdentityDeliveryPlant)),
 	)
 }
 
@@ -272,8 +272,8 @@ func validateOrderingForMabe(value interface{}) error {
 	}
 	return validation.ValidateStruct(ord,
 		validation.Field(&ord.Identities,
-			org.HasIdentityKey(MabeKeyIdentityPurchaseOrder),
-			org.HasIdentityKey(MabeKeyIdentityRef1),
+			org.RequireIdentityKey(MabeKeyIdentityPurchaseOrder),
+			org.RequireIdentityKey(MabeKeyIdentityRef1),
 		),
 	)
 }
@@ -372,7 +372,7 @@ func setMabeTaxes(inv *bill.Invoice, mabe *MabeFactura) {
 	var traslados, retenciones []*MabeImpuesto
 
 	for _, cat := range inv.Totals.Taxes.Categories {
-		catDef := inv.TaxRegime().Category(cat.Code)
+		catDef := inv.RegimeDef().CategoryDef(cat.Code)
 
 		for _, rate := range cat.Rates {
 			t := &MabeImpuesto{

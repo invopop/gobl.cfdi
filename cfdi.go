@@ -11,13 +11,12 @@ import (
 	"github.com/invopop/gobl.cfdi/addendas"
 	"github.com/invopop/gobl.cfdi/internal"
 	"github.com/invopop/gobl.cfdi/internal/format"
+	addon "github.com/invopop/gobl/addons/mx/cfdi"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
-	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/currency"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/pay"
-	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/schema"
 	"github.com/invopop/gobl/tax"
 	"github.com/invopop/validation"
@@ -128,8 +127,8 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Version:        CFDIVersion,
 
 		TipoDeComprobante: lookupTipoDeComprobante(inv),
-		Serie:             inv.Series,
-		Folio:             inv.Code,
+		Serie:             inv.Series.String(),
+		Folio:             inv.Code.String(),
 		Fecha:             formatIssueDate(inv.IssueDate),
 		LugarExpedicion:   issuePlace,
 		SubTotal:          subtotal.String(),
@@ -147,8 +146,8 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		CFDIRelacionados: newCfdiRelacionados(inv),
 		Emisor:           newEmisor(inv.Supplier),
 		Receptor:         newReceptor(inv.Customer, issuePlace),
-		Conceptos:        newConceptos(inv.Lines, inv.TaxRegime()), // nolint:misspell
-		Impuestos:        newImpuestos(inv.Totals, &inv.Currency, inv.TaxRegime()),
+		Conceptos:        newConceptos(inv.Lines, inv.RegimeDef()), // nolint:misspell
+		Impuestos:        newImpuestos(inv.Totals, &inv.Currency, inv.RegimeDef()),
 	}
 
 	if err := addComplementos(document, inv.Complements); err != nil {
@@ -180,11 +179,11 @@ func validateSupport(inv *bill.Invoice) error {
 	}
 
 	if inv.Tax != nil {
-		if inv.Tax.ContainsTag(tax.TagSelfBilled) {
+		if inv.HasTags(tax.TagSelfBilled) {
 			errs["self-billed"] = ErrNotSupported
 		}
 
-		if inv.Tax.ContainsTag(tax.TagCustomerRates) {
+		if inv.HasTags(tax.TagCustomerRates) {
 			errs["customer-rates"] = ErrNotSupported
 		}
 	}
@@ -197,11 +196,11 @@ func validateSupport(inv *bill.Invoice) error {
 }
 
 func issuePlace(inv *bill.Invoice) string {
-	if inv.Tax != nil && inv.Tax.Ext.Has(mx.ExtKeyCFDIIssuePlace) {
-		return inv.Tax.Ext[mx.ExtKeyCFDIIssuePlace].String()
+	if inv.Tax != nil && inv.Tax.Ext.Has(addon.ExtKeyIssuePlace) {
+		return inv.Tax.Ext[addon.ExtKeyIssuePlace].String()
 	}
 	// Fallback
-	return inv.Supplier.Ext[mx.ExtKeyCFDIIssuePlace].String()
+	return inv.Supplier.Ext[addon.ExtKeyIssuePlace].String()
 }
 
 // Bytes returns the XML representation of the document in bytes
@@ -237,9 +236,9 @@ func (d *Document) AppendAddenda(c interface{}) {
 func addComplementos(doc *Document, complements []*schema.Object) error {
 	for _, c := range complements {
 		switch o := c.Instance().(type) {
-		case *mx.FuelAccountBalance:
+		case *addon.FuelAccountBalance:
 			addEstadoCuentaCombustible(doc, o)
-		case *mx.FoodVouchers:
+		case *addon.FoodVouchers:
 			addValesDeDespensa(doc, o)
 		default:
 			return fmt.Errorf("unsupported complement %T", o)
@@ -267,13 +266,11 @@ func formatIssueDate(date cal.Date) string {
 }
 
 func lookupTipoDeComprobante(inv *bill.Invoice) string {
-	ss := inv.ScenarioSummary()
-	if ss == nil {
+	if inv.Tax == nil {
 		return ""
 	}
 
-	code := ss.Codes[mx.KeySATTipoDeComprobante]
-	return code.String()
+	return inv.Tax.Ext[addon.ExtKeyDocType].String()
 }
 
 func tipoCambio(inv *bill.Invoice) string {
@@ -298,18 +295,9 @@ func formaPago(inv *bill.Invoice) string {
 		return FormaPagoPorDefinir
 	}
 
-	r := inv.TaxRegime()
-	if r == nil {
-		return ""
-	}
+	adv := largestAdvance(inv)
 
-	keyDef := findKeyDef(r.PaymentMeansKeys, largestAdvance(inv).Key)
-	if keyDef == nil {
-		return ""
-	}
-
-	code := keyDef.Map[mx.KeySATFormaPago]
-	return code.String()
+	return adv.Ext[addon.ExtKeyPaymentMeans].String()
 }
 
 func isPrepaid(inv *bill.Invoice) bool {
@@ -326,16 +314,6 @@ func largestAdvance(inv *bill.Invoice) *pay.Advance {
 	}
 
 	return la
-}
-
-func findKeyDef(keyDefs []*cbc.KeyDefinition, key cbc.Key) *cbc.KeyDefinition {
-	for _, keyDef := range keyDefs {
-		if keyDef.Key == key {
-			return keyDef
-		}
-	}
-
-	return nil
 }
 
 func paymentTermsNotes(inv *bill.Invoice) string {

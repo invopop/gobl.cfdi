@@ -4,12 +4,15 @@
 		"uuid": "f3ede26e-2b7f-11ee-ab54-e6a7901137ed",
 		"dig": {
 			"alg": "sha256",
-			"val": "05f97e1bc987faf824b743a02ddb7118c39dee7a013eb66d2ba6cc6857588298"
-		},
-		"draft": true
+			"val": "ba0f34a4290042be426de46aca53c6d8481b691f1e21599983556cbec8647577"
+		}
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "MX",
+		"$addons": [
+			"mx-cfdi-v4"
+		],
 		"uuid": "018fc8dd-9c95-7e00-8754-86548830072d",
 		"type": "credit-note",
 		"series": "CN",
@@ -18,9 +21,9 @@
 		"currency": "MXN",
 		"preceding": [
 			{
+				"issue_date": "2023-07-20",
 				"series": "LMC",
 				"code": "327",
-				"issue_date": "2023-07-20",
 				"stamps": [
 					{
 						"prv": "sat-uuid",
@@ -31,7 +34,9 @@
 		],
 		"tax": {
 			"ext": {
-				"mx-cfdi-issue-place": "21000"
+				"mx-cfdi-doc-type": "E",
+				"mx-cfdi-issue-place": "21000",
+				"mx-cfdi-rel-type": "01"
 			}
 		},
 		"supplier": {
@@ -72,7 +77,10 @@
 					{
 						"cat": "VAT",
 						"rate": "zero",
-						"percent": "0.0%"
+						"percent": "0.0%",
+						"ext": {
+							"mx-cfdi-tax-type": "002"
+						}
 					}
 				],
 				"total": "1.76"
@@ -93,7 +101,10 @@
 					{
 						"cat": "VAT",
 						"rate": "zero",
-						"percent": "0.0%"
+						"percent": "0.0%",
+						"ext": {
+							"mx-cfdi-tax-type": "002"
+						}
 					}
 				],
 				"total": "0.0087"
@@ -104,7 +115,10 @@
 				"notes": "Condiciones de pago"
 			},
 			"instructions": {
-				"key": "online+wallet"
+				"key": "online+wallet",
+				"ext": {
+					"mx-cfdi-payment-means": "05"
+				}
 			}
 		},
 		"totals": {
@@ -117,6 +131,9 @@
 						"rates": [
 							{
 								"key": "zero",
+								"ext": {
+									"mx-cfdi-tax-type": "002"
+								},
 								"base": "1.76",
 								"percent": "0.0%",
 								"amount": "0.00"

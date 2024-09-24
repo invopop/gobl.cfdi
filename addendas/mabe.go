@@ -9,8 +9,10 @@ import (
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/i18n"
+	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/org"
+	"github.com/invopop/gobl/tax"
 	"github.com/invopop/validation"
 )
 
@@ -216,7 +218,7 @@ func validateSupplierForMabe(value interface{}) error {
 		return nil
 	}
 	return validation.ValidateStruct(sup,
-		validation.Field(&sup.Identities, org.HasIdentityKey(MabeKeyIdentityProviderCode)),
+		validation.Field(&sup.Identities, org.RequireIdentityKey(MabeKeyIdentityProviderCode)),
 	)
 }
 
@@ -238,7 +240,7 @@ func validateItemForMabe(value interface{}) error {
 		return nil
 	}
 	return validation.ValidateStruct(item,
-		validation.Field(&item.Identities, org.HasIdentityKey(MabeKeyIdentityArticleCode)),
+		validation.Field(&item.Identities, org.RequireIdentityKey(MabeKeyIdentityArticleCode)),
 	)
 }
 
@@ -261,7 +263,7 @@ func validateReceiverForMabe(value interface{}) error {
 		return nil
 	}
 	return validation.ValidateStruct(rec,
-		validation.Field(&rec.Identities, org.HasIdentityKey(MabeKeyIdentityDeliveryPlant)),
+		validation.Field(&rec.Identities, org.RequireIdentityKey(MabeKeyIdentityDeliveryPlant)),
 	)
 }
 
@@ -272,8 +274,8 @@ func validateOrderingForMabe(value interface{}) error {
 	}
 	return validation.ValidateStruct(ord,
 		validation.Field(&ord.Identities,
-			org.HasIdentityKey(MabeKeyIdentityPurchaseOrder),
-			org.HasIdentityKey(MabeKeyIdentityRef1),
+			org.RequireIdentityKey(MabeKeyIdentityPurchaseOrder),
+			org.RequireIdentityKey(MabeKeyIdentityRef1),
 		),
 	)
 }
@@ -371,17 +373,19 @@ func newMabeImporte(amount num.Amount) *MabeImporte {
 func setMabeTaxes(inv *bill.Invoice, mabe *MabeFactura) {
 	var traslados, retenciones []*MabeImpuesto
 
+	regime := tax.RegimeDefFor(l10n.MX)
+
 	for _, cat := range inv.Totals.Taxes.Categories {
-		catDef := inv.TaxRegime().Category(cat.Code)
+		catDef := regime.CategoryDef(cat.Code)
 
 		for _, rate := range cat.Rates {
 			t := &MabeImpuesto{
-				Tipo:    catDef.Name.In(i18n.ES),
+				Tipo:    catDef.Name.In(i18n.ES), // this is risky
 				Tasa:    format.TaxPercent(rate.Percent),
 				Importe: rate.Amount.String(),
 			}
 
-			if catDef.Retained {
+			if cat.Retained {
 				retenciones = append(retenciones, t)
 			} else {
 				traslados = append(traslados, t)

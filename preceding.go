@@ -1,7 +1,9 @@
 package cfdi
 
 import (
+	"github.com/invopop/gobl/addons/mx/cfdi"
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/regimes/mx"
 )
 
@@ -37,7 +39,7 @@ func newCfdiRelacionados(inv *bill.Invoice) *CFDIRelacionados {
 	return crs
 }
 
-func lookupUUID(p *bill.Preceding) string {
+func lookupUUID(p *org.DocumentRef) string {
 	for _, s := range p.Stamps {
 		if s.Provider == mx.StampSATUUID {
 			return s.Value
@@ -48,11 +50,5 @@ func lookupUUID(p *bill.Preceding) string {
 }
 
 func lookupTipoRelacion(inv *bill.Invoice) string {
-	ss := inv.ScenarioSummary()
-	if ss == nil {
-		return ""
-	}
-
-	code := ss.Codes[mx.KeySATTipoRelacion]
-	return code.String()
+	return inv.Tax.Ext[cfdi.ExtKeyRelType].String()
 }

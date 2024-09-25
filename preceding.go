@@ -50,5 +50,9 @@ func lookupUUID(p *org.DocumentRef) string {
 }
 
 func lookupTipoRelacion(inv *bill.Invoice) string {
+	if inv.Tax == nil {
+		return ""
+	}
+
 	return inv.Tax.Ext[cfdi.ExtKeyRelType].String()
 }

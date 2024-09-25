@@ -267,6 +267,10 @@ func formatIssueDate(date cal.Date) string {
 }
 
 func lookupTipoDeComprobante(inv *bill.Invoice) string {
+	if inv.Tax == nil {
+		return ""
+	}
+
 	return inv.Tax.Ext[cfdi.ExtKeyDocType].String()
 }
 
@@ -288,11 +292,8 @@ func metodoPago(inv *bill.Invoice) string {
 }
 
 func formaPago(inv *bill.Invoice) string {
-	if !isPrepaid(inv) {
-		return FormaPagoPorDefinir
-	}
 	adv := largestAdvance(inv)
-	if adv == nil {
+	if !isPrepaid(inv) || adv == nil {
 		return FormaPagoPorDefinir
 	}
 	return adv.Ext[cfdi.ExtKeyPaymentMeans].String()
@@ -303,6 +304,10 @@ func isPrepaid(inv *bill.Invoice) bool {
 }
 
 func largestAdvance(inv *bill.Invoice) *pay.Advance {
+	if inv.Payment == nil || len(inv.Payment.Advances) == 0 {
+		return nil
+	}
+
 	la := inv.Payment.Advances[0]
 	for _, a := range inv.Payment.Advances {
 		if a.Amount.Compare(la.Amount) == 1 {

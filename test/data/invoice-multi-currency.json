@@ -1,15 +1,18 @@
 {
 	"$schema": "https://gobl.org/draft-0/envelope",
 	"head": {
-		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
+		"uuid": "01922d7f-74e9-727e-b21d-2f40440d9a64",
 		"dig": {
 			"alg": "sha256",
-			"val": "bd0d56f948ef52abff2a80e13b893add855bf7c36ac6ca3c5d052847c9897d84"
-		},
-		"draft": true
+			"val": "32da573d7772a5cdc6ca727de820073227f6f25b76999fabb668bec9db241b8f"
+		}
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "MX",
+		"$addons": [
+			"mx-cfdi-v4"
+		],
 		"uuid": "018fc8dc-2903-76aa-a68c-4c3873667023",
 		"type": "standard",
 		"series": "LMC",
@@ -25,6 +28,7 @@
 		],
 		"tax": {
 			"ext": {
+				"mx-cfdi-doc-type": "I",
 				"mx-cfdi-issue-place": "26015"
 			}
 		},
@@ -74,7 +78,10 @@
 		],
 		"payment": {
 			"instructions": {
-				"key": "credit-transfer"
+				"key": "credit-transfer",
+				"ext": {
+					"mx-cfdi-payment-means": "03"
+				}
 			}
 		},
 		"totals": {

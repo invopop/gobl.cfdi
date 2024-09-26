@@ -1,15 +1,18 @@
 {
 	"$schema": "https://gobl.org/draft-0/envelope",
 	"head": {
-		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
+		"uuid": "01922d7f-748e-7ac6-a885-133ddca0eb29",
 		"dig": {
 			"alg": "sha256",
-			"val": "0a5ebb3218a7a568d4952633a1eade79217ca7854df0c373ab0ff98b393f0574"
-		},
-		"draft": true
+			"val": "cd54fda67404318f15299978b2d450e05c0b4dd69b7618e4e307972373003f0d"
+		}
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "MX",
+		"$addons": [
+			"mx-cfdi-v4"
+		],
 		"uuid": "018fc8dd-9ccf-758e-9cbf-a2b4740dbd1d",
 		"type": "standard",
 		"series": "TEST",
@@ -18,6 +21,7 @@
 		"currency": "MXN",
 		"tax": {
 			"ext": {
+				"mx-cfdi-doc-type": "I",
 				"mx-cfdi-issue-place": "21000"
 			}
 		},
@@ -70,7 +74,10 @@
 				"notes": "Condiciones de pago"
 			},
 			"instructions": {
-				"key": "online+wallet"
+				"key": "online+wallet",
+				"ext": {
+					"mx-cfdi-payment-means": "05"
+				}
 			}
 		},
 		"totals": {

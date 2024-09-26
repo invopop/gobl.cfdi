@@ -37,9 +37,9 @@ jobs:
           WITH_V: true
 
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v4
         with:
-          go-version: 1.18
+          go-version-file: "go.mod"
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2

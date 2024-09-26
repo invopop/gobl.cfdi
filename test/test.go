@@ -3,7 +3,7 @@ package test
 
 import (
 	"bytes"
-	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -42,9 +42,20 @@ func LoadTestEnvelope(name string) (*gobl.Envelope, error) {
 		return nil, err
 	}
 
-	env := new(gobl.Envelope)
-	if err := json.Unmarshal(buf.Bytes(), env); err != nil {
-		return nil, err
+	out, err := gobl.Parse(buf.Bytes())
+	if err != nil {
+		return nil, fmt.Errorf("parsing file: %w", err)
+	}
+
+	var env *gobl.Envelope
+	switch obj := out.(type) {
+	case *gobl.Envelope:
+		env = obj
+	default:
+		env = gobl.NewEnvelope()
+		if err := env.Insert(obj); err != nil {
+			return nil, fmt.Errorf("inserting object: %w", err)
+		}
 	}
 
 	if err := env.Calculate(); err != nil {

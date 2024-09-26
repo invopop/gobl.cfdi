@@ -3,7 +3,6 @@ package cfdi
 import (
 	"github.com/invopop/gobl.cfdi/internal"
 	"github.com/invopop/gobl/bill"
-	"github.com/invopop/gobl/tax"
 )
 
 // Conceptos list invoice lines
@@ -27,17 +26,17 @@ type Concepto struct {
 }
 
 // nolint:misspell
-func newConceptos(lines []*bill.Line, regime *tax.Regime) *Conceptos {
+func newConceptos(lines []*bill.Line) *Conceptos {
 	var conceptos []*Concepto
 
 	for _, line := range lines {
-		conceptos = append(conceptos, newConcepto(line, regime))
+		conceptos = append(conceptos, newConcepto(line))
 	}
 
 	return &Conceptos{conceptos}
 }
 
-func newConcepto(line *bill.Line, regime *tax.Regime) *Concepto {
+func newConcepto(line *bill.Line) *Concepto {
 	concepto := &Concepto{
 		ClaveProdServ: internal.ClaveProdServ(line).String(),
 		Cantidad:      line.Quantity.String(),
@@ -47,7 +46,7 @@ func newConcepto(line *bill.Line, regime *tax.Regime) *Concepto {
 		Importe:       line.Sum.String(),
 		Descuento:     formatOptionalAmount(internal.TotalLineDiscount(line)),
 		ObjetoImp:     lineSubjectToTax(line),
-		Impuestos:     newConceptoImpuestos(line, regime),
+		Impuestos:     newConceptoImpuestos(line),
 	}
 
 	return concepto

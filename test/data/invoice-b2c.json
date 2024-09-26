@@ -1,15 +1,21 @@
 {
 	"$schema": "https://gobl.org/draft-0/envelope",
 	"head": {
-		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
+		"uuid": "01922d7f-74c9-702f-a9b7-0b69accc0c41",
 		"dig": {
 			"alg": "sha256",
-			"val": "239697a119d3e3e8ba190887b3fd7e205523c95906fb8290d1ace112648840d3"
-		},
-		"draft": true
+			"val": "edc93f5a361f2664a50ed31c1c8fe2895fb6c20454c31f64d3d1652be27f5122"
+		}
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "MX",
+		"$addons": [
+			"mx-cfdi-v4"
+		],
+		"$tags": [
+			"simplified"
+		],
 		"uuid": "018fc8dc-2903-76aa-a68c-4c3873667023",
 		"type": "standard",
 		"series": "LMC",
@@ -17,10 +23,8 @@
 		"issue_date": "2023-05-29",
 		"currency": "MXN",
 		"tax": {
-			"tags": [
-				"simplified"
-			],
 			"ext": {
+				"mx-cfdi-doc-type": "I",
 				"mx-cfdi-issue-place": "26015"
 			}
 		},
@@ -58,7 +62,10 @@
 		],
 		"payment": {
 			"instructions": {
-				"key": "credit-transfer"
+				"key": "credit-transfer",
+				"ext": {
+					"mx-cfdi-payment-means": "03"
+				}
 			}
 		},
 		"totals": {

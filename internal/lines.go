@@ -1,9 +1,9 @@
 package internal
 
 import (
+	"github.com/invopop/gobl/addons/mx/cfdi"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
-	"github.com/invopop/gobl/regimes/mx"
 	"github.com/invopop/gobl/tax"
 )
 
@@ -27,5 +27,5 @@ func ClaveProdServ(line *bill.Line) tax.ExtValue {
 		return ""
 	}
 
-	return line.Item.Ext[mx.ExtKeyCFDIProdServ]
+	return line.Item.Ext[cfdi.ExtKeyProdServ]
 }

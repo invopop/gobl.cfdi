@@ -1,15 +1,18 @@
 {
 	"$schema": "https://gobl.org/draft-0/envelope",
 	"head": {
-		"uuid": "c4ed7c55-fef6-11ed-98ea-e6a7901137ed",
+		"uuid": "01922d7f-74af-73f4-9cfa-675fedc70c03",
 		"dig": {
 			"alg": "sha256",
-			"val": "e42b6b68f2cbc0cef7bf7d26d5a71db2e78b19c98be2579f927a65ffabd1d592"
-		},
-		"draft": true
+			"val": "f4425b1183b192d5093dced4787201afe6d6d93711f058d80dd6ee5bfad58b8b"
+		}
 	},
 	"doc": {
 		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "MX",
+		"$addons": [
+			"mx-cfdi-v4"
+		],
 		"uuid": "018f5299-3dfb-7562-9cac-7125207161f5",
 		"type": "standard",
 		"series": "LMC",
@@ -18,6 +21,7 @@
 		"currency": "MXN",
 		"tax": {
 			"ext": {
+				"mx-cfdi-doc-type": "I",
 				"mx-cfdi-issue-place": "26015"
 			}
 		},
@@ -126,7 +130,10 @@
 					"key": "credit-transfer",
 					"description": "Top-up payment",
 					"percent": "100%",
-					"amount": "211.36"
+					"amount": "211.36",
+					"ext": {
+						"mx-cfdi-payment-means": "03"
+					}
 				}
 			]
 		},

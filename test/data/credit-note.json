@@ -1,125 +1,143 @@
 {
-  "$schema": "https://gobl.org/draft-0/bill/invoice",
-  "$addons": ["mx-cfdi-v4"],
-  "uuid": "018fc8dd-9c95-7e00-8754-86548830072d",
-  "type": "credit-note",
-  "series": "CN",
-  "code": "0003",
-  "issue_date": "2023-07-26",
-  "currency": "MXN",
-  "preceding": [
-    {
-      "series": "LMC",
-      "code": "327",
-      "issue_date": "2023-07-20",
-      "stamps": [
-        {
-          "prv": "sat-uuid",
-          "val": "1fac4464-1111-0000-1111-cd37179db12e"
-        }
-      ]
-    }
-  ],
-  "tax": {
-    "ext": {
-      "mx-cfdi-issue-place": "21000"
-    }
-  },
-  "supplier": {
-    "name": "ESCUELA KEMPER URGATE",
-    "tax_id": {
-      "country": "MX",
-      "code": "EKU9003173C9"
-    },
-    "ext": {
-      "mx-cfdi-fiscal-regime": "601"
-    }
-  },
-  "customer": {
-    "name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
-    "tax_id": {
-      "country": "MX",
-      "code": "URE180429TM6"
-    },
-    "ext": {
-      "mx-cfdi-fiscal-regime": "601",
-      "mx-cfdi-post-code": "86991",
-      "mx-cfdi-use": "G03"
-    }
-  },
-  "lines": [
-    {
-      "i": 1,
-      "quantity": "1.33",
-      "item": {
-        "name": "Cobro por tarjetas",
-        "price": "1.32",
-        "ext": {
-          "mx-cfdi-prod-serv": "84141602"
-        }
-      },
-      "sum": "1.76",
-      "taxes": [
-        {
-          "cat": "VAT",
-          "rate": "zero",
-          "percent": "0.0%"
-        }
-      ],
-      "total": "1.76"
-    },
-    {
-      "i": 2,
-      "quantity": "1",
-      "item": {
-        "name": "Porcentaje sobre GMV",
-        "price": "0.0087",
-        "unit": "service",
-        "ext": {
-          "mx-cfdi-prod-serv": "80141628"
-        }
-      },
-      "sum": "0.0087",
-      "taxes": [
-        {
-          "cat": "VAT",
-          "rate": "zero",
-          "percent": "0.0%"
-        }
-      ],
-      "total": "0.0087"
-    }
-  ],
-  "payment": {
-    "terms": {
-      "notes": "Condiciones de pago"
-    },
-    "instructions": {
-      "key": "online+wallet"
-    }
-  },
-  "totals": {
-    "sum": "1.76",
-    "total": "1.76",
-    "taxes": {
-      "categories": [
-        {
-          "code": "VAT",
-          "rates": [
-            {
-              "key": "zero",
-              "base": "1.76",
-              "percent": "0.0%",
-              "amount": "0.00"
-            }
-          ],
-          "amount": "0.00"
-        }
-      ],
-      "sum": "0.00"
-    },
-    "tax": "0.00",
-    "total_with_tax": "1.76",
-    "payable": "1.76"
-  }
+	"$schema": "https://gobl.org/draft-0/envelope",
+	"head": {
+		"uuid": "01922d7f-7467-7840-88e7-d70a607a85bf",
+		"dig": {
+			"alg": "sha256",
+			"val": "dc0483e3d07d8b7a317a22cb5b2f31dbd20f320d11560683d0ae3e51d75d5674"
+		}
+	},
+	"doc": {
+		"$schema": "https://gobl.org/draft-0/bill/invoice",
+		"$regime": "MX",
+		"$addons": [
+			"mx-cfdi-v4"
+		],
+		"uuid": "018fc8dd-9c95-7e00-8754-86548830072d",
+		"type": "credit-note",
+		"series": "CN",
+		"code": "0003",
+		"issue_date": "2023-07-26",
+		"currency": "MXN",
+		"preceding": [
+			{
+				"issue_date": "2023-07-20",
+				"series": "LMC",
+				"code": "327",
+				"stamps": [
+					{
+						"prv": "sat-uuid",
+						"val": "1fac4464-1111-0000-1111-cd37179db12e"
+					}
+				]
+			}
+		],
+		"tax": {
+			"ext": {
+				"mx-cfdi-doc-type": "E",
+				"mx-cfdi-issue-place": "21000",
+				"mx-cfdi-rel-type": "01"
+			}
+		},
+		"supplier": {
+			"name": "ESCUELA KEMPER URGATE",
+			"tax_id": {
+				"country": "MX",
+				"code": "EKU9003173C9"
+			},
+			"ext": {
+				"mx-cfdi-fiscal-regime": "601"
+			}
+		},
+		"customer": {
+			"name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
+			"tax_id": {
+				"country": "MX",
+				"code": "URE180429TM6"
+			},
+			"ext": {
+				"mx-cfdi-fiscal-regime": "601",
+				"mx-cfdi-post-code": "86991",
+				"mx-cfdi-use": "G03"
+			}
+		},
+		"lines": [
+			{
+				"i": 1,
+				"quantity": "1.33",
+				"item": {
+					"name": "Cobro por tarjetas",
+					"price": "1.32",
+					"ext": {
+						"mx-cfdi-prod-serv": "84141602"
+					}
+				},
+				"sum": "1.76",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"rate": "zero",
+						"percent": "0.0%"
+					}
+				],
+				"total": "1.76"
+			},
+			{
+				"i": 2,
+				"quantity": "1",
+				"item": {
+					"name": "Porcentaje sobre GMV",
+					"price": "0.0087",
+					"unit": "service",
+					"ext": {
+						"mx-cfdi-prod-serv": "80141628"
+					}
+				},
+				"sum": "0.0087",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"rate": "zero",
+						"percent": "0.0%"
+					}
+				],
+				"total": "0.0087"
+			}
+		],
+		"payment": {
+			"terms": {
+				"notes": "Condiciones de pago"
+			},
+			"instructions": {
+				"key": "online+wallet",
+				"ext": {
+					"mx-cfdi-payment-means": "05"
+				}
+			}
+		},
+		"totals": {
+			"sum": "1.76",
+			"total": "1.76",
+			"taxes": {
+				"categories": [
+					{
+						"code": "VAT",
+						"rates": [
+							{
+								"key": "zero",
+								"base": "1.76",
+								"percent": "0.0%",
+								"amount": "0.00"
+							}
+						],
+						"amount": "0.00"
+					}
+				],
+				"sum": "0.00"
+			},
+			"tax": "0.00",
+			"total_with_tax": "1.76",
+			"payable": "1.76"
+		}
+	}
 }

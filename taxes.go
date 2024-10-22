@@ -52,6 +52,9 @@ var taxCategoryMap = map[cbc.Code]string{
 }
 
 func newImpuestos(totals *bill.Totals, currency *currency.Code) *Impuestos {
+	if totals.Taxes == nil {
+		return nil
+	}
 	var traslados, retenciones []*Impuesto
 	totalTraslados, totalRetenciones := currency.Def().Zero(), currency.Def().Zero()
 

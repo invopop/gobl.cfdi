@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-74af-73f4-9cfa-675fedc70c03",
 		"dig": {
 			"alg": "sha256",
-			"val": "f4425b1183b192d5093dced4787201afe6d6d93711f058d80dd6ee5bfad58b8b"
+			"val": "14c160ddb0cf03d744445fedca48d548c41e88f2aa85afbf5e75e2986224f8c4"
 		}
 	},
 	"doc": {
@@ -41,9 +41,13 @@
 				"country": "MX",
 				"code": "URE180429TM6"
 			},
+			"addresses": [
+				{
+					"code": "65000"
+				}
+			],
 			"ext": {
 				"mx-cfdi-fiscal-regime": "601",
-				"mx-cfdi-post-code": "65000",
 				"mx-cfdi-use": "G01"
 			}
 		},

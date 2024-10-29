@@ -5,7 +5,7 @@ go 1.22
 toolchain go1.22.5
 
 require (
-	github.com/invopop/gobl v0.203.0
+	github.com/invopop/gobl v0.203.1-0.20241029145211-53dd01f77dfe
 	github.com/joho/godotenv v1.5.1
 	github.com/magefile/mage v1.15.0
 	github.com/spf13/cobra v1.8.1

@@ -58,11 +58,16 @@ func newReceptor(customer *org.Party, issuePlace string) *Receptor {
 		}
 	}
 
+	postcode := customer.Ext[cfdi.ExtKeyPostCode].String() // TODO: Drop support for ExtKeyPostCode
+	if postcode == "" && len(customer.Addresses) > 0 {
+		postcode = customer.Addresses[0].Code
+	}
+
 	return &Receptor{
 		Nombre:                  customer.Name,
 		Rfc:                     customer.TaxID.Code.String(),
 		RegimenFiscalReceptor:   customer.Ext[cfdi.ExtKeyFiscalRegime].String(),
 		UsoCFDI:                 customer.Ext[cfdi.ExtKeyUse].String(),
-		DomicilioFiscalReceptor: customer.Ext[cfdi.ExtKeyPostCode].String(),
+		DomicilioFiscalReceptor: postcode,
 	}
 }

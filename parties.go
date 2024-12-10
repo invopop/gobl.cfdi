@@ -60,7 +60,7 @@ func newReceptor(customer *org.Party, issuePlace string) *Receptor {
 
 	var postcode string
 	if len(customer.Addresses) > 0 {
-		postcode = customer.Addresses[0].Code
+		postcode = customer.Addresses[0].Code.String()
 	}
 
 	return &Receptor{

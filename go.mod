@@ -5,7 +5,7 @@ go 1.22
 toolchain go1.22.5
 
 require (
-	github.com/invopop/gobl v0.203.1-0.20241029145211-53dd01f77dfe
+	github.com/invopop/gobl v0.206.1
 	github.com/joho/godotenv v1.5.1
 	github.com/magefile/mage v1.15.0
 	github.com/spf13/cobra v1.8.1
@@ -29,16 +29,16 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.110.2
-	github.com/Masterminds/semver/v3 v3.2.1 // indirect
+	cloud.google.com/go v0.116.0
+	github.com/Masterminds/semver/v3 v3.3.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/invopop/jsonschema v0.12.0 // indirect
-	github.com/invopop/validation v0.7.0
+	github.com/invopop/validation v0.8.0
 	github.com/lestrrat-go/libxml2 v0.0.0-20201123224832-e6d9de61b80d
 	github.com/square/go-jose/v3 v3.0.0-20200630053402-0a67ce9b0693 // indirect
 	github.com/stretchr/testify v1.8.4
-	golang.org/x/crypto v0.26.0 // indirect
+	golang.org/x/crypto v0.30.0 // indirect
 )
 
 // replace github.com/invopop/gobl => ../gobl

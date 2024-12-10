@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-748e-7ac6-a885-133ddca0eb29",
 		"dig": {
 			"alg": "sha256",
-			"val": "b0946f9ed598bc632900cb8a0135a69473f94dff7c07f8d7a844573303839324"
+			"val": "5b1eaa9bbf2acf0e7a5a66160184d90ef381a7d7d725b79320f6910b8ce3ba88"
 		}
 	},
 	"doc": {
@@ -116,6 +116,7 @@
 				"total": "400.00",
 				"lines": [
 					{
+						"i": 1,
 						"e_wallet_id": "1234",
 						"purchase_date_time": "2022-07-19T10:20:30",
 						"vendor_tax_code": "RWT860605OF5",
@@ -143,6 +144,7 @@
 						]
 					},
 					{
+						"i": 2,
 						"e_wallet_id": "1234",
 						"purchase_date_time": "2022-08-19T10:20:30",
 						"vendor_tax_code": "DJV320816JT1",

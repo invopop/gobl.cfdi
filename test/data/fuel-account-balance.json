@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-748e-7ac6-a885-133ddca0eb29",
 		"dig": {
 			"alg": "sha256",
-			"val": "cd54fda67404318f15299978b2d450e05c0b4dd69b7618e4e307972373003f0d"
+			"val": "5b1eaa9bbf2acf0e7a5a66160184d90ef381a7d7d725b79320f6910b8ce3ba88"
 		}
 	},
 	"doc": {
@@ -41,9 +41,13 @@
 				"country": "MX",
 				"code": "URE180429TM6"
 			},
+			"addresses": [
+				{
+					"code": "86991"
+				}
+			],
 			"ext": {
 				"mx-cfdi-fiscal-regime": "601",
-				"mx-cfdi-post-code": "86991",
 				"mx-cfdi-use": "G01"
 			}
 		},
@@ -112,6 +116,7 @@
 				"total": "400.00",
 				"lines": [
 					{
+						"i": 1,
 						"e_wallet_id": "1234",
 						"purchase_date_time": "2022-07-19T10:20:30",
 						"vendor_tax_code": "RWT860605OF5",
@@ -139,6 +144,7 @@
 						]
 					},
 					{
+						"i": 2,
 						"e_wallet_id": "1234",
 						"purchase_date_time": "2022-08-19T10:20:30",
 						"vendor_tax_code": "DJV320816JT1",

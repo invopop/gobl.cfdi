@@ -4,8 +4,6 @@ import (
 	"testing"
 
 	"github.com/invopop/gobl.cfdi/test"
-	"github.com/invopop/gobl/addons/mx/cfdi"
-	"github.com/invopop/gobl/org"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -63,24 +61,5 @@ func TestReceptor(t *testing.T) {
 		assert.Equal(t, "S01", r.UsoCFDI)
 		assert.Equal(t, "9014514805", r.NumRegIdTrib)
 		assert.Equal(t, "COL", r.ResidenciaFiscal)
-	})
-
-	t.Run("should map DomicilioFiscal from customer post code", func(t *testing.T) {
-		inv, err := test.LoadTestInvoice("invoice-b2b-bare.json")
-		require.NoError(t, err)
-
-		delete(inv.Customer.Ext, cfdi.ExtKeyPostCode)
-		inv.Customer.Addresses = []*org.Address{{Code: "21000"}}
-
-		doc, err := test.GenerateCFDIFrom(inv)
-		require.NoError(t, err)
-
-		r := doc.Receptor
-
-		assert.Equal(t, "URE180429TM6", r.Rfc)
-		assert.Equal(t, "UNIVERSIDAD ROBOTICA ESPAÑOLA", r.Nombre)
-		assert.Equal(t, "21000", r.DomicilioFiscalReceptor)
-		assert.Equal(t, "601", r.RegimenFiscalReceptor)
-		assert.Equal(t, "G01", r.UsoCFDI)
 	})
 }

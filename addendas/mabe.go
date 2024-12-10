@@ -315,7 +315,7 @@ func newMabeEntrega(inv *bill.Invoice) *MabeEntrega {
 		e.Calle = addr.Street
 		e.NoExterior = addr.Number
 		e.NoInterior = MabeNotApplicable
-		e.CodigoPostal = addr.Code
+		e.CodigoPostal = addr.Code.String()
 	}
 
 	return e

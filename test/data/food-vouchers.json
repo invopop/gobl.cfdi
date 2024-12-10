@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-747d-702b-b7a9-261a7c0fc97d",
 		"dig": {
 			"alg": "sha256",
-			"val": "bb21712b8c1b97cd234826370a4c5b5bddc87b7e1bc003bd818cd95994020d7c"
+			"val": "aa93619acbfe907cc9206e261ed0a7db04be9a84b86805b38a3fd5ea52501a08"
 		}
 	},
 	"doc": {
@@ -41,9 +41,13 @@
 				"country": "MX",
 				"code": "URE180429TM6"
 			},
+			"addresses": [
+				{
+					"code": "86991"
+				}
+			],
 			"ext": {
 				"mx-cfdi-fiscal-regime": "601",
-				"mx-cfdi-post-code": "86991",
 				"mx-cfdi-use": "G01"
 			}
 		},
@@ -112,6 +116,7 @@
 				"total": "30.52",
 				"lines": [
 					{
+						"i": 1,
 						"e_wallet_id": "ABC1234",
 						"issue_date_time": "2022-07-19T10:20:30",
 						"employee": {
@@ -123,6 +128,7 @@
 						"amount": "10.12"
 					},
 					{
+						"i": 2,
 						"e_wallet_id": "BCD4321",
 						"issue_date_time": "2022-08-20T11:20:30",
 						"employee": {

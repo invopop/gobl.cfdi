@@ -177,10 +177,6 @@ func validateSupport(inv *bill.Invoice) error {
 		}
 	}
 
-	if len(inv.Outlays) > 0 {
-		errs["outlays"] = ErrNotSupported
-	}
-
 	// Deprecation pending...
 	if inv.HasTags(tax.TagSelfBilled) {
 		errs["self-billed"] = ErrNotSupported

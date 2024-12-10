@@ -58,9 +58,9 @@ func newReceptor(customer *org.Party, issuePlace string) *Receptor {
 		}
 	}
 
-	postcode := customer.Ext[cfdi.ExtKeyPostCode].String() // TODO: Drop support for ExtKeyPostCode
-	if postcode == "" && len(customer.Addresses) > 0 {
-		postcode = customer.Addresses[0].Code
+	var postcode string
+	if len(customer.Addresses) > 0 {
+		postcode = customer.Addresses[0].Code.String()
 	}
 
 	return &Receptor{

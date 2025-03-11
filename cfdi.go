@@ -123,7 +123,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 	subtotal := inv.Totals.Total.Add(discount)
 	issuePlace := issuePlace(inv)
 
-	document := &Document{
+	doc := &Document{
 		CFDINamespace:  CFDINamespace,
 		XSINamespace:   XSINamespace,
 		SchemaLocation: format.SchemaLocation(CFDINamespace, CFDISchemaLocation),
@@ -150,18 +150,18 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Emisor:           newEmisor(inv.Supplier),
 		Receptor:         newReceptor(inv.Customer, issuePlace),
 		Conceptos:        newConceptos(inv.Lines), // nolint:misspell
-		Impuestos:        newImpuestos(inv.Totals, &inv.Currency),
+		Impuestos:        newImpuestos(inv.Totals, inv.Lines, inv.Currency),
 	}
 
-	if err := addComplementos(document, inv.Complements); err != nil {
+	if err := addComplementos(doc, inv.Complements); err != nil {
 		return nil, err
 	}
 
-	if err := addAddendas(document, inv); err != nil {
+	if err := addAddendas(doc, inv); err != nil {
 		return nil, err
 	}
 
-	return document, nil
+	return doc, nil
 }
 
 func validateSupport(inv *bill.Invoice) error {
@@ -169,12 +169,6 @@ func validateSupport(inv *bill.Invoice) error {
 
 	if len(inv.Charges) > 0 {
 		errs["charges"] = ErrNotSupported
-	}
-
-	for _, l := range inv.Lines {
-		if len(l.Charges) > 0 {
-			errs["line charges"] = ErrNotSupported
-		}
 	}
 
 	// Deprecation pending...

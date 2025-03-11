@@ -193,36 +193,45 @@ func newMabe(inv *bill.Invoice) (*MabeFactura, error) {
 
 func validateInvoiceForMabe(inv *bill.Invoice) error {
 	return validation.ValidateStruct(inv,
-		validation.Field(&inv.Type, validation.In(validMabeInvoiceTypes()...)),
+		validation.Field(&inv.Type,
+			validation.In(validMabeInvoiceTypes()...),
+			validation.Skip,
+		),
 		validation.Field(&inv.Supplier,
 			validation.By(validateSupplierForMabe),
+			validation.Skip,
 		),
 		validation.Field(&inv.Lines,
 			validation.Each(validation.By(validateLineForMabe), validation.Skip),
 			validation.Skip, // prevent GOBL validations from running
 		),
-		validation.Field(&inv.Ordering,
-			validation.Required,
-			validation.By(validateOrderingForMabe),
-		),
 		validation.Field(&inv.Delivery,
 			validation.Required,
 			validation.By(validateDeliveryForMabe),
+			validation.Skip,
+		),
+		validation.Field(&inv.Ordering,
+			validation.Required,
+			validation.By(validateOrderingForMabe),
+			validation.Skip,
 		),
 	)
 }
 
-func validateSupplierForMabe(value interface{}) error {
+func validateSupplierForMabe(value any) error {
 	sup, _ := value.(*org.Party)
 	if sup == nil {
 		return nil
 	}
 	return validation.ValidateStruct(sup,
-		validation.Field(&sup.Identities, org.RequireIdentityKey(MabeKeyIdentityProviderCode)),
+		validation.Field(&sup.Identities,
+			org.RequireIdentityKey(MabeKeyIdentityProviderCode),
+			validation.Skip,
+		),
 	)
 }
 
-func validateLineForMabe(value interface{}) error {
+func validateLineForMabe(value any) error {
 	line, _ := value.(*bill.Line)
 	if line == nil {
 		return nil
@@ -230,22 +239,26 @@ func validateLineForMabe(value interface{}) error {
 	return validation.ValidateStruct(line,
 		validation.Field(&line.Item,
 			validation.By(validateItemForMabe),
+			validation.Skip,
 		),
 	)
 }
 
-func validateItemForMabe(value interface{}) error {
+func validateItemForMabe(value any) error {
 	item, _ := value.(*org.Item)
 	if item == nil {
 		return nil
 	}
 	return validation.ValidateStruct(item,
-		validation.Field(&item.Identities, org.RequireIdentityKey(MabeKeyIdentityArticleCode)),
+		validation.Field(&item.Identities,
+			org.RequireIdentityKey(MabeKeyIdentityArticleCode),
+			validation.Skip,
+		),
 	)
 }
 
-func validateDeliveryForMabe(value interface{}) error {
-	del, _ := value.(*bill.Delivery)
+func validateDeliveryForMabe(value any) error {
+	del, _ := value.(*bill.DeliveryDetails)
 	if del == nil {
 		return nil
 	}
@@ -253,21 +266,25 @@ func validateDeliveryForMabe(value interface{}) error {
 		validation.Field(&del.Receiver,
 			validation.Required,
 			validation.By(validateReceiverForMabe),
+			validation.Skip,
 		),
 	)
 }
 
-func validateReceiverForMabe(value interface{}) error {
+func validateReceiverForMabe(value any) error {
 	rec, _ := value.(*org.Party)
 	if rec == nil {
 		return nil
 	}
 	return validation.ValidateStruct(rec,
-		validation.Field(&rec.Identities, org.RequireIdentityKey(MabeKeyIdentityDeliveryPlant)),
+		validation.Field(&rec.Identities,
+			org.RequireIdentityKey(MabeKeyIdentityDeliveryPlant),
+			validation.Skip,
+		),
 	)
 }
 
-func validateOrderingForMabe(value interface{}) error {
+func validateOrderingForMabe(value any) error {
 	ord, _ := value.(*bill.Ordering)
 	if ord == nil {
 		return nil
@@ -276,11 +293,12 @@ func validateOrderingForMabe(value interface{}) error {
 		validation.Field(&ord.Identities,
 			org.RequireIdentityKey(MabeKeyIdentityPurchaseOrder),
 			org.RequireIdentityKey(MabeKeyIdentityRef1),
+			validation.Skip,
 		),
 	)
 }
 
-func validMabeInvoiceTypes() []interface{} {
+func validMabeInvoiceTypes() []any {
 	var types []interface{}
 	for t := range MabeTipoDocumentoMap {
 		types = append(types, t)

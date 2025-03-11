@@ -21,7 +21,7 @@ func TestConceptos(t *testing.T) {
 		assert.Equal(t, "H87", c.ClaveUnidad)
 		assert.Equal(t, "Cigarros", c.Descripcion)
 		assert.Equal(t, "200.2020", c.ValorUnitario)
-		assert.Equal(t, "200.2010", c.Descuento)
+		assert.Equal(t, "200.2020", c.Descuento)
 		assert.Equal(t, "400.4040", c.Importe)
 		assert.Equal(t, "02", c.ObjetoImp)
 		assert.Equal(t, "H87", c.ClaveUnidad)

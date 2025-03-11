@@ -26,3 +26,9 @@ func SchemaLocation(namespace, schemaLocation string) string {
 func TaxPercent(percent *num.Percentage) string {
 	return percent.Base().Rescale(6).String()
 }
+
+// TaxRate ensures we add extra precision to the tax rate so that it can be used
+// for matching and can be used for CFDI requirements.
+func TaxRate(amount num.Amount) string {
+	return amount.Rescale(6).String()
+}

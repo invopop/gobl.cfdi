@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-74af-73f4-9cfa-675fedc70c03",
 		"dig": {
 			"alg": "sha256",
-			"val": "14c160ddb0cf03d744445fedca48d548c41e88f2aa85afbf5e75e2986224f8c4"
+			"val": "ac7713cb6763f8241c6bd20c8601e1a4c056052e2e7ab3e89b8286786f2ebf49"
 		}
 	},
 	"doc": {
@@ -70,7 +70,7 @@
 						"amount": "100.1010"
 					},
 					{
-						"amount": "100.1010"
+						"amount": "100.10"
 					}
 				],
 				"taxes": [
@@ -88,7 +88,7 @@
 						"percent": "10%"
 					}
 				],
-				"total": "200.2020"
+				"total": "200.2030"
 			},
 			{
 				"i": 2,
@@ -170,10 +170,10 @@
 							{
 								"base": "200.20",
 								"percent": "10.6667%",
-								"amount": "21.35"
+								"amount": "21.36"
 							}
 						],
-						"amount": "21.35"
+						"amount": "21.36"
 					},
 					{
 						"code": "ISR",

@@ -87,6 +87,27 @@ func TestComprobanteIngreso(t *testing.T) {
 		assert.Equal(t, "USD", doc.Moneda)
 		assert.Equal(t, "17.46", doc.TipoCambio)
 	})
+
+	t.Run("should handle IEPS taxes in line charges", func(t *testing.T) {
+		doc, err := test.NewDocumentFrom("invoice-ieps.json")
+		require.NoError(t, err)
+
+		assert.Equal(t, "I", doc.TipoDeComprobante)
+		assert.Equal(t, "TEST", doc.Serie)
+		assert.Equal(t, "00001", doc.Folio)
+		assert.Equal(t, "2023-07-10T00:00:00", doc.Fecha)
+		assert.Equal(t, "21000", doc.LugarExpedicion)
+		assert.Equal(t, "80.90", doc.SubTotal)
+		assert.Equal(t, "", doc.Descuento)
+		assert.Equal(t, "93.84", doc.Total)
+		assert.Equal(t, "MXN", doc.Moneda)
+		assert.Equal(t, "01", doc.Exportacion)
+		assert.Equal(t, "PPD", doc.MetodoPago)
+		assert.Equal(t, "99", doc.FormaPago)
+		assert.Equal(t, "Condiciones de pago", doc.CondicionesDePago)
+
+		assert.Nil(t, doc.Complemento)
+	})
 }
 
 func TestComprobanteEgreso(t *testing.T) {

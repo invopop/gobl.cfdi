@@ -4,7 +4,6 @@ import (
 	"github.com/invopop/gobl/addons/mx/cfdi"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
-	"github.com/invopop/gobl/tax"
 )
 
 // Default keys
@@ -22,10 +21,9 @@ func ClaveUnidad(line *bill.Line) cbc.Code {
 }
 
 // ClaveProdServ determines the line's Product-Service code
-func ClaveProdServ(line *bill.Line) tax.ExtValue {
+func ClaveProdServ(line *bill.Line) cbc.Code {
 	if line.Item == nil {
 		return ""
 	}
-
 	return line.Item.Ext[cfdi.ExtKeyProdServ]
 }

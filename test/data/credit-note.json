@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-7467-7840-88e7-d70a607a85bf",
 		"dig": {
 			"alg": "sha256",
-			"val": "76792da4c23add3ac91f85438f70ba42dea5df7b351e06de88f29da02dd7b5c0"
+			"val": "78a7bb4a05d1c78b108d585f957aba0e62ed8eb5edd0e1e45c55cfe14fd07aea"
 		}
 	},
 	"doc": {
@@ -33,6 +33,7 @@
 			}
 		],
 		"tax": {
+			"rounding": "currency",
 			"ext": {
 				"mx-cfdi-doc-type": "E",
 				"mx-cfdi-issue-place": "21000",
@@ -97,7 +98,7 @@
 						"mx-cfdi-prod-serv": "80141628"
 					}
 				},
-				"sum": "0.0087",
+				"sum": "0.01",
 				"taxes": [
 					{
 						"cat": "VAT",
@@ -105,7 +106,7 @@
 						"percent": "0.0%"
 					}
 				],
-				"total": "0.0087"
+				"total": "0.01"
 			}
 		],
 		"payment": {
@@ -120,8 +121,8 @@
 			}
 		},
 		"totals": {
-			"sum": "1.76",
-			"total": "1.76",
+			"sum": "1.77",
+			"total": "1.77",
 			"taxes": {
 				"categories": [
 					{
@@ -129,7 +130,7 @@
 						"rates": [
 							{
 								"key": "zero",
-								"base": "1.76",
+								"base": "1.77",
 								"percent": "0.0%",
 								"amount": "0.00"
 							}
@@ -140,8 +141,8 @@
 				"sum": "0.00"
 			},
 			"tax": "0.00",
-			"total_with_tax": "1.76",
-			"payable": "1.76"
+			"total_with_tax": "1.77",
+			"payable": "1.77"
 		}
 	}
 }

@@ -74,7 +74,7 @@ func newImpuestos(totals *bill.Totals, lines []*bill.Line, currency currency.Cod
 		}
 	}
 
-	traslados = taxesAddLineCharges(traslados, lines)
+	traslados = taxesAddLineCharges(traslados, lines, currency)
 
 	impuestos := &Impuestos{}
 	empty := true
@@ -104,13 +104,16 @@ func newImpuestos(totals *bill.Totals, lines []*bill.Line, currency currency.Cod
 	return impuestos
 }
 
-func taxesAddLineCharges(traslados []*Impuesto, lines []*bill.Line) []*Impuesto {
+func taxesAddLineCharges(traslados []*Impuesto, lines []*bill.Line, cur currency.Code) []*Impuesto {
 	taxes := []*Impuesto{}
 	// generate the lines that need to be there
 	for _, line := range lines {
 		for _, charge := range line.Charges {
 			tl := newImpuestoFromLineCharge(line, charge)
 			if tl != nil {
+				// ensure bases are rounded as they may have come from quantities
+				b := stringToAmount(tl.Base)
+				tl.Base = b.Rescale(cur.Def().Subunits).String()
 				taxes = append(taxes, tl)
 			}
 		}
@@ -144,21 +147,18 @@ func taxesAddLineCharges(traslados []*Impuesto, lines []*bill.Line) []*Impuesto 
 // string instead of a number. Any errors occur during parsing, we'll just
 // return the other amount.
 func addStringAmounts(a, b string) string {
+	return stringToAmount(a).Add(stringToAmount(b)).String()
+}
+
+func stringToAmount(a string) num.Amount {
 	if a == "" {
 		a = "0.00"
 	}
-	if b == "" {
-		b = "0.00"
-	}
-	an, err := num.AmountFromString(a)
+	am, err := num.AmountFromString(a)
 	if err != nil {
-		return b
+		return currency.MXN.Def().Zero()
 	}
-	bn, err := num.AmountFromString(b)
-	if err != nil {
-		return a
-	}
-	return an.Add(bn).String()
+	return am
 }
 
 func newImpuesto(catCode cbc.Code, rate *tax.RateTotal, currency currency.Code) *Impuesto {
@@ -253,11 +253,11 @@ func newImpuestoFromLineCharge(line *bill.Line, charge *bill.LineCharge) *Impues
 		i.TasaOCuota = format.TaxPercent(charge.Percent)
 		i.TipoFactor = TipoFactorTasa
 	} else if charge.Rate != nil {
+		q := line.Quantity
 		if charge.Quantity != nil {
-			i.Base = charge.Quantity.String()
-		} else {
-			i.Base = line.Quantity.String()
+			q = *charge.Quantity
 		}
+		i.Base = q.String()
 		i.TasaOCuota = format.TaxRate(*charge.Rate)
 		i.TipoFactor = TipoFactorCuota
 	} else {

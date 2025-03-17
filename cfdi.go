@@ -120,7 +120,6 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 	}
 
 	discount := internal.TotalInvoiceDiscount(inv)
-	subtotal := inv.Totals.Total.Add(discount)
 	issuePlace := issuePlace(inv)
 
 	doc := &Document{
@@ -134,7 +133,6 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Folio:             inv.Code.String(),
 		Fecha:             formatIssueDate(inv.IssueDate),
 		LugarExpedicion:   issuePlace,
-		SubTotal:          subtotal.String(),
 		Descuento:         formatOptionalAmount(discount),
 		Total:             inv.Totals.TotalWithTax.String(),
 		Moneda:            string(inv.Currency),
@@ -152,6 +150,15 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Conceptos:        newConceptos(inv.Lines), // nolint:misspell
 		Impuestos:        newImpuestos(inv.Totals, inv.Lines, inv.Currency),
 	}
+
+	// Determine the subtotal directly from the concepts, as there may be some
+	// additional taxes that needed to be taken into account
+	subtotal := inv.Currency.Def().Zero()
+	for _, c := range doc.Conceptos.Concepto {
+		i := stringToAmount(c.Importe)
+		subtotal = subtotal.Add(i)
+	}
+	doc.SubTotal = subtotal.String()
 
 	if err := addComplementos(doc, inv.Complements); err != nil {
 		return nil, err

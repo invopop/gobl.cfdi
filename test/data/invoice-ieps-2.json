@@ -4,7 +4,7 @@
 		"uuid": "01959bdd-3a81-7ed3-98b6-620a521345eb",
 		"dig": {
 			"alg": "sha256",
-			"val": "922ce883fd59035fba962a42175550cce105605746988585d411d5818b43e4e7"
+			"val": "2a1bb6e02bb349d62686f0f56b3a582962af8f3919abc6e579d11cb7fd38c285"
 		}
 	},
 	"doc": {
@@ -128,10 +128,6 @@
 			"payable": "120.00",
 			"advance": "120.00",
 			"due": "0.00"
-		},
-		"meta": {
-			"order-id": "68e6c0a3-539c-49a3-8ba1-769445e6b956",
-			"restaurant-id": "9545b0d0-1d95-46cb-9bb9-8137e221456e"
 		}
 	},
 	"sigs": [

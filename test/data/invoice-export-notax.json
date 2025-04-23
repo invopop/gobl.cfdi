@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-74d9-79ff-be0c-290fd1a847ce",
 		"dig": {
 			"alg": "sha256",
-			"val": "a8951f98e701d660b884abb907d0168954d395ed30b8ac6e201b6fe18aee443c"
+			"val": "cc16a8b9b177c830887650ea3fc94279b350a126d1b03509e5f0267fcf047ac0"
 		}
 	},
 	"doc": {
@@ -18,6 +18,7 @@
 		"series": "LMC",
 		"code": "0010",
 		"issue_date": "2023-05-29",
+		"issue_time": "12:00:00",
 		"currency": "MXN",
 		"tax": {
 			"ext": {

@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 
-	"cloud.google.com/go/civil"
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl.cfdi/addendas"
 	"github.com/invopop/gobl.cfdi/internal"
@@ -98,14 +97,22 @@ type Document struct {
 	NoCertificado     string `xml:",attr"`
 	Certificado       string `xml:",attr"`
 
-	CFDIRelacionados *CFDIRelacionados `xml:"cfdi:CfdiRelacionados,omitempty"`
-	Emisor           *Emisor           `xml:"cfdi:Emisor"`
-	Receptor         *Receptor         `xml:"cfdi:Receptor"`
-	Conceptos        *Conceptos        `xml:"cfdi:Conceptos"` //nolint:misspell
-	Impuestos        *Impuestos        `xml:"cfdi:Impuestos,omitempty"`
+	Global           *GlobalInformation `xml:"cfdi:InformacionGlobal,omitempty"`
+	CFDIRelacionados *CFDIRelacionados  `xml:"cfdi:CfdiRelacionados,omitempty"`
+	Emisor           *Emisor            `xml:"cfdi:Emisor"`
+	Receptor         *Receptor          `xml:"cfdi:Receptor"`
+	Conceptos        *Conceptos         `xml:"cfdi:Conceptos"` //nolint:misspell
+	Impuestos        *Impuestos         `xml:"cfdi:Impuestos,omitempty"`
 
 	Complemento *internal.Nodes `xml:"cfdi:Complemento,omitempty"`
 	Addenda     *internal.Nodes `xml:"cfdi:Addenda,omitempty"`
+}
+
+// GlobalInformation is used for invoices that contain a summary of B2C documents.
+type GlobalInformation struct {
+	Period string `xml:"Periodicidad,attr"`
+	Month  string `xml:"Meses,attr"`
+	Year   string `xml:"Año,attr"`
 }
 
 // NewDocument converts a GOBL envelope into a CFDI document
@@ -131,7 +138,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		TipoDeComprobante: lookupTipoDeComprobante(inv),
 		Serie:             inv.Series.String(),
 		Folio:             inv.Code.String(),
-		Fecha:             formatIssueDate(inv.IssueDate),
+		Fecha:             formatIssueDateTime(inv),
 		LugarExpedicion:   issuePlace,
 		Descuento:         formatOptionalAmount(discount),
 		Total:             inv.Totals.TotalWithTax.String(),
@@ -144,6 +151,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 
 		NoCertificado: FakeNoCertificado,
 
+		Global:           newGlobalInformation(inv),
 		CFDIRelacionados: newCfdiRelacionados(inv),
 		Emisor:           newEmisor(inv.Supplier),
 		Receptor:         newReceptor(inv.Customer, issuePlace),
@@ -169,6 +177,17 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 	}
 
 	return doc, nil
+}
+
+func newGlobalInformation(inv *bill.Invoice) *GlobalInformation {
+	if inv.Tax == nil || !inv.Tax.Ext.Has(cfdi.ExtKeyGlobalPeriod) {
+		return nil
+	}
+	return &GlobalInformation{
+		Period: inv.Tax.Ext[cfdi.ExtKeyGlobalPeriod].String(),
+		Month:  inv.Tax.Ext[cfdi.ExtKeyGlobalMonth].String(),
+		Year:   inv.Tax.Ext[cfdi.ExtKeyGlobalYear].String(),
+	}
 }
 
 func validateSupport(inv *bill.Invoice) error {
@@ -258,9 +277,12 @@ func addAddendas(doc *Document, inv *bill.Invoice) error {
 	return nil
 }
 
-func formatIssueDate(date cal.Date) string {
-	dateTime := civil.DateTime{Date: date.Date, Time: civil.Time{}}
-	return dateTime.String()
+func formatIssueDateTime(inv *bill.Invoice) string {
+	tn := inv.IssueTime
+	if tn == nil {
+		tn = new(cal.Time) // zero
+	}
+	return inv.IssueDate.WithTime(*tn).String()
 }
 
 func lookupTipoDeComprobante(inv *bill.Invoice) string {

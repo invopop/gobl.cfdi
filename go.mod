@@ -1,11 +1,11 @@
 module github.com/invopop/gobl.cfdi
 
-go 1.22
+go 1.23.0
 
-toolchain go1.22.5
+toolchain go1.23.4
 
 require (
-	github.com/invopop/gobl v0.212.1
+	github.com/invopop/gobl v0.214.2-0.20250423112257-36e3437ad921
 	github.com/joho/godotenv v1.5.1
 	github.com/magefile/mage v1.15.0
 	github.com/spf13/cobra v1.8.1
@@ -16,6 +16,7 @@ require (
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/go-jose/go-jose/v4 v4.0.5 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/invopop/yaml v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
@@ -36,9 +37,8 @@ require (
 	github.com/invopop/jsonschema v0.12.0 // indirect
 	github.com/invopop/validation v0.8.0
 	github.com/lestrrat-go/libxml2 v0.0.0-20201123224832-e6d9de61b80d
-	github.com/square/go-jose/v3 v3.0.0-20200630053402-0a67ce9b0693 // indirect
-	github.com/stretchr/testify v1.9.0
-	golang.org/x/crypto v0.31.0 // indirect
+	github.com/stretchr/testify v1.10.0
+	golang.org/x/crypto v0.36.0 // indirect
 )
 
 // replace github.com/invopop/gobl => ../gobl

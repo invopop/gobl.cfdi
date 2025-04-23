@@ -14,9 +14,10 @@ type Conceptos struct {
 // Concepto stores an invoice line data
 type Concepto struct {
 	ClaveProdServ string `xml:",attr"`
+	Ref           string `xml:"NoIdentificacion,attr,omitempty"`
 	Cantidad      string `xml:",attr"`
 	ClaveUnidad   string `xml:",attr"`
-	Descripcion   string `xml:",attr"` // nolint:misspell
+	Desc          string `xml:"Descripcion,attr"` // nolint:misspell
 	ValorUnitario string `xml:",attr"`
 	Importe       string `xml:",attr"`
 	Descuento     string `xml:",attr,omitempty"`
@@ -39,9 +40,10 @@ func newConceptos(lines []*bill.Line) *Conceptos {
 func newConcepto(line *bill.Line) *Concepto {
 	concepto := &Concepto{
 		ClaveProdServ: internal.ClaveProdServ(line).String(),
+		Ref:           line.Item.Ref.String(),
 		Cantidad:      line.Quantity.String(),
 		ClaveUnidad:   internal.ClaveUnidad(line).String(),
-		Descripcion:   line.Item.Name, // nolint:misspell
+		Desc:          line.Item.Name,
 		ValorUnitario: line.Item.Price.String(),
 		Importe:       line.Sum.String(),
 		Descuento:     formatOptionalAmount(internal.TotalLineDiscount(line)),

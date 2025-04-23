@@ -5,7 +5,7 @@ go 1.23.0
 toolchain go1.23.4
 
 require (
-	github.com/invopop/gobl v0.214.2-0.20250423112257-36e3437ad921
+	github.com/invopop/gobl v0.214.2-0.20250423145328-647f7ff23502
 	github.com/joho/godotenv v1.5.1
 	github.com/magefile/mage v1.15.0
 	github.com/spf13/cobra v1.8.1
@@ -30,7 +30,7 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.116.0
+	cloud.google.com/go v0.116.0 // indirect
 	github.com/Masterminds/semver/v3 v3.3.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/google/uuid v1.6.0 // indirect

@@ -183,7 +183,7 @@ func newMabe(inv *bill.Invoice) (*MabeFactura, error) {
 		Detalles:   newMabeDetalles(inv),
 
 		Subtotal: newMabeImporte(inv.Totals.Sum),
-		Total:    newMabeImporte(inv.Totals.TotalWithTax),
+		Total:    newMabeImporte(inv.Totals.Payable),
 	}
 
 	setMabeTaxes(inv, f)
@@ -341,8 +341,7 @@ func newMabeEntrega(inv *bill.Invoice) *MabeEntrega {
 
 func newMabeDescuentos(inv *bill.Invoice) *MabeDescuentos {
 	d := internal.TotalInvoiceDiscount(inv)
-
-	if d.IsZero() {
+	if d == nil {
 		return nil
 	}
 

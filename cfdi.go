@@ -79,23 +79,23 @@ type Document struct {
 	SchemaLocation string   `xml:"xsi:schemaLocation,attr"`
 	Version        string   `xml:"Version,attr"`
 
-	TipoDeComprobante string `xml:",attr"`
-	Serie             string `xml:",attr,omitempty"`
-	Folio             string `xml:",attr,omitempty"`
-	Fecha             string `xml:",attr"`
-	LugarExpedicion   string `xml:",attr"`
-	SubTotal          string `xml:",attr"`
-	Descuento         string `xml:",attr,omitempty"`
-	Total             string `xml:",attr"`
-	Moneda            string `xml:",attr"`
-	TipoCambio        string `xml:",attr,omitempty"`
-	Exportacion       string `xml:",attr"`
-	MetodoPago        string `xml:",attr,omitempty"`
-	FormaPago         string `xml:",attr,omitempty"`
-	CondicionesDePago string `xml:",attr,omitempty"`
-	Sello             string `xml:",attr"`
-	NoCertificado     string `xml:",attr"`
-	Certificado       string `xml:",attr"`
+	TipoDeComprobante string      `xml:",attr"`
+	Serie             string      `xml:",attr,omitempty"`
+	Folio             string      `xml:",attr,omitempty"`
+	Fecha             string      `xml:",attr"`
+	LugarExpedicion   string      `xml:",attr"`
+	SubTotal          num.Amount  `xml:",attr"`
+	Descuento         *num.Amount `xml:",attr,omitempty"`
+	Total             num.Amount  `xml:",attr"`
+	Moneda            string      `xml:",attr"`
+	TipoCambio        *num.Amount `xml:",attr,omitempty"`
+	Exportacion       string      `xml:",attr"`
+	MetodoPago        string      `xml:",attr,omitempty"`
+	FormaPago         string      `xml:",attr,omitempty"`
+	CondicionesDePago string      `xml:",attr,omitempty"`
+	Sello             string      `xml:",attr"`
+	NoCertificado     string      `xml:",attr"`
+	Certificado       string      `xml:",attr"`
 
 	Global           *GlobalInformation `xml:"cfdi:InformacionGlobal,omitempty"`
 	CFDIRelacionados *CFDIRelacionados  `xml:"cfdi:CfdiRelacionados,omitempty"`
@@ -126,7 +126,6 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		return nil, err
 	}
 
-	discount := internal.TotalInvoiceDiscount(inv)
 	issuePlace := issuePlace(inv)
 
 	doc := &Document{
@@ -140,8 +139,8 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Folio:             inv.Code.String(),
 		Fecha:             formatIssueDateTime(inv),
 		LugarExpedicion:   issuePlace,
-		Descuento:         formatOptionalAmount(discount),
-		Total:             inv.Totals.TotalWithTax.String(),
+		Descuento:         internal.TotalInvoiceDiscount(inv),
+		Total:             inv.Totals.Payable,
 		Moneda:            string(inv.Currency),
 		TipoCambio:        tipoCambio(inv),
 		Exportacion:       ExportacionNoAplica,
@@ -161,12 +160,24 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 
 	// Determine the subtotal directly from the concepts, as there may be some
 	// additional taxes that needed to be taken into account
-	subtotal := inv.Currency.Def().Zero()
+	doc.SubTotal = inv.Currency.Def().Zero()
 	for _, c := range doc.Conceptos.Concepto {
-		i := stringToAmount(c.Importe)
-		subtotal = subtotal.Add(i)
+		doc.SubTotal = doc.SubTotal.Add(c.Importe)
 	}
-	doc.SubTotal = subtotal.String()
+
+	// Recalculate the total so that we can avoid any rounding issues
+	doc.Total = doc.SubTotal
+	if doc.Descuento != nil {
+		doc.Total = doc.Total.Subtract(*doc.Descuento)
+	}
+	if doc.Impuestos != nil {
+		if tit := doc.Impuestos.TotalImpuestosTrasladados; tit != nil {
+			doc.Total = doc.Total.Add(*tit)
+		}
+		if tir := doc.Impuestos.TotalImpuestosRetenidos; tir != nil {
+			doc.Total = doc.Total.Subtract(*tir)
+		}
+	}
 
 	if err := addComplementos(doc, inv.Complements); err != nil {
 		return nil, err
@@ -293,13 +304,13 @@ func lookupTipoDeComprobante(inv *bill.Invoice) string {
 	return inv.Tax.Ext[cfdi.ExtKeyDocType].String()
 }
 
-func tipoCambio(inv *bill.Invoice) string {
+func tipoCambio(inv *bill.Invoice) *num.Amount {
 	r := currency.MatchExchangeRate(inv.ExchangeRates, inv.Currency, currency.MXN)
 	if r == nil {
-		return ""
+		return nil
 	}
-
-	return r.Amount.String()
+	a := r.Amount
+	return &a
 }
 
 func metodoPago(inv *bill.Invoice) string {
@@ -342,12 +353,4 @@ func paymentTermsNotes(inv *bill.Invoice) string {
 	}
 
 	return inv.Payment.Terms.Notes
-}
-
-func formatOptionalAmount(a num.Amount) string {
-	if a.IsZero() {
-		return ""
-	}
-
-	return a.String()
 }

@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-74af-73f4-9cfa-675fedc70c03",
 		"dig": {
 			"alg": "sha256",
-			"val": "57c14abd889218dfb3a2298f01379ad63bf9249668efebd885420c08d19bb0e9"
+			"val": "6df92149980566dfa2d940373dc4d504a925e316185cb1a84ac337bcdc8ccb57"
 		}
 	},
 	"doc": {
@@ -135,7 +135,7 @@
 					"key": "credit-transfer",
 					"description": "Top-up payment",
 					"percent": "100%",
-					"amount": "211.36",
+					"amount": "211.35",
 					"ext": {
 						"mx-cfdi-payment-means": "03"
 					}
@@ -189,12 +189,14 @@
 						"amount": "20.02"
 					}
 				],
-				"sum": "-9.34"
+				"sum": "32.03",
+				"retained": "41.38"
 			},
-			"tax": "-9.34",
-			"total_with_tax": "211.36",
-			"payable": "211.36",
-			"advance": "211.36",
+			"tax": "32.03",
+			"total_with_tax": "252.73",
+			"retained_tax": "41.38",
+			"payable": "211.35",
+			"advance": "211.35",
 			"due": "0.00"
 		}
 	}

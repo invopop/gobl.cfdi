@@ -14,15 +14,15 @@ func TestImpuestos(t *testing.T) {
 		doc, err := test.NewDocumentFrom("invoice-b2b-full.json")
 		require.NoError(t, err)
 
-		assert.Equal(t, "32.03", doc.Impuestos.TotalImpuestosTrasladados)
+		assert.Equal(t, "32.03", doc.Impuestos.TotalImpuestosTrasladados.String())
 
 		tr := doc.Impuestos.Traslados.Traslado[0]
 
-		assert.Equal(t, "200.20", tr.Base)   // SAT expects 2 decimals only
-		assert.Equal(t, "32.03", tr.Importe) // SAT expects 2 decimals only
+		assert.Equal(t, "200.20", tr.Base.String())   // SAT expects 2 decimals only
+		assert.Equal(t, "32.03", tr.Importe.String()) // SAT expects 2 decimals only
 		assert.Equal(t, "002", tr.Impuesto)
 		assert.Equal(t, "Tasa", tr.TipoFactor)
-		assert.Equal(t, "0.160000", tr.TasaOCuota)
+		assert.Equal(t, "0.160000", tr.TasaOCuota.String())
 	})
 
 	t.Run("should return a Document with the Impuestos data when all taxes are exempt", func(t *testing.T) {
@@ -34,7 +34,7 @@ func TestImpuestos(t *testing.T) {
 		doc, err := test.GenerateCFDIFrom(inv)
 		require.NoError(t, err)
 
-		assert.Equal(t, "", doc.Impuestos.TotalImpuestosTrasladados)
+		assert.Nil(t, doc.Impuestos.TotalImpuestosTrasladados)
 	})
 
 	t.Run("should return a Document with the Impuestos data of each Concepto", func(t *testing.T) {
@@ -43,18 +43,18 @@ func TestImpuestos(t *testing.T) {
 
 		tr := doc.Conceptos.Concepto[0].Impuestos.Traslados.Traslado[0]
 
-		assert.Equal(t, "200.2020", tr.Base)
-		assert.Equal(t, "32.0323", tr.Importe)
+		assert.Equal(t, "200.2020", tr.Base.String())
+		assert.Equal(t, "32.0323", tr.Importe.String())
 		assert.Equal(t, "002", tr.Impuesto)
 		assert.Equal(t, "Tasa", tr.TipoFactor)
-		assert.Equal(t, "0.160000", tr.TasaOCuota)
+		assert.Equal(t, "0.160000", tr.TasaOCuota.String())
 
 		tr = doc.Conceptos.Concepto[1].Impuestos.Traslados.Traslado[0]
-		assert.Equal(t, "10.50", tr.Base)
-		assert.Empty(t, tr.Importe)
+		assert.Equal(t, "10.50", tr.Base.String())
+		assert.Nil(t, tr.Importe)
 		assert.Equal(t, "002", tr.Impuesto)
 		assert.Equal(t, "Exento", tr.TipoFactor)
-		assert.Empty(t, tr.TasaOCuota)
+		assert.Nil(t, tr.TasaOCuota)
 
 		assert.Nil(t, doc.Conceptos.Concepto[2].Impuestos)
 	})

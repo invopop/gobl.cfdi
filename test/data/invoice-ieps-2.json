@@ -4,7 +4,7 @@
 		"uuid": "01959bdd-3a81-7ed3-98b6-620a521345eb",
 		"dig": {
 			"alg": "sha256",
-			"val": "2a1bb6e02bb349d62686f0f56b3a582962af8f3919abc6e579d11cb7fd38c285"
+			"val": "4d21e3e7170abf86f9821e3ec67ccec3d2b67918877d6100c8c886cdd5d158b3"
 		}
 	},
 	"doc": {
@@ -18,6 +18,7 @@
 		"series": "FA",
 		"code": "FA000130",
 		"issue_date": "2025-03-15",
+		"issue_time": "12:00:00",
 		"currency": "MXN",
 		"tax": {
 			"rounding": "currency",

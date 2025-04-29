@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 
-	"cloud.google.com/go/civil"
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl.cfdi/addendas"
 	"github.com/invopop/gobl.cfdi/internal"
@@ -80,32 +79,40 @@ type Document struct {
 	SchemaLocation string   `xml:"xsi:schemaLocation,attr"`
 	Version        string   `xml:"Version,attr"`
 
-	TipoDeComprobante string `xml:",attr"`
-	Serie             string `xml:",attr,omitempty"`
-	Folio             string `xml:",attr,omitempty"`
-	Fecha             string `xml:",attr"`
-	LugarExpedicion   string `xml:",attr"`
-	SubTotal          string `xml:",attr"`
-	Descuento         string `xml:",attr,omitempty"`
-	Total             string `xml:",attr"`
-	Moneda            string `xml:",attr"`
-	TipoCambio        string `xml:",attr,omitempty"`
-	Exportacion       string `xml:",attr"`
-	MetodoPago        string `xml:",attr,omitempty"`
-	FormaPago         string `xml:",attr,omitempty"`
-	CondicionesDePago string `xml:",attr,omitempty"`
-	Sello             string `xml:",attr"`
-	NoCertificado     string `xml:",attr"`
-	Certificado       string `xml:",attr"`
+	TipoDeComprobante string      `xml:",attr"`
+	Serie             string      `xml:",attr,omitempty"`
+	Folio             string      `xml:",attr,omitempty"`
+	Fecha             string      `xml:",attr"`
+	LugarExpedicion   string      `xml:",attr"`
+	SubTotal          num.Amount  `xml:",attr"`
+	Descuento         *num.Amount `xml:",attr,omitempty"`
+	Total             num.Amount  `xml:",attr"`
+	Moneda            string      `xml:",attr"`
+	TipoCambio        *num.Amount `xml:",attr,omitempty"`
+	Exportacion       string      `xml:",attr"`
+	MetodoPago        string      `xml:",attr,omitempty"`
+	FormaPago         string      `xml:",attr,omitempty"`
+	CondicionesDePago string      `xml:",attr,omitempty"`
+	Sello             string      `xml:",attr"`
+	NoCertificado     string      `xml:",attr"`
+	Certificado       string      `xml:",attr"`
 
-	CFDIRelacionados *CFDIRelacionados `xml:"cfdi:CfdiRelacionados,omitempty"`
-	Emisor           *Emisor           `xml:"cfdi:Emisor"`
-	Receptor         *Receptor         `xml:"cfdi:Receptor"`
-	Conceptos        *Conceptos        `xml:"cfdi:Conceptos"` //nolint:misspell
-	Impuestos        *Impuestos        `xml:"cfdi:Impuestos,omitempty"`
+	Global           *GlobalInformation `xml:"cfdi:InformacionGlobal,omitempty"`
+	CFDIRelacionados *CFDIRelacionados  `xml:"cfdi:CfdiRelacionados,omitempty"`
+	Emisor           *Emisor            `xml:"cfdi:Emisor"`
+	Receptor         *Receptor          `xml:"cfdi:Receptor"`
+	Conceptos        *Conceptos         `xml:"cfdi:Conceptos"` //nolint:misspell
+	Impuestos        *Impuestos         `xml:"cfdi:Impuestos,omitempty"`
 
 	Complemento *internal.Nodes `xml:"cfdi:Complemento,omitempty"`
 	Addenda     *internal.Nodes `xml:"cfdi:Addenda,omitempty"`
+}
+
+// GlobalInformation is used for invoices that contain a summary of B2C documents.
+type GlobalInformation struct {
+	Period string `xml:"Periodicidad,attr"`
+	Month  string `xml:"Meses,attr"`
+	Year   string `xml:"Año,attr"`
 }
 
 // NewDocument converts a GOBL envelope into a CFDI document
@@ -119,7 +126,6 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		return nil, err
 	}
 
-	discount := internal.TotalInvoiceDiscount(inv)
 	issuePlace := issuePlace(inv)
 
 	doc := &Document{
@@ -131,10 +137,10 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		TipoDeComprobante: lookupTipoDeComprobante(inv),
 		Serie:             inv.Series.String(),
 		Folio:             inv.Code.String(),
-		Fecha:             formatIssueDate(inv.IssueDate),
+		Fecha:             formatIssueDateTime(inv),
 		LugarExpedicion:   issuePlace,
-		Descuento:         formatOptionalAmount(discount),
-		Total:             inv.Totals.TotalWithTax.String(),
+		Descuento:         internal.TotalInvoiceDiscount(inv),
+		Total:             inv.Totals.Payable,
 		Moneda:            string(inv.Currency),
 		TipoCambio:        tipoCambio(inv),
 		Exportacion:       ExportacionNoAplica,
@@ -144,6 +150,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 
 		NoCertificado: FakeNoCertificado,
 
+		Global:           newGlobalInformation(inv),
 		CFDIRelacionados: newCfdiRelacionados(inv),
 		Emisor:           newEmisor(inv.Supplier),
 		Receptor:         newReceptor(inv.Customer, issuePlace),
@@ -153,12 +160,24 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 
 	// Determine the subtotal directly from the concepts, as there may be some
 	// additional taxes that needed to be taken into account
-	subtotal := inv.Currency.Def().Zero()
+	doc.SubTotal = inv.Currency.Def().Zero()
 	for _, c := range doc.Conceptos.Concepto {
-		i := stringToAmount(c.Importe)
-		subtotal = subtotal.Add(i)
+		doc.SubTotal = doc.SubTotal.Add(c.Importe)
 	}
-	doc.SubTotal = subtotal.String()
+
+	// Recalculate the total so that we can avoid any rounding issues
+	doc.Total = doc.SubTotal
+	if doc.Descuento != nil {
+		doc.Total = doc.Total.Subtract(*doc.Descuento)
+	}
+	if doc.Impuestos != nil {
+		if tit := doc.Impuestos.TotalImpuestosTrasladados; tit != nil {
+			doc.Total = doc.Total.Add(*tit)
+		}
+		if tir := doc.Impuestos.TotalImpuestosRetenidos; tir != nil {
+			doc.Total = doc.Total.Subtract(*tir)
+		}
+	}
 
 	if err := addComplementos(doc, inv.Complements); err != nil {
 		return nil, err
@@ -169,6 +188,17 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 	}
 
 	return doc, nil
+}
+
+func newGlobalInformation(inv *bill.Invoice) *GlobalInformation {
+	if inv.Tax == nil || !inv.Tax.Ext.Has(cfdi.ExtKeyGlobalPeriod) {
+		return nil
+	}
+	return &GlobalInformation{
+		Period: inv.Tax.Ext[cfdi.ExtKeyGlobalPeriod].String(),
+		Month:  inv.Tax.Ext[cfdi.ExtKeyGlobalMonth].String(),
+		Year:   inv.Tax.Ext[cfdi.ExtKeyGlobalYear].String(),
+	}
 }
 
 func validateSupport(inv *bill.Invoice) error {
@@ -258,9 +288,12 @@ func addAddendas(doc *Document, inv *bill.Invoice) error {
 	return nil
 }
 
-func formatIssueDate(date cal.Date) string {
-	dateTime := civil.DateTime{Date: date.Date, Time: civil.Time{}}
-	return dateTime.String()
+func formatIssueDateTime(inv *bill.Invoice) string {
+	tn := inv.IssueTime
+	if tn == nil {
+		tn = new(cal.Time) // zero
+	}
+	return inv.IssueDate.WithTime(*tn).String()
 }
 
 func lookupTipoDeComprobante(inv *bill.Invoice) string {
@@ -271,13 +304,13 @@ func lookupTipoDeComprobante(inv *bill.Invoice) string {
 	return inv.Tax.Ext[cfdi.ExtKeyDocType].String()
 }
 
-func tipoCambio(inv *bill.Invoice) string {
+func tipoCambio(inv *bill.Invoice) *num.Amount {
 	r := currency.MatchExchangeRate(inv.ExchangeRates, inv.Currency, currency.MXN)
 	if r == nil {
-		return ""
+		return nil
 	}
-
-	return r.Amount.String()
+	a := r.Amount
+	return &a
 }
 
 func metodoPago(inv *bill.Invoice) string {
@@ -320,12 +353,4 @@ func paymentTermsNotes(inv *bill.Invoice) string {
 	}
 
 	return inv.Payment.Terms.Notes
-}
-
-func formatOptionalAmount(a num.Amount) string {
-	if a.IsZero() {
-		return ""
-	}
-
-	return a.String()
 }

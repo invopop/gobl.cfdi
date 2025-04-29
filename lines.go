@@ -3,6 +3,7 @@ package cfdi
 import (
 	"github.com/invopop/gobl.cfdi/internal"
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/num"
 )
 
 // Conceptos list invoice lines
@@ -13,14 +14,15 @@ type Conceptos struct {
 
 // Concepto stores an invoice line data
 type Concepto struct {
-	ClaveProdServ string `xml:",attr"`
-	Cantidad      string `xml:",attr"`
-	ClaveUnidad   string `xml:",attr"`
-	Descripcion   string `xml:",attr"` // nolint:misspell
-	ValorUnitario string `xml:",attr"`
-	Importe       string `xml:",attr"`
-	Descuento     string `xml:",attr,omitempty"`
-	ObjetoImp     string `xml:",attr"`
+	ClaveProdServ string      `xml:",attr"`
+	Ref           string      `xml:"NoIdentificacion,attr,omitempty"`
+	Cantidad      string      `xml:",attr"`
+	ClaveUnidad   string      `xml:",attr"`
+	Desc          string      `xml:"Descripcion,attr"` // nolint:misspell
+	ValorUnitario num.Amount  `xml:",attr"`
+	Importe       num.Amount  `xml:",attr"`
+	Descuento     *num.Amount `xml:",attr,omitempty"`
+	ObjetoImp     string      `xml:",attr"`
 
 	Impuestos *ConceptoImpuestos `xml:"cfdi:Impuestos,omitempty"`
 }
@@ -30,6 +32,9 @@ func newConceptos(lines []*bill.Line) *Conceptos {
 	var conceptos []*Concepto
 
 	for _, line := range lines {
+		if line.Sum == nil {
+			continue
+		}
 		conceptos = append(conceptos, newConcepto(line))
 	}
 
@@ -39,12 +44,13 @@ func newConceptos(lines []*bill.Line) *Conceptos {
 func newConcepto(line *bill.Line) *Concepto {
 	concepto := &Concepto{
 		ClaveProdServ: internal.ClaveProdServ(line).String(),
+		Ref:           line.Item.Ref.String(),
 		Cantidad:      line.Quantity.String(),
 		ClaveUnidad:   internal.ClaveUnidad(line).String(),
-		Descripcion:   line.Item.Name, // nolint:misspell
-		ValorUnitario: line.Item.Price.String(),
-		Importe:       line.Sum.String(),
-		Descuento:     formatOptionalAmount(internal.TotalLineDiscount(line)),
+		Desc:          line.Item.Name,
+		ValorUnitario: *line.Item.Price,
+		Importe:       *line.Sum,
+		Descuento:     internal.TotalLineDiscount(line),
 		ObjetoImp:     lineSubjectToTax(line),
 		Impuestos:     newConceptoImpuestos(line),
 	}

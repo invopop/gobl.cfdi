@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-74af-73f4-9cfa-675fedc70c03",
 		"dig": {
 			"alg": "sha256",
-			"val": "14c160ddb0cf03d744445fedca48d548c41e88f2aa85afbf5e75e2986224f8c4"
+			"val": "6df92149980566dfa2d940373dc4d504a925e316185cb1a84ac337bcdc8ccb57"
 		}
 	},
 	"doc": {
@@ -18,6 +18,7 @@
 		"series": "LMC",
 		"code": "0010",
 		"issue_date": "2023-05-29",
+		"issue_time": "12:00:00",
 		"currency": "MXN",
 		"tax": {
 			"ext": {
@@ -134,7 +135,7 @@
 					"key": "credit-transfer",
 					"description": "Top-up payment",
 					"percent": "100%",
-					"amount": "211.36",
+					"amount": "211.35",
 					"ext": {
 						"mx-cfdi-payment-means": "03"
 					}
@@ -188,12 +189,14 @@
 						"amount": "20.02"
 					}
 				],
-				"sum": "-9.34"
+				"sum": "32.03",
+				"retained": "41.38"
 			},
-			"tax": "-9.34",
-			"total_with_tax": "211.36",
-			"payable": "211.36",
-			"advance": "211.36",
+			"tax": "32.03",
+			"total_with_tax": "252.73",
+			"retained_tax": "41.38",
+			"payable": "211.35",
+			"advance": "211.35",
 			"due": "0.00"
 		}
 	}

@@ -1,7 +1,6 @@
 package cfdi
 
 import (
-	"github.com/invopop/gobl.cfdi/internal/format"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/currency"
@@ -12,8 +11,8 @@ import (
 
 // Impuestos store the invoice tax totals
 type Impuestos struct {
-	TotalImpuestosTrasladados string       `xml:",attr,omitempty"`
-	TotalImpuestosRetenidos   string       `xml:",attr,omitempty"`
+	TotalImpuestosTrasladados *num.Amount  `xml:",attr,omitempty"`
+	TotalImpuestosRetenidos   *num.Amount  `xml:",attr,omitempty"`
 	Retenciones               *Retenciones `xml:"cfdi:Retenciones,omitempty"`
 	Traslados                 *Traslados   `xml:"cfdi:Traslados,omitempty"`
 }
@@ -36,11 +35,11 @@ type Retenciones struct {
 
 // Impuesto stores the tax data of the invoice or a line
 type Impuesto struct {
-	Base       string `xml:",attr,omitempty"`
-	Importe    string `xml:",attr,omitempty"`
-	Impuesto   string `xml:",attr"`
-	TasaOCuota string `xml:",attr,omitempty"`
-	TipoFactor string `xml:",attr,omitempty"`
+	Base       *num.Amount `xml:",attr,omitempty"`
+	Importe    *num.Amount `xml:",attr,omitempty"`
+	Impuesto   string      `xml:",attr"`
+	TasaOCuota *num.Amount `xml:",attr,omitempty"`
+	TipoFactor string      `xml:",attr,omitempty"`
 }
 
 // Map of tax categories to SAT tax types
@@ -63,8 +62,8 @@ func newImpuestos(totals *bill.Totals, lines []*bill.Line, currency currency.Cod
 			imp := newImpuesto(cat.Code, rate, currency)
 			if cat.Retained {
 				// Clear out fields not supported by retained totals
-				imp.Base = ""
-				imp.TasaOCuota = ""
+				imp.Base = nil
+				imp.TasaOCuota = nil
 				imp.TipoFactor = ""
 
 				retenciones = append(retenciones, imp)
@@ -84,7 +83,7 @@ func newImpuestos(totals *bill.Totals, lines []*bill.Line, currency currency.Cod
 		// Set tax total only for non-exempt taxes
 		for _, t := range traslados {
 			if t.TipoFactor != TipoFactorExento {
-				impuestos.TotalImpuestosTrasladados = addStringAmounts(impuestos.TotalImpuestosTrasladados, t.Importe)
+				impuestos.TotalImpuestosTrasladados = amountAdd(impuestos.TotalImpuestosTrasladados, t.Importe)
 			}
 		}
 
@@ -93,7 +92,7 @@ func newImpuestos(totals *bill.Totals, lines []*bill.Line, currency currency.Cod
 	if len(retenciones) > 0 {
 		impuestos.Retenciones = &Retenciones{retenciones}
 		for _, r := range retenciones {
-			impuestos.TotalImpuestosRetenidos = addStringAmounts(impuestos.TotalImpuestosRetenidos, r.Importe)
+			impuestos.TotalImpuestosRetenidos = amountAdd(impuestos.TotalImpuestosRetenidos, r.Importe)
 		}
 		empty = false
 	}
@@ -112,8 +111,8 @@ func taxesAddLineCharges(traslados []*Impuesto, lines []*bill.Line, cur currency
 			tl := newImpuestoFromLineCharge(line, charge)
 			if tl != nil {
 				// ensure bases are rounded as they may have come from quantities
-				b := stringToAmount(tl.Base)
-				tl.Base = b.Rescale(cur.Def().Subunits).String()
+				b := tl.Base.Rescale(cur.Def().Subunits)
+				tl.Base = &b
 				taxes = append(taxes, tl)
 			}
 		}
@@ -128,10 +127,10 @@ func taxesAddLineCharges(traslados []*Impuesto, lines []*bill.Line, cur currency
 		for _, tlt := range traslados {
 			if tlt.Impuesto == tl.Impuesto &&
 				tlt.TipoFactor == tl.TipoFactor &&
-				tlt.TasaOCuota == tl.TasaOCuota {
+				tlt.TasaOCuota.Equals(*tl.TasaOCuota) {
 
-				tlt.Base = addStringAmounts(tlt.Base, tl.Base)
-				tlt.Importe = addStringAmounts(tlt.Importe, tl.Importe)
+				tlt.Base = amountAdd(tlt.Base, tl.Base)
+				tlt.Importe = amountAdd(tlt.Importe, tl.Importe)
 				found = true
 			}
 		}
@@ -143,22 +142,19 @@ func taxesAddLineCharges(traslados []*Impuesto, lines []*bill.Line, cur currency
 	return traslados
 }
 
-// addStringAmounts is used to add to amounts together when the source is a
-// string instead of a number. Any errors occur during parsing, we'll just
-// return the other amount.
-func addStringAmounts(a, b string) string {
-	return stringToAmount(a).Add(stringToAmount(b)).String()
+func amountAdd(a, b *num.Amount) *num.Amount {
+	if a == nil {
+		return b
+	}
+	if b == nil {
+		return a
+	}
+	r := a.Add(*b)
+	return &r
 }
 
-func stringToAmount(a string) num.Amount {
-	if a == "" {
-		a = "0.00"
-	}
-	am, err := num.AmountFromString(a)
-	if err != nil {
-		return currency.MXN.Def().Zero()
-	}
-	return am
+func amountPtr(a num.Amount) *num.Amount {
+	return &a
 }
 
 func newImpuesto(catCode cbc.Code, rate *tax.RateTotal, currency currency.Code) *Impuesto {
@@ -166,17 +162,17 @@ func newImpuesto(catCode cbc.Code, rate *tax.RateTotal, currency currency.Code) 
 
 	if rate.Percent == nil {
 		return &Impuesto{
-			Base:       rate.Base.Rescale(cu).String(),
+			Base:       amountPtr(rate.Base.Rescale(cu)),
 			Impuesto:   taxCategoryMap[catCode],
 			TipoFactor: TipoFactorExento,
 		}
 	}
 
 	return &Impuesto{
-		Base:       rate.Base.Rescale(cu).String(),
-		Importe:    rate.Amount.Rescale(cu).String(),
+		Base:       amountPtr(rate.Base.Rescale(cu)),
+		Importe:    amountPtr(rate.Amount.Rescale(cu)),
 		Impuesto:   taxCategoryMap[catCode],
-		TasaOCuota: format.TaxPercent(rate.Percent),
+		TasaOCuota: amountPtr(rate.Percent.Base().Rescale(6)),
 		TipoFactor: TipoFactorTasa,
 	}
 }
@@ -221,7 +217,7 @@ func newConceptoImpuestos(line *bill.Line) *ConceptoImpuestos {
 func newImpuestoFromCombo(line *bill.Line, tax *tax.Combo) *Impuesto {
 	if tax.Percent == nil {
 		return &Impuesto{
-			Base:       line.Total.String(),
+			Base:       line.Total,
 			Impuesto:   taxCategoryMap[tax.Category],
 			TipoFactor: TipoFactorExento,
 		}
@@ -230,10 +226,10 @@ func newImpuestoFromCombo(line *bill.Line, tax *tax.Combo) *Impuesto {
 	// GOBL doesn't provide an amount at line level, so we calculate it
 	taxAmount := tax.Percent.Of(*line.Total)
 	return &Impuesto{
-		Base:       line.Total.String(),
-		Importe:    taxAmount.String(),
+		Base:       line.Total,
+		Importe:    amountPtr(taxAmount),
 		Impuesto:   taxCategoryMap[tax.Category],
-		TasaOCuota: format.TaxPercent(tax.Percent),
+		TasaOCuota: amountPtr(tax.Percent.Base().Rescale(6)),
 		TipoFactor: TipoFactorTasa,
 	}
 }
@@ -246,19 +242,19 @@ func newImpuestoFromLineCharge(line *bill.Line, charge *bill.LineCharge) *Impues
 
 	i := &Impuesto{
 		Impuesto: taxCategoryMap[charge.Code],
-		Importe:  charge.Amount.String(),
+		Importe:  amountPtr(charge.Amount),
 	}
 	if charge.Percent != nil {
-		i.Base = line.Sum.String()
-		i.TasaOCuota = format.TaxPercent(charge.Percent)
+		i.Base = line.Sum
+		i.TasaOCuota = amountPtr(charge.Percent.Base().Rescale(6))
 		i.TipoFactor = TipoFactorTasa
 	} else if charge.Rate != nil {
 		q := line.Quantity
 		if charge.Quantity != nil {
 			q = *charge.Quantity
 		}
-		i.Base = q.String()
-		i.TasaOCuota = format.TaxRate(*charge.Rate)
+		i.Base = &q
+		i.TasaOCuota = amountPtr(charge.Rate.Rescale(6))
 		i.TipoFactor = TipoFactorCuota
 	} else {
 		// Not enough details to process, ignore.

@@ -8,7 +8,8 @@ import (
 
 // Default keys
 const (
-	DefaultClaveUnidad = "ZZ" // Mutuamente definida
+	DefaultClaveUnidad   = "ZZ" // Mutuamente definida
+	DefaultClaveProdServ = "01010101"
 )
 
 // ClaveUnidad determines the line item's "ClaveUnidad" value.
@@ -25,5 +26,9 @@ func ClaveProdServ(line *bill.Line) cbc.Code {
 	if line.Item == nil {
 		return ""
 	}
-	return line.Item.Ext[cfdi.ExtKeyProdServ]
+	val := line.Item.Ext.Get(cfdi.ExtKeyProdServ)
+	if val == "" {
+		val = DefaultClaveProdServ
+	}
+	return val
 }

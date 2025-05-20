@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-74af-73f4-9cfa-675fedc70c03",
 		"dig": {
 			"alg": "sha256",
-			"val": "5c052ba19d5903be2ceb414c331d72284a97349c8e3f51fa117ded393eb703cd"
+			"val": "06e7457b5d0e369397c67b9ee38e3c54d926edad015db988fe192f8bb0a3b7a5"
 		}
 	},
 	"doc": {
@@ -21,7 +21,7 @@
 		"issue_time": "12:00:00",
 		"currency": "MXN",
 		"tax": {
-			"rounding": "precise",
+			"rounding": "currency",
 			"ext": {
 				"mx-cfdi-doc-type": "I",
 				"mx-cfdi-issue-place": "26015"
@@ -65,11 +65,11 @@
 						"mx-cfdi-prod-serv": "50211502"
 					}
 				},
-				"sum": "400.4040",
+				"sum": "400.40",
 				"discounts": [
 					{
 						"percent": "25.0%",
-						"amount": "100.1010"
+						"amount": "100.10"
 					},
 					{
 						"amount": "100.1010"
@@ -90,7 +90,7 @@
 						"percent": "10%"
 					}
 				],
-				"total": "200.2020"
+				"total": "200.20"
 			},
 			{
 				"i": 2,
@@ -191,11 +191,11 @@
 					}
 				],
 				"sum": "32.03",
-				"retained": "41.38"
+				"retained": "41.37"
 			},
 			"tax": "32.03",
 			"total_with_tax": "252.73",
-			"retained_tax": "41.38",
+			"retained_tax": "41.37",
 			"payable": "211.36",
 			"advance": "211.36",
 			"due": "0.00"

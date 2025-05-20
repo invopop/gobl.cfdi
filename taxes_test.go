@@ -50,7 +50,7 @@ func TestImpuestos(t *testing.T) {
 		assert.Equal(t, "0.160000", tr.TasaOCuota.String())
 
 		tr = doc.Conceptos.Concepto[1].Impuestos.Traslados.Traslado[0]
-		assert.Equal(t, "10.50", tr.Base.String())
+		assert.Equal(t, "10.5000", tr.Base.String()) // more precision
 		assert.Nil(t, tr.Importe)
 		assert.Equal(t, "002", tr.Impuesto)
 		assert.Equal(t, "Exento", tr.TipoFactor)

@@ -21,7 +21,7 @@ type Receptor struct {
 	DomicilioFiscalReceptor string `xml:",attr"`
 	RegimenFiscalReceptor   string `xml:",attr"`
 	UsoCFDI                 string `xml:",attr"`
-	NumRegIdTrib            string `xml:",attr,omitempty"` //nolint:revive
+	NumRegIdTrib            string `xml:",attr,omitempty"` //nolint:staticcheck,revive
 	ResidenciaFiscal        string `xml:",attr,omitempty"`
 }
 

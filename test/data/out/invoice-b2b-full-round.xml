@@ -3,14 +3,14 @@
   <cfdi:Emisor Rfc="EKU9003173C9" Nombre="ESCUELA KEMPER URGATE" RegimenFiscal="601"></cfdi:Emisor>
   <cfdi:Receptor Rfc="URE180429TM6" Nombre="UNIVERSIDAD ROBOTICA ESPAÑOLA" DomicilioFiscalReceptor="65000" RegimenFiscalReceptor="601" UsoCFDI="G01"></cfdi:Receptor>
   <cfdi:Conceptos>
-    <cfdi:Concepto ClaveProdServ="50211502" Cantidad="2" ClaveUnidad="H87" Descripcion="Cigarros" ValorUnitario="200.2020" Importe="400.4040" Descuento="200.2020" ObjetoImp="02">
+    <cfdi:Concepto ClaveProdServ="50211502" Cantidad="2" ClaveUnidad="H87" Descripcion="Cigarros" ValorUnitario="200.2020" Importe="400.40" Descuento="200.20" ObjetoImp="02">
       <cfdi:Impuestos>
         <cfdi:Traslados>
-          <cfdi:Traslado Base="200.2020" Importe="32.0323" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
+          <cfdi:Traslado Base="200.2000" Importe="32.0320" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
         </cfdi:Traslados>
         <cfdi:Retenciones>
-          <cfdi:Retencion Base="200.2020" Importe="21.3549" Impuesto="002" TasaOCuota="0.106667" TipoFactor="Tasa"></cfdi:Retencion>
-          <cfdi:Retencion Base="200.2020" Importe="20.0202" Impuesto="001" TasaOCuota="0.100000" TipoFactor="Tasa"></cfdi:Retencion>
+          <cfdi:Retencion Base="200.2000" Importe="21.3547" Impuesto="002" TasaOCuota="0.106667" TipoFactor="Tasa"></cfdi:Retencion>
+          <cfdi:Retencion Base="200.2000" Importe="20.0200" Impuesto="001" TasaOCuota="0.100000" TipoFactor="Tasa"></cfdi:Retencion>
         </cfdi:Retenciones>
       </cfdi:Impuestos>
     </cfdi:Concepto>

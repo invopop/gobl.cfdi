@@ -6,7 +6,7 @@
     <cfdi:Concepto ClaveProdServ="84141602" Cantidad="1" ClaveUnidad="ZZ" Descripcion="Comisión servicio de monedero electrónico" ValorUnitario="10.00" Importe="10.00" ObjetoImp="02">
       <cfdi:Impuestos>
         <cfdi:Traslados>
-          <cfdi:Traslado Base="10.00" Importe="1.60" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
+          <cfdi:Traslado Base="10.0000" Importe="1.6000" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
         </cfdi:Traslados>
       </cfdi:Impuestos>
     </cfdi:Concepto>

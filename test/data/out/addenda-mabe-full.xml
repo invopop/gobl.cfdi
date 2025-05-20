@@ -6,11 +6,11 @@
     <cfdi:Concepto ClaveProdServ="50211502" Cantidad="2" ClaveUnidad="ZZ" Descripcion="Cigarros" ValorUnitario="100.00" Importe="200.00" Descuento="20.00" ObjetoImp="02">
       <cfdi:Impuestos>
         <cfdi:Traslados>
-          <cfdi:Traslado Base="180.00" Importe="28.80" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
+          <cfdi:Traslado Base="180.0000" Importe="28.8000" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
         </cfdi:Traslados>
         <cfdi:Retenciones>
-          <cfdi:Retencion Base="180.00" Importe="19.20" Impuesto="002" TasaOCuota="0.106667" TipoFactor="Tasa"></cfdi:Retencion>
-          <cfdi:Retencion Base="180.00" Importe="18.00" Impuesto="001" TasaOCuota="0.100000" TipoFactor="Tasa"></cfdi:Retencion>
+          <cfdi:Retencion Base="180.0000" Importe="19.2001" Impuesto="002" TasaOCuota="0.106667" TipoFactor="Tasa"></cfdi:Retencion>
+          <cfdi:Retencion Base="180.0000" Importe="18.0000" Impuesto="001" TasaOCuota="0.100000" TipoFactor="Tasa"></cfdi:Retencion>
         </cfdi:Retenciones>
       </cfdi:Impuestos>
     </cfdi:Concepto>

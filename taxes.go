@@ -219,7 +219,7 @@ func newImpuestoFromCombo(line *bill.Line, tax *tax.Combo) *Impuesto {
 		return nil
 	}
 
-	// Start wuth 4 decimal places of precision to try and avoid rounding issues.
+	// Start with 4 decimal places of precision to try and avoid rounding issues.
 	total := line.Total.RescaleUp(4)
 
 	if tax.Percent == nil {

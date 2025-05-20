@@ -6,7 +6,7 @@
     <cfdi:Concepto ClaveProdServ="90101500" Cantidad="1" ClaveUnidad="ZZ" Descripcion="Consumo de alimentos y bebidas del ticket 2225" ValorUnitario="95.79" Importe="95.79" ObjetoImp="02">
       <cfdi:Impuestos>
         <cfdi:Traslados>
-          <cfdi:Traslado Base="103.45" Importe="16.55" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
+          <cfdi:Traslado Base="103.4500" Importe="16.5520" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
           <cfdi:Traslado Base="95.79" Importe="7.66" Impuesto="003" TasaOCuota="0.080000" TipoFactor="Tasa"></cfdi:Traslado>
         </cfdi:Traslados>
       </cfdi:Impuestos>

@@ -9,14 +9,14 @@
     <cfdi:Concepto ClaveProdServ="84141602" Cantidad="1.33" ClaveUnidad="ZZ" Descripcion="Cobro por tarjetas" ValorUnitario="1.32" Importe="1.76" ObjetoImp="02">
       <cfdi:Impuestos>
         <cfdi:Traslados>
-          <cfdi:Traslado Base="1.76" Importe="0.00" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"></cfdi:Traslado>
+          <cfdi:Traslado Base="1.7600" Importe="0.0000" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"></cfdi:Traslado>
         </cfdi:Traslados>
       </cfdi:Impuestos>
     </cfdi:Concepto>
     <cfdi:Concepto ClaveProdServ="80141628" Cantidad="1" ClaveUnidad="E48" Descripcion="Porcentaje sobre GMV" ValorUnitario="0.0087" Importe="0.01" ObjetoImp="02">
       <cfdi:Impuestos>
         <cfdi:Traslados>
-          <cfdi:Traslado Base="0.01" Importe="0.00" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"></cfdi:Traslado>
+          <cfdi:Traslado Base="0.0100" Importe="0.0000" Impuesto="002" TasaOCuota="0.000000" TipoFactor="Tasa"></cfdi:Traslado>
         </cfdi:Traslados>
       </cfdi:Impuestos>
     </cfdi:Concepto>

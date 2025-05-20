@@ -6,7 +6,7 @@
     <cfdi:Concepto ClaveProdServ="50211502" Cantidad="2" ClaveUnidad="ZZ" Descripcion="Cigarros" ValorUnitario="100.00" Importe="200.00" ObjetoImp="02">
       <cfdi:Impuestos>
         <cfdi:Traslados>
-          <cfdi:Traslado Base="200.00" Importe="32.00" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
+          <cfdi:Traslado Base="200.0000" Importe="32.0000" Impuesto="002" TasaOCuota="0.160000" TipoFactor="Tasa"></cfdi:Traslado>
         </cfdi:Traslados>
       </cfdi:Impuestos>
     </cfdi:Concepto>

@@ -215,18 +215,25 @@ func newConceptoImpuestos(line *bill.Line) *ConceptoImpuestos {
 }
 
 func newImpuestoFromCombo(line *bill.Line, tax *tax.Combo) *Impuesto {
+	if line.Total == nil {
+		return nil
+	}
+
+	// Start wuth 4 decimal places of precision to try and avoid rounding issues.
+	total := line.Total.RescaleUp(4)
+
 	if tax.Percent == nil {
 		return &Impuesto{
-			Base:       line.Total,
+			Base:       &total,
 			Impuesto:   taxCategoryMap[tax.Category],
 			TipoFactor: TipoFactorExento,
 		}
 	}
 
 	// GOBL doesn't provide an amount at line level, so we calculate it
-	taxAmount := tax.Percent.Of(*line.Total)
+	taxAmount := tax.Percent.Of(total)
 	return &Impuesto{
-		Base:       line.Total,
+		Base:       &total,
 		Importe:    amountPtr(taxAmount),
 		Impuesto:   taxCategoryMap[tax.Category],
 		TasaOCuota: amountPtr(tax.Percent.Base().Rescale(6)),

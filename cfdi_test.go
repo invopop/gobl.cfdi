@@ -96,7 +96,7 @@ func TestComprobanteIngreso(t *testing.T) {
 		assert.Equal(t, "TEST", doc.Serie)
 		assert.Equal(t, "00001", doc.Folio)
 		assert.Equal(t, "2023-07-10T12:00:00", doc.Fecha)
-		assert.Equal(t, "21000", doc.LugarExpedicion)
+		assert.Equal(t, "26015", doc.LugarExpedicion)
 		assert.Equal(t, "64.00", doc.SubTotal.String())
 		assert.Nil(t, doc.Descuento)
 		assert.Equal(t, "93.84", doc.Total.String())

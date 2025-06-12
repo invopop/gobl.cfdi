@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-74d9-79ff-be0c-290fd1a847ce",
 		"dig": {
 			"alg": "sha256",
-			"val": "7b0458683c8d2db81f4ffb968c2dcef56d9b10b8ccc960c68152806608530d70"
+			"val": "2ad2f876da34f4c328a0646f50a2f00765ad96e6f99bbdd02cf53e095fca71d9"
 		}
 	},
 	"doc": {
@@ -23,7 +23,8 @@
 		"tax": {
 			"ext": {
 				"mx-cfdi-doc-type": "I",
-				"mx-cfdi-issue-place": "26015"
+				"mx-cfdi-issue-place": "26015",
+				"mx-cfdi-payment-method": "PPD"
 			}
 		},
 		"supplier": {

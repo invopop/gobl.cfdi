@@ -9,6 +9,7 @@ Copyright [Invopop Ltd.](https://invopop.com) 2023. Released publicly under the 
 [![Go Report Card](https://goreportcard.com/badge/github.com/invopop/gobl.cfdi)](https://goreportcard.com/report/github.com/invopop/gobl.cfdi)
 [![GoDoc](https://godoc.org/github.com/invopop/gobl.cfdi?status.svg)](https://godoc.org/github.com/invopop/gobl.cfdi)
 ![Latest Tag](https://img.shields.io/github/v/tag/invopop/gobl.cfdi)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/invopop/gobl.cfdi)
 
 ## Usage
 

@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-749f-7dda-881c-9ad8dc87167a",
 		"dig": {
 			"alg": "sha256",
-			"val": "b4be46084b733cdb41b9f0dd74c20b6c0f3438ed4a04bcd69345a840726fdfa8"
+			"val": "d038148fe691de240fb42a6465864392583e04dc45ec3d3e37b3db1aae5e64db"
 		}
 	},
 	"doc": {
@@ -23,7 +23,8 @@
 		"tax": {
 			"ext": {
 				"mx-cfdi-doc-type": "I",
-				"mx-cfdi-issue-place": "26015"
+				"mx-cfdi-issue-place": "26015",
+				"mx-cfdi-payment-method": "PPD"
 			}
 		},
 		"supplier": {
@@ -67,7 +68,8 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "standard",
+						"key": "standard",
+						"rate": "general",
 						"percent": "16.0%"
 					}
 				],

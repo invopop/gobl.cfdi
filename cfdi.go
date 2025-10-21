@@ -154,7 +154,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		CFDIRelacionados: newCfdiRelacionados(inv),
 		Emisor:           newEmisor(inv.Supplier),
 		Receptor:         newReceptor(inv.Customer, issuePlace),
-		Conceptos:        newConceptos(inv.Lines), // nolint:misspell
+		Conceptos:        newConceptos(inv.Lines, inv.Ordering), // nolint:misspell
 		Impuestos:        newImpuestos(inv.Totals, inv.Lines, inv.Currency),
 	}
 

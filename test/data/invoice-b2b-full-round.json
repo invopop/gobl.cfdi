@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-74af-73f4-9cfa-675fedc70c03",
 		"dig": {
 			"alg": "sha256",
-			"val": "06e7457b5d0e369397c67b9ee38e3c54d926edad015db988fe192f8bb0a3b7a5"
+			"val": "32fb98cbc7d0b4e05de64a67fc3122b7b6c3f2ef2d158f0b291bfbbde74ef5a5"
 		}
 	},
 	"doc": {
@@ -24,7 +24,8 @@
 			"rounding": "currency",
 			"ext": {
 				"mx-cfdi-doc-type": "I",
-				"mx-cfdi-issue-place": "26015"
+				"mx-cfdi-issue-place": "26015",
+				"mx-cfdi-payment-method": "PUE"
 			}
 		},
 		"supplier": {
@@ -78,7 +79,8 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "standard",
+						"key": "standard",
+						"rate": "general",
 						"percent": "16.0%"
 					},
 					{
@@ -107,7 +109,7 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "exempt"
+						"key": "exempt"
 					}
 				],
 				"total": "10.50"

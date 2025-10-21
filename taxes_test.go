@@ -29,7 +29,7 @@ func TestImpuestos(t *testing.T) {
 		inv, err := test.LoadTestInvoice("invoice-b2b-bare.json")
 		require.NoError(t, err)
 
-		inv.Lines[0].Taxes[0].Rate = tax.RateExempt
+		inv.Lines[0].Taxes[0].Key = tax.KeyExempt
 
 		doc, err := test.GenerateCFDIFrom(inv)
 		require.NoError(t, err)

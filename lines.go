@@ -24,24 +24,25 @@ type Concepto struct {
 	Descuento     *num.Amount `xml:",attr,omitempty"`
 	ObjetoImp     string      `xml:",attr"`
 
-	Impuestos *ConceptoImpuestos `xml:"cfdi:Impuestos,omitempty"`
+	Impuestos  *ConceptoImpuestos `xml:"cfdi:Impuestos,omitempty"`
+	ThirdParty *ThirdParty        `xml:"cfdi:ACuentaTerceros,omitempty"`
 }
 
 // nolint:misspell
-func newConceptos(lines []*bill.Line) *Conceptos {
+func newConceptos(lines []*bill.Line, ordering *bill.Ordering) *Conceptos {
 	var conceptos []*Concepto
 
 	for _, line := range lines {
 		if line.Sum == nil {
 			continue
 		}
-		conceptos = append(conceptos, newConcepto(line))
+		conceptos = append(conceptos, newConcepto(line, ordering))
 	}
 
 	return &Conceptos{conceptos}
 }
 
-func newConcepto(line *bill.Line) *Concepto {
+func newConcepto(line *bill.Line, ordering *bill.Ordering) *Concepto {
 	concepto := &Concepto{
 		ClaveProdServ: internal.ClaveProdServ(line).String(),
 		Ref:           line.Item.Ref.String(),
@@ -54,7 +55,9 @@ func newConcepto(line *bill.Line) *Concepto {
 		ObjetoImp:     lineSubjectToTax(line),
 		Impuestos:     newConceptoImpuestos(line),
 	}
-
+	if ordering != nil && ordering.Seller != nil {
+		concepto.ThirdParty = newThirdParty(ordering.Seller)
+	}
 	return concepto
 }
 

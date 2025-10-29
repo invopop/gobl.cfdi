@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-74c9-702f-a9b7-0b69accc0c41",
 		"dig": {
 			"alg": "sha256",
-			"val": "7ad801126ac5cf27483a33c2a976c23ae6f6d727cae7c68744c52d960c0bca1e"
+			"val": "da15108f6c8347eb0042984093b8aad39e1af023b34cabce575f723fc78990ee"
 		}
 	},
 	"doc": {
@@ -60,26 +60,24 @@
 						"percent": "16.0%"
 					}
 				],
-				"total": "200.00"
-			}
-		],
-		"ordering": {
-			"seller": {
-				"name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
-				"tax_id": {
-					"country": "MX",
-					"code": "URE180429TM6"
-				},
-				"addresses": [
-					{
-						"code": "65000"
+				"total": "200.00",
+				"seller": {
+					"name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
+					"tax_id": {
+						"country": "MX",
+						"code": "URE180429TM6"
+					},
+					"addresses": [
+						{
+							"code": "65000"
+						}
+					],
+					"ext": {
+						"mx-cfdi-fiscal-regime": "601"
 					}
-				],
-				"ext": {
-					"mx-cfdi-fiscal-regime": "601"
 				}
 			}
-		},
+		],
 		"payment": {
 			"instructions": {
 				"key": "credit-transfer",

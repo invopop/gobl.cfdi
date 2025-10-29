@@ -55,7 +55,9 @@ func newConcepto(line *bill.Line, ordering *bill.Ordering) *Concepto {
 		ObjetoImp:     lineSubjectToTax(line),
 		Impuestos:     newConceptoImpuestos(line),
 	}
-	if ordering != nil && ordering.Seller != nil {
+	if line.Seller != nil {
+		concepto.ThirdParty = newThirdParty(line.Seller)
+	} else if ordering != nil && ordering.Seller != nil {
 		concepto.ThirdParty = newThirdParty(ordering.Seller)
 	}
 	return concepto

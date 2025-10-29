@@ -13,6 +13,7 @@ import (
 	"github.com/invopop/gobl/addons/mx/cfdi"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
+	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/currency"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/pay"
@@ -35,12 +36,6 @@ const (
 	ExportacionNoAplica = "01"
 	FormaPagoPorDefinir = "99"
 	ImpuestoIVA         = "002"
-)
-
-// MetodoPago definitions
-const (
-	MetodoPagoUnaExhibicion = "PUE"
-	MetodoPagoParcialidades = "PPD"
 )
 
 // Generic supplier constants
@@ -90,7 +85,7 @@ type Document struct {
 	Moneda            string      `xml:",attr"`
 	TipoCambio        *num.Amount `xml:",attr,omitempty"`
 	Exportacion       string      `xml:",attr"`
-	MetodoPago        string      `xml:",attr,omitempty"`
+	MetodoPago        cbc.Code    `xml:",attr,omitempty"`
 	FormaPago         string      `xml:",attr,omitempty"`
 	CondicionesDePago string      `xml:",attr,omitempty"`
 	Sello             string      `xml:",attr"`
@@ -327,12 +322,15 @@ func tipoCambio(inv *bill.Invoice) *num.Amount {
 	return &a
 }
 
-func metodoPago(inv *bill.Invoice) string {
-	if isPrepaid(inv) {
-		return MetodoPagoUnaExhibicion
+func metodoPago(inv *bill.Invoice) cbc.Code {
+	if inv.Tax != nil && inv.Tax.Ext.Has(cfdi.ExtKeyPaymentMethod) {
+		return inv.Tax.Ext[cfdi.ExtKeyPaymentMethod]
 	}
-
-	return MetodoPagoParcialidades
+	// Fallback to the payment method based on the detected payment advances
+	if isPrepaid(inv) {
+		return cfdi.ExtCodePaymentMethodPUE
+	}
+	return cfdi.ExtCodePaymentMethodPPD
 }
 
 func formaPago(inv *bill.Invoice) string {

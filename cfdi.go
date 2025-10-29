@@ -125,6 +125,9 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 	if err := validateSupport(inv); err != nil {
 		return nil, err
 	}
+	if err := inv.RemoveIncludedTaxes(); err != nil {
+		return nil, fmt.Errorf("removing included taxes: %w", err)
+	}
 
 	issuePlace := issuePlace(inv)
 
@@ -140,7 +143,6 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		Fecha:             formatIssueDateTime(inv),
 		LugarExpedicion:   issuePlace,
 		Descuento:         internal.TotalInvoiceDiscount(inv),
-		Total:             inv.Totals.Payable,
 		Moneda:            string(inv.Currency),
 		TipoCambio:        tipoCambio(inv),
 		Exportacion:       ExportacionNoAplica,
@@ -159,15 +161,19 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 	}
 
 	// Determine the subtotal directly from the concepts, as there may be some
-	// additional taxes that needed to be taken into account
-	doc.SubTotal = inv.Currency.Def().Zero()
+	// additional taxes included in the line charges that needed to be taken into
+	// account for the totals.
+	zero := inv.Currency.Def().Zero()
+	doc.SubTotal = zero
 	for _, c := range doc.Conceptos.Concepto {
+		doc.SubTotal = doc.SubTotal.MatchPrecision(c.Importe)
 		doc.SubTotal = doc.SubTotal.Add(c.Importe)
 	}
 
 	// Recalculate the total so that we can avoid any rounding issues
 	doc.Total = doc.SubTotal
 	if doc.Descuento != nil {
+		doc.Total = doc.Total.MatchPrecision(*doc.Descuento)
 		doc.Total = doc.Total.Subtract(*doc.Descuento)
 	}
 	if doc.Impuestos != nil {
@@ -185,6 +191,14 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 
 	if err := addAddendas(doc, inv); err != nil {
 		return nil, err
+	}
+
+	// Perform rounding on the totals at the last possible moment
+	doc.SubTotal = doc.SubTotal.Rescale(zero.Exp())
+	doc.Total = doc.Total.Rescale(zero.Exp())
+	if doc.Descuento != nil {
+		d := doc.Descuento.Rescale(zero.Exp())
+		doc.Descuento = &d
 	}
 
 	return doc, nil

@@ -37,12 +37,6 @@ const (
 	ImpuestoIVA         = "002"
 )
 
-// MetodoPago definitions
-const (
-	MetodoPagoUnaExhibicion = "PUE"
-	MetodoPagoParcialidades = "PPD"
-)
-
 // Generic supplier constants
 const (
 	NombreReceptorGenerico       = "PÚBLICO EN GENERAL"
@@ -328,11 +322,14 @@ func tipoCambio(inv *bill.Invoice) *num.Amount {
 }
 
 func metodoPago(inv *bill.Invoice) string {
-	if isPrepaid(inv) {
-		return MetodoPagoUnaExhibicion
+	if inv.Tax != nil && inv.Tax.Ext.Has(cfdi.ExtKeyPaymentMethod) {
+		return inv.Tax.Ext[cfdi.ExtKeyPaymentMethod].String()
 	}
-
-	return MetodoPagoParcialidades
+	// Fallback to the payment method based on the detected payment advances
+	if isPrepaid(inv) {
+		return cfdi.ExtCodePaymentMethodPUE.String()
+	}
+	return cfdi.ExtCodePaymentMethodPPD.String()
 }
 
 func formaPago(inv *bill.Invoice) string {

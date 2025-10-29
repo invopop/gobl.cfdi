@@ -7,10 +7,11 @@ import (
 
 // TotalInvoiceDiscount calculates the total discount for the invoice.
 func TotalInvoiceDiscount(i *bill.Invoice) *num.Amount {
-	td := i.Currency.Def().Zero() // currency's precision is required by the SAT
+	td := i.Currency.Def().Zero()
 	for _, l := range i.Lines {
 		ld := TotalLineDiscount(l)
 		if ld != nil {
+			td = td.MatchPrecision(*ld)
 			td = td.Add(*ld)
 		}
 	}

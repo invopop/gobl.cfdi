@@ -4,7 +4,7 @@
 		"uuid": "01922d7f-7467-7840-88e7-d70a607a85bf",
 		"dig": {
 			"alg": "sha256",
-			"val": "95df9714ddfc3f0969684843fe8699c4c519224d7338e03ed8ff11f9048c0240"
+			"val": "e2a85ef0a49c8b6eff60b42f840b555fffade93c0385d4816103d65b122ba60b"
 		}
 	},
 	"doc": {
@@ -38,6 +38,7 @@
 			"ext": {
 				"mx-cfdi-doc-type": "E",
 				"mx-cfdi-issue-place": "26015",
+				"mx-cfdi-payment-method": "PPD",
 				"mx-cfdi-rel-type": "01"
 			}
 		},
@@ -82,7 +83,7 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "zero",
+						"key": "zero",
 						"percent": "0.0%"
 					}
 				],
@@ -103,7 +104,7 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "zero",
+						"key": "zero",
 						"percent": "0.0%"
 					}
 				],

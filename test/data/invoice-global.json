@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "21967c52bf96b49463d82858a6a79ca9f16be9fd351e3ed1da3a9cdb566067c1"
+			"val": "5d758fe00f86e3bd94aa612259e5e055e43bc547ec1ec47b4115e292bb841dbf"
 		}
 	},
 	"doc": {
@@ -29,7 +29,8 @@
 				"mx-cfdi-global-month": "03",
 				"mx-cfdi-global-period": "04",
 				"mx-cfdi-global-year": "2025",
-				"mx-cfdi-issue-place": "26015"
+				"mx-cfdi-issue-place": "26015",
+				"mx-cfdi-payment-method": "PUE"
 			}
 		},
 		"supplier": {
@@ -61,7 +62,8 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "standard",
+						"key": "standard",
+						"rate": "general",
 						"percent": "16.0%"
 					}
 				],
@@ -79,7 +81,8 @@
 				"taxes": [
 					{
 						"cat": "VAT",
-						"rate": "standard",
+						"key": "standard",
+						"rate": "general",
 						"percent": "16.0%"
 					}
 				],

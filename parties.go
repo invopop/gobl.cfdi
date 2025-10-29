@@ -2,6 +2,7 @@ package cfdi
 
 import (
 	"github.com/invopop/gobl/addons/mx/cfdi"
+	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/regimes/mx"
@@ -25,6 +26,15 @@ type Receptor struct {
 	ResidenciaFiscal        string `xml:",attr,omitempty"`
 }
 
+// ThirdParty or "ACuentaTerceros" defines the details of a third part for whom this
+// transaction has been performed.
+type ThirdParty struct {
+	RFC          string   `xml:"RfcACuentaTerceros,attr"`
+	Name         string   `xml:"NombreACuentaTerceros,attr"`
+	FiscalRegime cbc.Code `xml:"RegimenFiscalACuentaTerceros,attr"`
+	PostCode     cbc.Code `xml:"DomicilioFiscalACuentaTerceros,attr"`
+}
+
 func newEmisor(supplier *org.Party) *Emisor {
 	emisor := &Emisor{
 		Rfc:           supplier.TaxID.Code.String(),
@@ -32,6 +42,19 @@ func newEmisor(supplier *org.Party) *Emisor {
 		RegimenFiscal: supplier.Ext[cfdi.ExtKeyFiscalRegime].String(),
 	}
 	return emisor
+}
+
+func newThirdParty(p *org.Party) *ThirdParty {
+	if p == nil || p.TaxID == nil || len(p.Addresses) == 0 {
+		return nil
+	}
+	out := &ThirdParty{
+		RFC:          p.TaxID.Code.String(),
+		Name:         p.Name,
+		FiscalRegime: p.Ext.Get(cfdi.ExtKeyFiscalRegime),
+		PostCode:     p.Addresses[0].Code,
+	}
+	return out
 }
 
 func newReceptor(customer *org.Party, issuePlace string) *Receptor {

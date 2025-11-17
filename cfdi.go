@@ -171,14 +171,18 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 		doc.Total = doc.Total.MatchPrecision(*doc.Descuento)
 		doc.Total = doc.Total.Subtract(*doc.Descuento)
 	}
+	taxes := zero
 	if doc.Impuestos != nil {
 		if tit := doc.Impuestos.TotalImpuestosTrasladados; tit != nil {
-			doc.Total = doc.Total.Add(*tit)
+			taxes = taxes.MatchPrecision(*tit)
+			taxes = taxes.Add(*tit)
 		}
 		if tir := doc.Impuestos.TotalImpuestosRetenidos; tir != nil {
-			doc.Total = doc.Total.Subtract(*tir)
+			taxes = taxes.MatchPrecision(*tir)
+			taxes = taxes.Subtract(*tir)
 		}
 	}
+	doc.Total = doc.Total.Add(taxes)
 
 	if err := addComplementos(doc, inv.Complements); err != nil {
 		return nil, err
@@ -192,8 +196,7 @@ func NewDocument(env *gobl.Envelope) (*Document, error) {
 	doc.SubTotal = doc.SubTotal.Rescale(zero.Exp())
 	doc.Total = doc.Total.Rescale(zero.Exp())
 	if doc.Descuento != nil {
-		d := doc.Descuento.Rescale(zero.Exp())
-		doc.Descuento = &d
+		adjustDiscount(doc, taxes, zero)
 	}
 
 	return doc, nil
@@ -365,4 +368,35 @@ func paymentTermsNotes(inv *bill.Invoice) string {
 	}
 
 	return inv.Payment.Terms.Notes
+}
+
+// adjustDiscount adjusts the document's discount to ensure it's consistent with the
+// totals after rounding. It also adjusts one concept's discount to ensure it's consistent
+// with the adjusted total discount. This can cause the data in the CFDI to be
+// different from the data in the GOBL envelope, but we couldn't find another way to
+// comply with the SAT requirements.
+func adjustDiscount(doc *Document, taxes num.Amount, zero num.Amount) {
+	// Recalculate the discount from the other totals
+	desc := doc.SubTotal.Add(taxes).Subtract(doc.Total)
+	diff := desc.MatchPrecision(*doc.Descuento).Subtract(*doc.Descuento)
+
+	// Set the document's discount to the adjusted value
+	doc.Descuento = &desc
+
+	// Determine the minimum increment necessary to match the adjusted total discount
+	inc := diff.Subtract(num.MakeAmount(5, zero.Exp()+1))
+	if !inc.IsPositive() {
+		// No adjustment is needed
+		return
+	}
+
+	// Apply the increment to the first concept with a discount
+	for _, c := range doc.Conceptos.Concepto {
+		if c.Descuento != nil {
+			disc := c.Descuento.MatchPrecision(inc).Add(inc)
+			c.Descuento = &disc
+			c.Importe = c.Importe.MatchPrecision(disc) // Importe and Descuento must match precision
+			break
+		}
+	}
 }
